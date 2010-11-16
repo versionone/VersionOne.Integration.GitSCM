@@ -78,7 +78,7 @@
     </target>
 
     <target name="clean"
-        depends="compile.clean, package.clean, build.clean"
+        depends="compile.clean, package.clean, build.clean, coverage.clean"
         description="cleanup all"/>
 
     <!-- Compile -->
@@ -160,7 +160,7 @@
         <delete file="${coverage.file}"/>
     </target>
 
-    <target name="coverage" depends="integration.compile.git, coverage.clean, coverage.init" unless="skip.tests">
+    <target name="coverage" depends="integration.compile.git, coverage.init" unless="skip.tests">
         <mkdir dir="${junit.output.dir}"/>
         <!--
         <cobertura-instrument todir="${coverage.classes}" datafile="${coverage.file}">
@@ -180,12 +180,13 @@
                 <path refid="classpath"/>
             </classpath>
             <formatter type="xml"/>
-
+            <!--
             <batchtest fork="yes" todir="${junit.output.dir}">
                 <fileset dir="${bin.product.dir}">
                     <include name="**/*Tester.class"/>
                 </fileset>
             </batchtest>
+            -->
         </junit>
 
         <!--
