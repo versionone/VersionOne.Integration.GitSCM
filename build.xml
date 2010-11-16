@@ -26,7 +26,7 @@
     <property name="build.dir" value="${basedir}/Common"/>
     <property name="bin.product.dir" value="${build.dir}/bin_production"/>
     <property name="junit.output.dir" value="junit"/>
-    <property name="publish.lib.dir" value="${publish.dir}/tmpl/VersionOne/lib"/>
+    <property name="publish.git.dir" value="${publish.dir}/tmpl/GitIntegration"/>
 
     <path id="classpath">
         <fileset dir="${lib.dir}">
@@ -101,19 +101,19 @@
 
     <!-- package -->
     <target name="integration.package.git" depends="integration.build.git">
-        <mkdir dir="${publish.lib.dir}"/>
+        <mkdir dir="${publish.git.dir}"/>
 
-        <copy file="${distr.dir}/${jar.filename}" todir="${publish.lib.dir}"/>
+        <copy file="${distr.dir}/${jar.filename}" todir="${publish.git.dir}"/>
         <copy file="${lib.dir}/VersionOne.APIClient.jar"
-            tofile="${publish.lib.dir}/VersionOne.APIClient.jar"/>
+            tofile="${publish.git.dir}/VersionOne.APIClient.jar"/>
         <copy file="${lib.dir}/jsch-0.1.44.jar"
-            tofile="${publish.lib.dir}/jsch-0.1.44.jar"/>
+            tofile="${publish.git.dir}/jsch-0.1.44.jar"/>
         <copy file="${lib.dir}/org.eclipse.jgit-0.9.3.jar"
-            tofile="${publish.lib.dir}/org.eclipse.jgit-0.9.3.jar"/>
+            tofile="${publish.git.dir}/org.eclipse.jgit-0.9.3.jar"/>
         <copy file="${lib.dir}/log4j-1.2.16.jar"
-            tofile="${publish.lib.dir}/log4j-1.2.16.jar"/>
+            tofile="${publish.git.dir}/log4j-1.2.16.jar"/>
         <!--
-		<move todir="${publish.lib.dir}/../doc">
+		<move todir="${publish.git.dir}/../doc">
 			<fileset dir="${doc.dir}"/>
 		</move>
 		-->
