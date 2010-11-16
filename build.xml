@@ -15,14 +15,12 @@
     <property name="jar.filename" value="V1GitIntegration.jar"/>
     <property name="zip.filename" value="V1GitIntegration.${build.version}.zip"/>
     <property name="zip.source.filename" value="V1GitIntegration.Source.${build.version}.zip"/>
-    <property name="coverage.file" value="cobertura.ser"/>
 
     <!-- Directories -->
     <property name="base.dir" value="."/>
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="src.dir" value="${basedir}/src"/>
     <property name="distr.dir" value="${basedir}/distr"/>
-    <property name="coverage.dir" value="coverage"/>
     <property name="tests.dir" value="${basedir}/tests"/>
 
 
@@ -31,22 +29,13 @@
     <property name="bin.product.dir" value="${build.dir}/bin_production"/>
     <property name="junit.output.dir" value="junit"/>
     <property name="publish.git.dir" value="${publish.dir}/tmpl/GitIntegration"/>
-    <property name="coverage.classes" value="${coverage.dir}/classes"/>
 
     <path id="classpath">
         <fileset dir="${lib.dir}">
             <include name="**/*.jar"/>
         </fileset>
     </path>
-
-    <taskdef classpath="${lib.dir}/cobertura.jar" resource="tasks.properties">
-        <classpath>
-            <fileset dir="${lib.dir}">
-                <include name="**/*.jar"/>
-            </fileset>
-        </classpath>
-    </taskdef>
-
+    
     <patternset id="compiler.resources">
         <include name="**/?*.properties"/>
         <include name="**/?*.xml"/>
@@ -151,8 +140,7 @@
     </target>
 
     <!-- covarage -->
-    <target name="coverage.init">
-        <mkdir dir="${coverage.classes}"/>
+    <target name="testing.init">
     </target>
 
     <target name="coverage.clean">
@@ -160,22 +148,11 @@
         <delete file="${coverage.file}"/>
     </target>
 
-    <target name="coverage" depends="integration.compile.git, coverage.init" unless="skip.tests">
+    <target name="testing" depends="integration.compile.git, testing.init">
         <mkdir dir="${junit.output.dir}"/>
-        <!--
-        <cobertura-instrument todir="${coverage.classes}" datafile="${coverage.file}">
-            <fileset dir="${bin.product.dir}">
-                <include name="**/*.class"/>
-                <exclude name="**/*Tester.class"/>
-            </fileset>
-        </cobertura-instrument>
-        -->
 
         <junit fork="true" printsummary="withOutAndErr">
-            <!---<sysproperty key="net.sourceforge.cobertura.datafile" file="${coverage.file}"/>-->
-
             <classpath>
-                <pathelement location="${coverage.classes}"/>
                 <pathelement location="${bin.product.dir}"/>
                 <path refid="classpath"/>
             </classpath>
@@ -188,22 +165,10 @@
             </batchtest>
         </junit>
 
-        <!--
-        <cobertura-report datafile="${coverage.file}" destdir="${coverage.dir}/html">
-            <fileset dir="${src.dir}" includes="**/*"/>
-        </cobertura-report>
-        <cobertura-report datafile="${coverage.file}" format="xml" destdir="${coverage.dir}">
-            <fileset dir="${src.dir}" includes="**/*"/>
-        </cobertura-report>
-
-        <move file="${coverage.dir}/coverage.xml" tofile="${coverage.dir}/coverage.raw"/>
-        <xslt destdir="${coverage.dir}" style="${base.dir}/stripDTD.xsl"
-            in="${coverage.dir}/coverage.raw" out="${coverage.dir}/coverage.xml"/>
-         -->
     </target>
 
 
-    <target name="teamcity.build" depends="clean, coverage, integration.package.git"
+    <target name="teamcity.build" depends="clean, testing, integration.package.git"
         description="build all"/>
 
 
