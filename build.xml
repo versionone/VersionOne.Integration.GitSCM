@@ -169,6 +169,7 @@
             </fileset>
         </cobertura-instrument>
 
+        <!--
         <junit fork="true" printsummary="withOutAndErr">
             <sysproperty key="net.sourceforge.cobertura.datafile" file="${coverage.file}"/>
 
@@ -185,6 +186,7 @@
                 </fileset>
             </batchtest>
         </junit>
+        -->
 
         <cobertura-report datafile="${coverage.file}" destdir="${coverage.dir}/html">
             <fileset dir="${src.dir}" includes="**/*"/>
@@ -198,7 +200,7 @@
     </target>
 
 
-    <target name="teamcity.build" depends="clean, integration.package.git"
+    <target name="teamcity.build" depends="clean, coverage, integration.package.git"
         description="build all"/>
 
 
