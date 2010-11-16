@@ -198,7 +198,7 @@
     </target>
 
 
-    <target name="teamcity.build" depends="clean, integration.package.git"
+    <target name="teamcity.build" depends="clean, coverage, integration.package.git"
         description="build all"/>
 
 
