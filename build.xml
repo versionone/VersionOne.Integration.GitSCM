@@ -180,13 +180,12 @@
                 <path refid="classpath"/>
             </classpath>
             <formatter type="xml"/>
-            <!--
+
             <batchtest fork="yes" todir="${junit.output.dir}">
                 <fileset dir="${bin.product.dir}">
                     <include name="**/*Tester.class"/>
                 </fileset>
             </batchtest>
-            -->
         </junit>
 
         <!--
