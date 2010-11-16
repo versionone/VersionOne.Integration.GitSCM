@@ -23,6 +23,8 @@
     <property name="src.dir" value="${basedir}/src"/>
     <property name="distr.dir" value="${basedir}/distr"/>
     <property name="coverage.dir" value="coverage"/>
+    <property name="tests.dir" value="${basedir}/tests"/>
+
 
     <!-- Build Directories -->
     <property name="build.dir" value="${basedir}/Common"/>
@@ -88,7 +90,7 @@
             <compilerarg line="${compiler.args}"/>
             <classpath refid="classpath"/>
 
-            <!--<src path="${tests.dir}"/>-->
+            <src path="${tests.dir}"/>
             <src path="${src.dir}"/>
         </javac>
 

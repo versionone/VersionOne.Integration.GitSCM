@@ -11,7 +11,7 @@ import org.junit.Test;
  * Time: 12:50:01
  * To change this template use File | Settings | File Templates.
  */
-public class TestStub {
+public class TestStubTester {
 
     @Test
     public void test() {
