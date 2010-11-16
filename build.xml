@@ -162,16 +162,17 @@
 
     <target name="coverage" depends="integration.compile.git, coverage.clean, coverage.init" unless="skip.tests">
         <mkdir dir="${junit.output.dir}"/>
+        <!--
         <cobertura-instrument todir="${coverage.classes}" datafile="${coverage.file}">
             <fileset dir="${bin.product.dir}">
                 <include name="**/*.class"/>
                 <exclude name="**/*Tester.class"/>
             </fileset>
         </cobertura-instrument>
+        -->
 
-        <!--
         <junit fork="true" printsummary="withOutAndErr">
-            <sysproperty key="net.sourceforge.cobertura.datafile" file="${coverage.file}"/>
+            <!---<sysproperty key="net.sourceforge.cobertura.datafile" file="${coverage.file}"/>-->
 
             <classpath>
                 <pathelement location="${coverage.classes}"/>
@@ -186,17 +187,19 @@
                 </fileset>
             </batchtest>
         </junit>
-        -->
 
+        <!--
         <cobertura-report datafile="${coverage.file}" destdir="${coverage.dir}/html">
             <fileset dir="${src.dir}" includes="**/*"/>
         </cobertura-report>
         <cobertura-report datafile="${coverage.file}" format="xml" destdir="${coverage.dir}">
             <fileset dir="${src.dir}" includes="**/*"/>
         </cobertura-report>
+
         <move file="${coverage.dir}/coverage.xml" tofile="${coverage.dir}/coverage.raw"/>
         <xslt destdir="${coverage.dir}" style="${base.dir}/stripDTD.xsl"
             in="${coverage.dir}/coverage.raw" out="${coverage.dir}/coverage.xml"/>
+         -->
     </target>
 
 
