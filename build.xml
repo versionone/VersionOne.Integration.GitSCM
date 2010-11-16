@@ -30,7 +30,6 @@
     <property name="junit.output.dir" value="junit"/>
     <property name="publish.git.dir" value="${publish.dir}/tmpl/GitIntegration"/>
     <property name="coverage.classes" value="${coverage.dir}/classes"/>
-    <property name="coverage.junit" value="${coverage.dir}/junit"/>
 
     <path id="classpath">
         <fileset dir="${lib.dir}">
@@ -152,7 +151,6 @@
     <!-- covarage -->
     <target name="coverage.init">
         <mkdir dir="${coverage.classes}"/>
-        <mkdir dir="${coverage.junit}"/>
     </target>
 
     <target name="coverage.clean">
@@ -171,7 +169,6 @@
 
         <junit fork="true" printsummary="withOutAndErr">
             <sysproperty key="net.sourceforge.cobertura.datafile" file="${coverage.file}"/>
-            <!--<sysproperty key="test.websiteurl" value="${test.websiteurl}"/>-->
 
             <classpath>
                 <pathelement location="${coverage.classes}"/>

@@ -15,7 +15,7 @@ public class TestStub {
 
     @Test
     public void test() {
-        Assert.assertTrue("Testing works", true);
+        Assert.assertTrue("Testing works", false);
     }
     
 }
