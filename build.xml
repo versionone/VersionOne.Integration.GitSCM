@@ -143,7 +143,7 @@
 				<!--<include name="stripDTD.xsl"/>-->
 				<!--<include name="res/**/*"/>-->
 				<include name="src/**/*"/>
-				<!--<include name="tests/**/*"/>-->
+				<include name="tests/**/*"/>
 				<include name="lib/**/*"/>
 				<!--<include name="DocSource/**/*"/>-->
 			</fileset>
