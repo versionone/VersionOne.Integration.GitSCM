@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--(c) Copyright 2010, VersionOne, Inc. All rights reserved. (c)-->
+<project name="V1GIT">
+    <!-- Compiler settings -->
+    <property name="compiler.debug" value="on"/>
+    <property name="compiler.generate.no.warnings" value="off"/>
+    <property name="compiler.max.memory" value="128m"/>
+    <property name="compiler.args" value=""/>
+
+    <property name="ver.major" value="9"/>
+    <property name="ver.minor" value="0"/>
+    <property name="ver.build" value="0"/>
+    <property name="publish.dir" value="./_publish"/>
+    <property name="build.version" value="${ver.major}.${ver.minor}.${ver.build}"/>
+    <property name="jar.filename" value="V1GitIntegration.jar"/>
+    <property name="zip.filename" value="V1GitIntegration.${build.version}.zip"/>
+    <property name="zip.source.filename" value="V1GitIntegration.Source.${build.version}.zip"/>
+
+    <!-- Directories -->
+    <property name="base.dir" value="."/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="distr.dir" value="${basedir}/distr"/>
+
+    <!-- Build Directories -->
+    <property name="build.dir" value="${basedir}/Common"/>
+    <property name="bin.product.dir" value="${build.dir}/bin_production"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="publish.lib.dir" value="${publish.dir}/tmpl/VersionOne/lib"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <patternset id="compiler.resources">
+        <include name="**/?*.properties"/>
+        <include name="**/?*.xml"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpeg"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.dtd"/>
+        <include name="**/?*.tld"/>
+    </patternset>
+
+    <!-- Clean -->
+    <target name="compile.clean">
+        <delete dir="${bin.product.dir}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="build.clean">
+        <delete file="${build.dir}/${jar.filename}"/>
+    </target>
+
+    <target name="package.clean">
+        <delete dir="${distr.dir}"/>
+        <delete file="${zip.filename}"/>
+        <delete file="${zip.source.filename}"/>
+        <delete dir="${junit.output.dir}"/>
+        <delete dir="." includes="cobertura.ser"/>
+    </target>
+
+    <target name="clean"
+        depends="compile.clean, package.clean, build.clean"
+        description="cleanup all"/>
+
+    <!-- Compile -->
+    <target name="integration.compile.git" description="Compile VersionOne integration for Git">
+        <mkdir dir="${bin.product.dir}"/>
+        <javac destdir="${bin.product.dir}" debug="${compiler.debug}"
+            nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}"
+            fork="true">
+            <compilerarg line="${compiler.args}"/>
+            <classpath refid="classpath"/>
+
+            <!--<src path="${tests.dir}"/>-->
+            <src path="${src.dir}"/>
+        </javac>
+
+    </target>
+
+    <!-- Jar creation -->
+    <target name="integration.build.git" depends="integration.compile.git">
+        <mkdir dir="${distr.dir}"/>
+
+        <jar destfile="${distr.dir}/${jar.filename}" duplicate="preserve">
+            <zipfileset dir="${bin.product.dir}" prefix=""/>
+            <manifest>
+                <attribute name="BuiltBy" value="VersionOne"/>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="BuildVersion" value="${build.version}"/>
+                <attribute name="BuildRev" value="${ver.build}"/>
+            </manifest>
+        </jar>
+    </target>
+
+
+    <!-- package -->
+    <target name="integration.package.git" depends="integration.build.git">
+        <mkdir dir="${publish.lib.dir}"/>
+
+        <copy file="${distr.dir}/${jar.filename}" todir="${publish.lib.dir}"/>
+        <copy file="${lib.dir}/VersionOne.APIClient.jar"
+            tofile="${publish.lib.dir}/VersionOne.APIClient.jar"/>
+        <copy file="${lib.dir}/jsch-0.1.44.jar"
+            tofile="${publish.lib.dir}/jsch-0.1.44.jar"/>
+        <copy file="${lib.dir}/org.eclipse.jgit-0.9.3.jar"
+            tofile="${publish.lib.dir}/org.eclipse.jgit-0.9.3.jar"/>
+        <copy file="${lib.dir}/log4j-1.2.16.jar"
+            tofile="${publish.lib.dir}/log4j-1.2.16.jar"/>
+        <!--
+		<move todir="${publish.lib.dir}/../doc">
+			<fileset dir="${doc.dir}"/>
+		</move>
+		-->
+
+        <zip destfile="${publish.dir}/${zip.filename}">
+            <fileset dir="${publish.dir}/tmpl/"/>
+        </zip>
+        <delete dir="${publish.dir}/tmpl"/>
+
+		<zip destfile="${publish.dir}/${zip.source.filename}">
+			<fileset dir="${base.dir}">
+				<include name="build.xml"/>
+				<!--<include name="build.properties"/>-->
+				<!--<include name="stripDTD.xsl"/>-->
+				<!--<include name="res/**/*"/>-->
+				<include name="src/**/*"/>
+				<!--<include name="tests/**/*"/>-->
+				<include name="lib/**/*"/>
+				<!--<include name="DocSource/**/*"/>-->
+			</fileset>
+		</zip>
+    </target>
+
+    <target name="teamcity.build" depends="clean, integration.package.git"
+        description="build all"/>
+
+
+</project>
