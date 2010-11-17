@@ -93,9 +93,11 @@
             <zipfileset dir="${bin.product.dir}" prefix=""/>
             <manifest>
                 <attribute name="BuiltBy" value="VersionOne"/>
+                <attribute name="Main-Class" value="GitConnector"/>
                 <attribute name="Manifest-Version" value="1.0"/>
                 <attribute name="BuildVersion" value="${build.version}"/>
                 <attribute name="BuildRev" value="${ver.build}"/>
+                <attribute name="Class-Path" value="org.eclipse.jgit-0.9.3.jar jsch-0.1.44.jar /"/>
             </manifest>
         </jar>
     </target>
