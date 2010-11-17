@@ -8,7 +8,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
-import java.sql.SQLException;
 import java.util.Collection;
 
 public class DbStorage implements IDbStorage {
@@ -18,7 +17,7 @@ public class DbStorage implements IDbStorage {
         return session;
     }
 
-    public DbStorage() throws SQLException {
+    public DbStorage() {
         SessionFactory factory = new Configuration().configure().buildSessionFactory();
         session = factory.openSession();
     }
