@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class GitConnector {
+public class GitConnector implements IGitConnector {
 
     private FileRepository local;
     private RemoteConfig remoteConfig;
@@ -39,7 +39,11 @@ public class GitConnector {
     private final String passphrase;
     private final String localDirectory;
 
-    public GitConnector(String username, String password, String passphrase, String url, String localDirectory) {
+    private final IDbStorage storage;
+
+    public GitConnector(String username, String password, String passphrase, String url, String localDirectory, IDbStorage storage) {
+        this.storage = storage;
+
         this.username = username;
         this.password = password;
         this.passphrase = passphrase;
@@ -49,7 +53,8 @@ public class GitConnector {
         SshSessionFactory.installWithCredentials(password, passphrase);
         Authenticator.install(username, password);
 
-        initRepository();
+        // TODO uncomment when configuration is ready
+        // initRepository();
     }
 
     private void initRepository() {
