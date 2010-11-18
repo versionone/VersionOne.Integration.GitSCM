@@ -88,7 +88,9 @@
     </target>
 
     <path id="base.classpath">
-        <fileset dir="${lib.dir}" includes="*.jar"/>
+        <fileset dir="${lib.dir}" includes="*.jar">
+            <exclude name="junit-4.4.jar"/> 
+        </fileset>
     </path>
     <pathconvert property="manifest.classpath" pathsep=" ">
       <path refid="base.classpath"/>
