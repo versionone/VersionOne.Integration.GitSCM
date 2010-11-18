@@ -32,27 +32,44 @@ public class GitConnector implements IGitConnector {
 
     private final String url;
 
-    private final String password;
-    private final String passphrase;
     private final String localDirectory;
+    private final String regexPattern;
+    private final String watchedBranch;
 
     private final IDbStorage storage;
 
-    public GitConnector(String password, String passphrase, String url, String localDirectory, IDbStorage storage) {
+    public GitConnector(String password, String passphrase, String url, String watchedBranch,
+                        String localDirectory, String regexPattern, IDbStorage storage) {
         this.storage = storage;
 
-        this.password = password;
-        this.passphrase = passphrase;
-
         this.url = url;
+        this.watchedBranch = watchedBranch;
         this.localDirectory = localDirectory;
+        this.regexPattern = regexPattern;
 
         SshSessionFactory.installWithCredentials(password, passphrase);
 
-        initRepository();
     }
 
-    private void initRepository() {
+    public void cleanupLocalDirectory() {
+        deleteDirectory(new File(localDirectory));
+    }
+
+    public void initRepository() throws ConnectorException {
+        // TODO
+    }
+
+    public List<ChangeSetInfo> getBranchCommits() throws ConnectorException {
+        // TODO
+        return null;
+    }
+
+    public List<ChangeSetInfo> getMergedBranches() throws ConnectorException {
+        // TODO
+        return null;
+    }
+
+    private void initRepositoryAndPrintContent() {
         try {
             //checkoutBranch(branchName);
             cloneRepository();
@@ -79,7 +96,6 @@ public class GitConnector implements IGitConnector {
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        System.out.println(" -  - - - -  -  --  - - - - -  --  - -");
 
         for (RevCommit commit : walk) {
             System.out.println("Id = " + commit.getId().getName());
@@ -98,26 +114,28 @@ public class GitConnector implements IGitConnector {
     private List<String> getBranchNames(RevCommit commit) {
         List<String> branchNames = new LinkedList<String>();
         Map<String, Ref> refs = local.getAllRefs();
+
         for (String key : refs.keySet()) {
             AnyObjectId headId = null;
             RevWalk walk = new RevWalk(local);
             walk.sort(RevSort.COMMIT_TIME_DESC);
             walk.sort(RevSort.TOPO);
+
             try {
                 headId = local.resolve(refs.get(key).getName());
                 walk.markStart(walk.parseCommit(headId));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             for (RevCommit commitFromBranch : walk) {
                 if (commit.equals(commitFromBranch)) {
                     branchNames.add(refs.get(key).getName());
                     break;
                 }
             }
-
-
         }
+
         return branchNames;
     }
 
@@ -133,12 +151,10 @@ public class GitConnector implements IGitConnector {
 		final String dst = Constants.R_REMOTES + remoteConfig.getName();
 		RefSpec wcrs = new RefSpec();
 		wcrs = wcrs.setForceUpdate(true);
-		wcrs = wcrs.setSourceDestination(Constants.R_HEADS
-				+ "*", dst + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
+		wcrs = wcrs.setSourceDestination(Constants.R_HEADS + "*", dst + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
         remoteConfig.addFetchRefSpec(wcrs);
 
-		local.getConfig().setBoolean(
-				"core", null, "bare", true); //$NON-NLS-1$ //$NON-NLS-2$
+		local.getConfig().setBoolean("core", null, "bare", true); //$NON-NLS-1$ //$NON-NLS-2$
 
 		remoteConfig.update(local.getConfig());
 
