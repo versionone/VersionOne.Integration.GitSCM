@@ -8,7 +8,7 @@ import java.util.TimerTask;
 public class Main {
 
     private final static Timer timer = new Timer();
-    private static final Logger LOG = Logger.getLogger("GetIntegration");
+    private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public static void main(String[] arg) {
         // TODO parse configuration
