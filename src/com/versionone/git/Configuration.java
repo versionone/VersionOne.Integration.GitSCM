@@ -3,23 +3,30 @@ package com.versionone.git;
 // TODO impl XML configuration
 public class Configuration {
     private int timeoutMillis;
-    //VersionOne
+
     private String versionOnePath;
     private String versionOneUserName;
     private String versionOnePassword;
-    //Git
-    private String gitPath;
-    private String gitPassword;
-    private String gitPassPhrase;
-    private String gitLocalDirectory;
-    //Reference
+
+    private String repositoryPath;
+    private String watchedBranch;
+    private String password;
+    private String passphrase;
+    private String localDirectory;
+
     private String referenceAttribute;
     private String referenceExpression;
-    //Link
+
     private String linkNameTemplate;
     private String linkUrlTemplate;
-    //processing type
+
     private Boolean isProcessingThroughBranchesName;
+
+    private Boolean linkOnMenu;
+
+    public Configuration() {
+        timeoutMillis = 5000;
+    }
 
     public Boolean getProcessingThroughBranchesName() {
         return isProcessingThroughBranchesName;
@@ -37,12 +44,6 @@ public class Configuration {
         return linkOnMenu;
     }
 
-    private Boolean linkOnMenu;
-
-    public Configuration() {
-        timeoutMillis = 5000;
-    }
-
     public String getVersionOnePath() {
         return versionOnePath;
     }
@@ -55,20 +56,20 @@ public class Configuration {
         return versionOnePassword;
     }
 
-    public String getGitPath() {
-        return gitPath;
+    public String getRepositoryPath() {
+        return repositoryPath;
     }
 
-    public String getGitPassword() {
-        return gitPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public String getGitPassPhrase() {
-        return gitPassPhrase;
+    public String getPassphrase() {
+        return passphrase;
     }
 
-    public String getGitLocalDirectory() {
-        return gitLocalDirectory;
+    public String getLocalDirectory() {
+        return localDirectory;
     }
 
     public String getReferenceAttribute() {
@@ -81,5 +82,9 @@ public class Configuration {
 
     public int getTimeoutMillis() {
         return timeoutMillis;
+    }
+
+    public String getWatchedBranch() {
+        return watchedBranch;
     }
 }
