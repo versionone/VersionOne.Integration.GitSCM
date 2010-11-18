@@ -31,18 +31,23 @@ public class GitConnector implements IGitConnector {
     private final int timeout = 100;
 
     private final String url;
+
+    private final String password;
+    private final String passphrase;
     private final String localDirectory;
 
     private final IDbStorage storage;
 
-    public GitConnector(String username, String password, String passphrase, String url, String localDirectory, IDbStorage storage) {
+    public GitConnector(String password, String passphrase, String url, String localDirectory, IDbStorage storage) {
         this.storage = storage;
+
+        this.password = password;
+        this.passphrase = passphrase;
 
         this.url = url;
         this.localDirectory = localDirectory;
 
         SshSessionFactory.installWithCredentials(password, passphrase);
-        Authenticator.install(username, password);
 
         initRepository();
     }

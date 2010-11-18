@@ -10,7 +10,7 @@ public class GitService {
     public GitService(Configuration configuration) {
         this.configuration = configuration;
         storage = new DbStorage();
-        connector = new GitConnector(null, null, null, null, null, storage);
+        connector = new GitConnector(configuration.getGitPassword(), configuration.getGitPassPhrase(), configuration.getGitPath(), configuration.getGitLocalDirectory(), storage);
     }
 
     public void onInterval() {
