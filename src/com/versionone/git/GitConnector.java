@@ -8,11 +8,9 @@ import org.eclipse.jgit.lib.NullProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevSort;
-import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.*;
-import org.eclipse.jgit.treewalk.TreeWalk;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +24,6 @@ public class GitConnector implements IGitConnector {
 
     private FileRepository local;
     private RemoteConfig remoteConfig;
-    private FetchResult fetchResult;
 
     private final String remoteBranchName = "refs/heads/master";
     private final String remoteName = "origin";
@@ -34,9 +31,6 @@ public class GitConnector implements IGitConnector {
     private final int timeout = 100;
 
     private final String url;
-    private final String username;
-    private final String password;
-    private final String passphrase;
     private final String localDirectory;
 
     private final IDbStorage storage;
@@ -44,17 +38,13 @@ public class GitConnector implements IGitConnector {
     public GitConnector(String username, String password, String passphrase, String url, String localDirectory, IDbStorage storage) {
         this.storage = storage;
 
-        this.username = username;
-        this.password = password;
-        this.passphrase = passphrase;
         this.url = url;
         this.localDirectory = localDirectory;
 
         SshSessionFactory.installWithCredentials(password, passphrase);
         Authenticator.install(username, password);
 
-        // TODO uncomment when configuration is ready
-        // initRepository();
+        initRepository();
     }
 
     private void initRepository() {
@@ -93,18 +83,10 @@ public class GitConnector implements IGitConnector {
             System.out.println("Author =  " + commit.getAuthorIdent().getName());
             List<String> branchNames = getBranchNames(commit);
             System.out.println("BranchNames:");
+
             for (String name : branchNames) {
                 System.out.println(name);
             }
-
-
-            System.out.println("Files:");
-
-            TreeWalk treeWalk = new TreeWalk(local);
-
-            RevTree tree = commit.getTree();
-
-            System.out.println(" -----------  ");
         }
     }
 
@@ -166,12 +148,11 @@ public class GitConnector implements IGitConnector {
 		local.getConfig().save();
     }
 
-	private void doFetch()
-			throws NotSupportedException, TransportException {
+	private void doFetch() throws NotSupportedException, TransportException {
 		final Transport tn = Transport.open(local, remoteConfig);
 		tn.setTimeout(this.timeout);
 		try {
-			fetchResult = tn.fetch(NullProgressMonitor.INSTANCE, null);
+			FetchResult fetchResult = tn.fetch(NullProgressMonitor.INSTANCE, null);
 		} finally {
 			tn.close();
 		}
@@ -179,14 +160,15 @@ public class GitConnector implements IGitConnector {
 
 	private static boolean deleteDirectory(File dir) {
 		if (dir.isDirectory()) {
-			String[] children = dir.list();
-			for (int i=0; i<children.length; i++) {
-				boolean success = deleteDirectory(new File(dir, children[i]));
-				if (!success) {
+			for (String child : dir.list()) {
+				boolean success = deleteDirectory(new File(dir, child));
+
+                if (!success) {
 					return false;
 				}
 			}
 		}
-		return dir.delete();
+
+        return dir.delete();
 	}
 }
