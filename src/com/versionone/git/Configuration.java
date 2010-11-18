@@ -28,6 +28,16 @@ public class Configuration {
         timeoutMillis = 5000;
     }
 
+    public static Configuration mock() {
+        Configuration configuration = new Configuration();
+        configuration.repositoryPath = "git@github.com:versionone/ExigenTest.git";
+        configuration.referenceExpression = "[a-zA-Z]+";
+        configuration.passphrase = "v10000";
+        configuration.watchedBranch = "master";
+        configuration.localDirectory = "c:/temp/checkout_v1";
+        return configuration;
+    }
+
     public Boolean getProcessingThroughBranchesName() {
         return isProcessingThroughBranchesName;
     }

@@ -16,7 +16,11 @@ public class Main {
         Configuration configuration = new Configuration();
         LOG.info("Configuration loaded..");
 
-        timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
+        try {
+            timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
+        } catch(ConnectorException e) {
+            System.exit(-1);
+        }
 
         while(true) { /* do nothing, the job is done in background thread */ }
     }
@@ -25,7 +29,7 @@ public class Main {
 
         private final GitService service;
 
-        GitPollTask(Configuration configuration) {
+        GitPollTask(Configuration configuration) throws ConnectorException {
             LOG.info("Creating service...");
             service = new GitService(configuration);
             LOG.info("Service created.");
@@ -34,7 +38,11 @@ public class Main {
         @Override
         public void run() {
             LOG.info("Running processing..");
-            service.onInterval();
+            try {
+                service.onInterval();
+            } catch(ConnectorException e) {
+                System.out.println("Fail: " + e.getInnerException().getMessage());
+            }
             LOG.info("Processing completed.");
         }
     }

@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class GitConnector implements IGitConnector {
 
@@ -56,12 +57,44 @@ public class GitConnector implements IGitConnector {
     }
 
     public void initRepository() throws ConnectorException {
-        // TODO
+        try {
+            cloneRepository();
+            doFetch();
+        } catch (IOException e) {
+            throw new ConnectorException(e);
+        } catch (URISyntaxException e) {
+            throw new ConnectorException(e);
+        }
     }
 
     public List<ChangeSetInfo> getBranchCommits() throws ConnectorException {
-        // TODO
-        return null;
+        try {
+            doFetch();
+
+            // TODO extract class and move interface off connector
+            IChangeSetListBuilder builder = new IChangeSetListBuilder() {
+                private final List<ChangeSetInfo> changes = new LinkedList<ChangeSetInfo>();
+                private final Pattern regex = Pattern.compile(regexPattern);
+
+                public IChangeSetListBuilder add(ChangeSetInfo info) {
+                    if(regex.matcher(info.getMessage()).find()) {
+                        changes.add(info);
+                    }
+                    
+                    return this;
+                }
+
+                public List<ChangeSetInfo> build() {
+                    return changes;
+                }
+            };
+            traverseChanges(builder);
+            return builder.build();
+        } catch(NotSupportedException e) {
+            throw new ConnectorException(e);
+        } catch(TransportException e) {
+            throw new ConnectorException(e);
+        }
     }
 
     public List<ChangeSetInfo> getMergedBranches() throws ConnectorException {
@@ -69,19 +102,7 @@ public class GitConnector implements IGitConnector {
         return null;
     }
 
-    private void initRepositoryAndPrintContent() {
-        try {
-            //checkoutBranch(branchName);
-            cloneRepository();
-            doFetch();
-            //doCheckout();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (URISyntaxException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-
+    private List<ChangeSetInfo> traverseChanges(IChangeSetListBuilder builder) throws ConnectorException {
         Map<String, Ref> refs = local.getAllRefs();
         for (String key : refs.keySet()) {
             System.out.println(key + " - " + refs.get(key).getName());
@@ -91,24 +112,24 @@ public class GitConnector implements IGitConnector {
         walk.sort(RevSort.COMMIT_TIME_DESC);
         walk.sort(RevSort.TOPO);
         try {
-            AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/master");
+            AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
             walk.markStart(walk.parseCommit(headId));//
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new ConnectorException(e);
         }
 
         for (RevCommit commit : walk) {
-            System.out.println("Id = " + commit.getId().getName());
-            System.out.println("Message =  " + commit.getFullMessage().trim());
-            System.out.println("Date =  " + new Date(commit.getCommitTime()));
-            System.out.println("Author =  " + commit.getAuthorIdent().getName());
-            List<String> branchNames = getBranchNames(commit);
-            System.out.println("BranchNames:");
+            ChangeSetInfo info = new ChangeSetInfo(
+                    commit.getAuthorIdent().getName(),
+                    commit.getFullMessage().trim(),
+                    commit.getId().getName(),
+                    new Date(commit.getCommitTime()));
+            builder.add(info);
 
-            for (String name : branchNames) {
-                System.out.println(name);
-            }
+            List<String> branchNames = getBranchNames(commit);
         }
+
+        return builder.build();
     }
 
     private List<String> getBranchNames(RevCommit commit) {
@@ -158,9 +179,7 @@ public class GitConnector implements IGitConnector {
 
 		remoteConfig.update(local.getConfig());
 
-		// branch is like 'Constants.R_HEADS + branchName', we need only
-		// the 'branchName' part
-		String branchName = remoteBranchName;//.substring(Constants.R_HEADS.length());
+		String branchName = remoteBranchName;
 
 		// setup the default remote branch for branchName
 		local.getConfig().setString("branch", branchName, "remote", remoteName); //$NON-NLS-1$ //$NON-NLS-2$
@@ -172,7 +191,8 @@ public class GitConnector implements IGitConnector {
 	private void doFetch() throws NotSupportedException, TransportException {
 		final Transport tn = Transport.open(local, remoteConfig);
 		tn.setTimeout(this.timeout);
-		try {
+
+        try {
 			FetchResult fetchResult = tn.fetch(NullProgressMonitor.INSTANCE, null);
 		} finally {
 			tn.close();
@@ -192,4 +212,9 @@ public class GitConnector implements IGitConnector {
 
         return dir.delete();
 	}
+
+    private interface IChangeSetListBuilder {
+        IChangeSetListBuilder add(ChangeSetInfo changeSet);
+        List<ChangeSetInfo> build();
+    }
 }
