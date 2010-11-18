@@ -5,7 +5,7 @@
     <property name="compiler.debug" value="on"/>
     <property name="compiler.generate.no.warnings" value="off"/>
     <property name="compiler.max.memory" value="128m"/>
-    <property name="compiler.args" value=""/>
+    <property name="compiler.args" value="app.jar:lib/*"/>
 
     <property name="ver.major" value="9"/>
     <property name="ver.minor" value="0"/>
@@ -20,6 +20,7 @@
     <property name="base.dir" value="."/>
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="src.dir" value="${basedir}/src"/>
+    <property name="res.dir" value="${basedir}/resources"/>    
     <property name="distr.dir" value="${basedir}/distr"/>
     <property name="tests.dir" value="${basedir}/tests"/>
 
@@ -75,39 +76,68 @@
         <mkdir dir="${bin.product.dir}"/>
         <javac destdir="${bin.product.dir}" debug="${compiler.debug}"
             nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}"
-            fork="true">
+            fork="true" >
             <compilerarg line="${compiler.args}"/>
             <classpath refid="classpath"/>
 
             <src path="${tests.dir}"/>
             <src path="${src.dir}"/>
+            <src path="${res.dir}"/>
         </javac>
 
     </target>
+
+    <path id="base.classpath">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+    </path>
+    <pathconvert property="manifest.classpath" pathsep=" ">
+      <path refid="base.classpath"/>
+      <mapper>
+        <chainedmapper>
+           <flattenmapper/>
+           <globmapper from="*.jar" to="lib/*.jar"/>
+        </chainedmapper>
+      </mapper>
+    </pathconvert>
+
 
     <!-- Jar creation -->
     <target name="integration.build.git" depends="integration.compile.git">
         <mkdir dir="${distr.dir}"/>
 
+        <copy todir="${bin.product.dir}/">
+            <fileset dir="${res.dir}/">
+                <include name="**/*.*"/>
+            </fileset>
+        </copy>
+        <copy file="${base.dir}/log4j.properties"
+            tofile="${bin.product.dir}/log4j.properties"/>
+
         <jar destfile="${distr.dir}/${jar.filename}" duplicate="preserve">
             <zipfileset dir="${bin.product.dir}" prefix=""/>
             <manifest>
                 <attribute name="BuiltBy" value="VersionOne"/>
-                <attribute name="Main-Class" value="GitConnector"/>
+                <attribute name="Main-Class" value="com.versionone.git.Main"/>
                 <attribute name="Manifest-Version" value="1.0"/>
                 <attribute name="BuildVersion" value="${build.version}"/>
                 <attribute name="BuildRev" value="${ver.build}"/>
-                <attribute name="Class-Path" value="org.eclipse.jgit-0.9.3.jar jsch-0.1.44.jar /"/>
+                <attribute name="Class-Path" value="${manifest.classpath}"/>
             </manifest>
         </jar>
     </target>
-
 
     <!-- package -->
     <target name="integration.package.git" depends="integration.build.git">
         <mkdir dir="${publish.git.dir}"/>
 
         <copy file="${distr.dir}/${jar.filename}" todir="${publish.git.dir}"/>
+
+        <copy todir="${publish.git.dir}/lib">
+            <fileset dir="${lib.dir}/">
+                <exclude name="${lib.dir}/junit-4.4.jar"/>
+            </fileset>
+        </copy>
+        <!--
         <copy file="${lib.dir}/VersionOne.APIClient.jar"
             tofile="${publish.git.dir}/VersionOne.APIClient.jar"/>
         <copy file="${lib.dir}/jsch-0.1.44.jar"
@@ -116,6 +146,7 @@
             tofile="${publish.git.dir}/org.eclipse.jgit-0.9.3.jar"/>
         <copy file="${lib.dir}/log4j-1.2.16.jar"
             tofile="${publish.git.dir}/log4j-1.2.16.jar"/>
+        -->
         <!--
 		<move todir="${publish.git.dir}/../doc">
 			<fileset dir="${doc.dir}"/>
@@ -130,9 +161,7 @@
 		<zip destfile="${publish.dir}/${zip.source.filename}">
 			<fileset dir="${base.dir}">
 				<include name="build.xml"/>
-				<!--<include name="build.properties"/>-->
-				<!--<include name="stripDTD.xsl"/>-->
-				<!--<include name="res/**/*"/>-->
+				<include name="resources/**/*"/>
 				<include name="src/**/*"/>
 				<include name="tests/**/*"/>
 				<include name="lib/**/*"/>
@@ -142,15 +171,10 @@
     </target>
 
     <!-- covarage -->
-    <target name="testing.init">
-    </target>
-
     <target name="coverage.clean">
-        <delete dir="${coverage.dir}"/>
-        <delete file="${coverage.file}"/>
     </target>
 
-    <target name="testing" depends="integration.compile.git, testing.init">
+    <target name="testing" depends="integration.compile.git">
         <mkdir dir="${junit.output.dir}"/>
 
         <junit fork="true" printsummary="withOutAndErr">
