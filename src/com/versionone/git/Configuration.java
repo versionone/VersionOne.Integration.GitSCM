@@ -18,6 +18,12 @@ public class Configuration {
     //Link
     private String linkNameTemplate;
     private String linkUrlTemplate;
+    //processing type
+    private Boolean isProcessingThroughBranchesName;
+
+    public Boolean getProcessingThroughBranchesName() {
+        return isProcessingThroughBranchesName;
+    }
 
     public String getLinkNameTemplate() {
         return linkNameTemplate;
