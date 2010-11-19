@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
     <VersionOneConnection>
-        <Path>http://server/versionone/</Path>
+        <Path>http://VersionOne.com/VersionOne/</Path>
         <UserName>admin</UserName>
-        <Password>admin</Password>
+        <Password>adminpass</Password>
     </VersionOneConnection>
     <GitSettings>
         <Path>github.com/Account.git</Path>
@@ -26,7 +26,7 @@
 
     <Link>
         <Name>ChangeSet: {0}</Name>
-        <URL>http://MySourceControlServer/subversion/viewvc.cgi?view=rev&amp;revision={0}</URL>
+        <URL>http://github.com/account/{0}</URL>
         <OnMenu>true</OnMenu>
     </Link>
 </Configuration>

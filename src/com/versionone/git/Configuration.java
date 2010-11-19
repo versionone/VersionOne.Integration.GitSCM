@@ -24,7 +24,7 @@ public class Configuration {
 
     @XmlElement(name = "BranchProcessing")
     private Boolean isProcessingThroughBranchesName;
-    @XmlElement(name = "ReferencAattribute")
+    @XmlElement(name = "ReferenceAttribute")
     private String referenceAttribute;
     @XmlElement(name = "ReferenceExpression")
     private String referenceExpression;
@@ -38,33 +38,50 @@ public class Configuration {
     private Configuration() {
     }
 
-
+    /***
+     * Load configuration.
+     * @return configuration
+     */
     public static Configuration getInstance() {
-        if (configuration == null) {
-            InputStream stream = null;
-            try {
-                final Class<Configuration> thisClass = Configuration.class;
-                JAXBContext jc = JAXBContext.newInstance(thisClass);
+        return getInstance("configuration.xml");
+    }
 
-                Unmarshaller um = jc.createUnmarshaller();
-                stream = new FileInputStream("configuration.xml");
-                configuration = (Configuration) um.unmarshal(stream);
-            } catch (JAXBException ex) {
-                LOG.warn("Can't use configuration", ex);
-                configuration = new Configuration();
-            } catch (FileNotFoundException ex) {
-                LOG.warn("Can't load configuration.xml", ex);
-            } finally {
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (IOException ex) {
-                        // Do nothing
-                    }
+    /***
+     * Load specify configuration. 
+     * @param fullPathToConfig full path to config file (include file)
+     * @return configuration
+     */
+    public static Configuration getInstance(String fullPathToConfig) {
+        if (configuration == null) {
+            configuration = loadConfiguration(fullPathToConfig);
+        }
+        return configuration;
+    }
+
+    private static Configuration loadConfiguration(String fileName) {
+        Configuration config = null;
+        InputStream stream = null;
+        try {
+            final Class<Configuration> thisClass = Configuration.class;
+            JAXBContext jc = JAXBContext.newInstance(thisClass);
+
+            Unmarshaller um = jc.createUnmarshaller();
+            stream = new FileInputStream(fileName);
+            config = (Configuration) um.unmarshal(stream);
+        } catch (JAXBException ex) {
+            LOG.warn("Can't use configuration", ex);
+        } catch (FileNotFoundException ex) {
+            LOG.warn("Can't load configuration.xml", ex);
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException ex) {
+                    // Do nothing
                 }
             }
         }
-        return configuration;
+        return config;
     }
 
     public VersionOneConnection getVersionOneConnection() {
