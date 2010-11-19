@@ -6,9 +6,9 @@
         <password>admin</password>
     </versiononeconnection>
     <gitsettings>
-        <path>git@github.com:versionone/ExigenTest.git</path>
-        <password>Rmvjej39($c_</password>
-        <sshpassphrase>versionone</sshpassphrase>
+        <path>github.com/path</path>
+        <password>password</password>
+        <sshpassphrase>pass_phrase</sshpassphrase>
         <watchedbranchname>master</watchedbranchname>
         <localdirectory>e:/gittmp/</localdirectory>
     </gitsettings>
