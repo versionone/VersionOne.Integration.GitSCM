@@ -10,10 +10,11 @@ public class GitService {
     private final IGitConnector connector;
 
     public GitService(Configuration config) throws ConnectorException {
-        configuration = Configuration.mock();
+        configuration = config;
         storage = new DbStorage();
-        connector = new GitConnector(configuration.getPassword(), configuration.getPassphrase(), 
-                configuration.getRepositoryPath(), configuration.getWatchedBranch(), configuration.getLocalDirectory(),
+        Configuration.GitSettings gitSettings = configuration.getGitSettings();
+        connector = new GitConnector(gitSettings.getPassword(), gitSettings.getPassphrase(),
+                gitSettings.getRepositoryPath(), gitSettings.getWatchedBranch(), gitSettings.getLocalDirectory(),
                 configuration.getReferenceExpression(), storage);
         connector.cleanupLocalDirectory();
         connector.initRepository();

@@ -8,7 +8,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.Collection;
+import java.util.List;
 
 public class DbStorage implements IDbStorage {
     private final Session session;
@@ -22,7 +22,7 @@ public class DbStorage implements IDbStorage {
         session = factory.openSession();
     }
 
-    public Collection<PersistentChange> getPersistedChanges() {
+    public List<PersistentChange> getPersistedChanges() {
         return getSession().createCriteria(PersistentChange.class).list(); 
     }
 

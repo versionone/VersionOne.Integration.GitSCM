@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] arg) {
         // TODO parse configuration
         LOG.info("Loading config..");
-        Configuration configuration = new Configuration();
+        Configuration configuration = Configuration.getInstance();
         LOG.info("Configuration loaded..");
 
         try {

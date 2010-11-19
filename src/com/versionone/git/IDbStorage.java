@@ -1,9 +1,9 @@
 package com.versionone.git;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface IDbStorage {
-    Collection<PersistentChange> getPersistedChanges();
+    List<PersistentChange> getPersistedChanges();
     void persistChange(PersistentChange change);
     boolean isChangePersisted(PersistentChange change);
 }
