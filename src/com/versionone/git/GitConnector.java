@@ -1,5 +1,6 @@
 package com.versionone.git;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.AnyObjectId;
@@ -37,6 +38,7 @@ public class GitConnector implements IGitConnector {
     private final String watchedBranch;
 
     private final IDbStorage storage;
+    private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public GitConnector(String password, String passphrase, String url, String watchedBranch,
                         String localDirectory, String regexPattern, IDbStorage storage) {
@@ -59,10 +61,12 @@ public class GitConnector implements IGitConnector {
         try {
             cloneRepository();
             doFetch();
-        } catch (IOException e) {
-            throw new ConnectorException(e);
-        } catch (URISyntaxException e) {
-            throw new ConnectorException(e);
+        } catch (IOException ex) {
+            LOG.fatal(ex);
+            throw new ConnectorException(ex);
+        } catch (URISyntaxException ex) {
+            LOG.fatal(ex);
+            throw new ConnectorException(ex);
         }
     }
 
@@ -78,10 +82,12 @@ public class GitConnector implements IGitConnector {
 
             traverseChanges(builder);
             return builder.build();
-        } catch(NotSupportedException e) {
-            throw new ConnectorException(e);
-        } catch(TransportException e) {
-            throw new ConnectorException(e);
+        } catch(NotSupportedException ex) {
+            LOG.fatal(ex);
+            throw new ConnectorException(ex);
+        } catch(TransportException ex) {
+            LOG.fatal(ex);
+            throw new ConnectorException(ex);
         }
     }
 
@@ -102,8 +108,9 @@ public class GitConnector implements IGitConnector {
         try {
             AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
             walk.markStart(walk.parseCommit(headId));//
-        } catch (IOException e) {
-            throw new ConnectorException(e);
+        } catch (IOException ex) {
+            LOG.fatal(ex);
+            throw new ConnectorException(ex);
         }
 
         for (RevCommit commit : walk) {

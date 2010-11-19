@@ -12,43 +12,32 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-@XmlRootElement(name="configuration")
+@XmlRootElement(name="Configuration")
 public class Configuration {
 
-    @XmlElement(name = "versiononeconnection")
+    @XmlElement(name = "VersionOneConnection")
     private VersionOneConnection versionOneConnection;
-    @XmlElement(name = "gitsettings")
+    @XmlElement(name = "GitSettings")
     private GitSettings gitSettings;
-    @XmlElement(name = "link")
+    @XmlElement(name = "Link")
     private Link link;
 
-    @XmlElement(name = "branchprocessing")
+    @XmlElement(name = "BranchProcessing")
     private Boolean isProcessingThroughBranchesName;
-    @XmlElement(name = "referenceattribute")
+    @XmlElement(name = "ReferencAattribute")
     private String referenceAttribute;
-    @XmlElement(name = "referenceexpression")
+    @XmlElement(name = "ReferenceExpression")
     private String referenceExpression;
-    @XmlElement(name = "timeout")
+    @XmlElement(name = "Timeout")
     private int timeoutMillis;
 
     private static Configuration configuration;
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
 
-    public Configuration() {
-        timeoutMillis = 5000;
+    private Configuration() {
     }
 
-    /*
-    public static Configuration mock() {
-        Configuration configuration = new Configuration();
-        configuration.repositoryPath = "git@github.com:versionone/ExigenTest.git";
-        configuration.referenceExpression = "[a-zA-Z]+";
-        configuration.passphrase = "v10000";
-        configuration.watchedBranch = "master";
-        configuration.localDirectory = "c:/temp/checkout_v1";
-        return configuration;
-    }*/
 
     public static Configuration getInstance() {
         if (configuration == null) {
@@ -58,8 +47,6 @@ public class Configuration {
                 JAXBContext jc = JAXBContext.newInstance(thisClass);
 
                 Unmarshaller um = jc.createUnmarshaller();
-                //stream = thisClass.getResourceAsStream(thisClass.getSimpleName() + ".xml");
-                //stream = new FileInputStream("e:\\WORK_VERSION_ONE\\V1Integration\\Java\\Git\\configuration.xml");
                 stream = new FileInputStream("configuration.xml");
                 configuration = (Configuration) um.unmarshal(stream);
             } catch (JAXBException ex) {
@@ -109,11 +96,11 @@ public class Configuration {
     }
 
     public static class VersionOneConnection {
-        @XmlElement(name = "path")
+        @XmlElement(name = "Path")
         private String versionOnePath;
-        @XmlElement(name = "username")
+        @XmlElement(name = "UserName")
         private String versionOneUserName;
-        @XmlElement(name = "password")
+        @XmlElement(name = "Password")
         private String versionOnePassword;
 
         public String getPath() {
@@ -128,15 +115,15 @@ public class Configuration {
     }
 
     public static class GitSettings {
-        @XmlElement(name = "path")
+        @XmlElement(name = "Path")
         private String repositoryPath;
-        @XmlElement(name = "watchedbranchname")
+        @XmlElement(name = "WatchedBranchName")
         private String watchedBranch;
-        @XmlElement(name = "password")
+        @XmlElement(name = "Password")
         private String password;
-        @XmlElement(name = "sshpassphrase")
+        @XmlElement(name = "SshPassphrase")
         private String passphrase;
-        @XmlElement(name = "localdirectory")
+        @XmlElement(name = "LocalDirectory")
         private String localDirectory;       
 
         public String getRepositoryPath() {
