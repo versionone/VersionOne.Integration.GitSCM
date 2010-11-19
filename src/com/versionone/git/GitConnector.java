@@ -37,13 +37,10 @@ public class GitConnector implements IGitConnector {
     private final String regexPattern;
     private final String watchedBranch;
 
-    private final IDbStorage storage;
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public GitConnector(String password, String passphrase, String url, String watchedBranch,
-                        String localDirectory, String regexPattern, IDbStorage storage) {
-        this.storage = storage;
-
+                        String localDirectory, String regexPattern) {
         this.url = url;
         this.watchedBranch = watchedBranch;
         this.localDirectory = localDirectory;
