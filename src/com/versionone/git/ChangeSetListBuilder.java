@@ -9,8 +9,8 @@ public abstract class ChangeSetListBuilder {
     private final List<ChangeSetInfo> changes = new LinkedList<ChangeSetInfo>();
     private final Pattern regexp;
 
-    public ChangeSetListBuilder(String pattern) {
-        regexp = Pattern.compile(pattern);
+    public ChangeSetListBuilder(Pattern pattern) {
+        regexp = pattern;
     }
 
     protected boolean matchByPattern(String valueToMatch) {

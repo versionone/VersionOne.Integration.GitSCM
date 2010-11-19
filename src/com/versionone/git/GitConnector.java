@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GitConnector implements IGitConnector {
 
@@ -34,8 +36,9 @@ public class GitConnector implements IGitConnector {
     private final String url;
 
     private final String localDirectory;
-    private final String regexPattern;
     private final String watchedBranch;
+
+    private final Pattern regexPattern;
 
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
@@ -44,7 +47,7 @@ public class GitConnector implements IGitConnector {
         this.url = url;
         this.watchedBranch = watchedBranch;
         this.localDirectory = localDirectory;
-        this.regexPattern = regexPattern;
+        this.regexPattern = Pattern.compile(regexPattern);
 
         SshSessionFactory.installWithCredentials(password, passphrase);
 
@@ -77,7 +80,7 @@ public class GitConnector implements IGitConnector {
                 }
             };
 
-            traverseChanges(builder);
+            traverseChanges(builder, true);
             return builder.build();
         } catch(NotSupportedException ex) {
             LOG.fatal(ex);
@@ -89,11 +92,28 @@ public class GitConnector implements IGitConnector {
     }
 
     public List<ChangeSetInfo> getMergedBranches() throws ConnectorException {
-        // TODO
-        return null;
+        try {
+            doFetch();
+
+            ChangeSetListBuilder builder = new ChangeSetListBuilder(regexPattern) {
+                public boolean shouldAdd(ChangeSetInfo changeSet) {
+                    return changeSet.getReferences().size() > 0;
+                }
+            };
+
+            traverseChanges(builder, false);
+            return builder.build();
+        } catch(NotSupportedException ex) {
+            LOG.fatal(ex);
+            throw new ConnectorException(ex);
+        } catch(TransportException ex) {
+            LOG.fatal(ex);
+            throw new ConnectorException(ex);
+        }
     }
 
-    private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder) throws ConnectorException {
+    private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder, boolean useCommitMessages)
+            throws ConnectorException {
         Map<String, Ref> refs = local.getAllRefs();
         for (String key : refs.keySet()) {
             System.out.println(key + " - " + refs.get(key).getName());
@@ -116,12 +136,28 @@ public class GitConnector implements IGitConnector {
                     commit.getFullMessage().trim(),
                     commit.getId().getName(),
                     new Date(commit.getCommitTime()));
-            builder.add(info);
 
-            List<String> branchNames = getBranchNames(commit);
+            if(useCommitMessages) {
+                fillReferences(info.getMessage(), info.getReferences());
+            } else {
+                List<String> branches = getBranchNames(commit);
+                for(String branch : branches) {
+                    fillReferences(branch, info.getReferences());
+                }
+            }
+
+            builder.add(info);
         }
 
         return builder.build();
+    }
+
+    private void fillReferences(String message, List<String> references) {
+        Matcher matcher = regexPattern.matcher(message);
+
+        while(matcher.find()) {
+            references.add(matcher.group());
+        }
     }
 
     private List<String> getBranchNames(RevCommit commit) {
