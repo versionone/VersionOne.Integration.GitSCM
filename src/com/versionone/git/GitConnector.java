@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class GitConnector implements IGitConnector {
 
@@ -71,23 +70,12 @@ public class GitConnector implements IGitConnector {
         try {
             doFetch();
 
-            // TODO extract class and move interface off connector
-            IChangeSetListBuilder builder = new IChangeSetListBuilder() {
-                private final List<ChangeSetInfo> changes = new LinkedList<ChangeSetInfo>();
-                private final Pattern regex = Pattern.compile(regexPattern);
-
-                public IChangeSetListBuilder add(ChangeSetInfo info) {
-                    if(regex.matcher(info.getMessage()).find()) {
-                        changes.add(info);
-                    }
-                    
-                    return this;
-                }
-
-                public List<ChangeSetInfo> build() {
-                    return changes;
+            ChangeSetListBuilder builder = new ChangeSetListBuilder(regexPattern) {
+                public boolean shouldAdd(ChangeSetInfo changeSet) {
+                    return matchByPattern(changeSet.getMessage());
                 }
             };
+
             traverseChanges(builder);
             return builder.build();
         } catch(NotSupportedException e) {
@@ -102,7 +90,7 @@ public class GitConnector implements IGitConnector {
         return null;
     }
 
-    private List<ChangeSetInfo> traverseChanges(IChangeSetListBuilder builder) throws ConnectorException {
+    private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder) throws ConnectorException {
         Map<String, Ref> refs = local.getAllRefs();
         for (String key : refs.keySet()) {
             System.out.println(key + " - " + refs.get(key).getName());
@@ -212,9 +200,4 @@ public class GitConnector implements IGitConnector {
 
         return dir.delete();
 	}
-
-    private interface IChangeSetListBuilder {
-        IChangeSetListBuilder add(ChangeSetInfo changeSet);
-        List<ChangeSetInfo> build();
-    }
 }
