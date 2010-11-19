@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <versiononeconnection>
+        <path>http://server/versionone/</path>
+        <username>admin</username>
+        <password>admin</password>
+    </versiononeconnection>
+    <gitsettings>
+        <path>git@github.com:versionone/ExigenTest.git</path>
+        <password>Rmvjej39($c_</password>
+        <sshpassphrase>versionone</sshpassphrase>
+        <watchedbranchname>master</watchedbranchname>
+        <localdirectory>e:/gittmp/</localdirectory>
+    </gitsettings>
+
+    <branchprocessing>false</branchprocessing>
+    <timeout>10000</timeout>
+    <!-- 
+        === Sample Regexes ===
+        To Match S-01001 (Matches "S-01001"):					[A-Z]{1,2}-[0-9]+
+        To match #Reference (matches only "Reference"):			(?<=#)[a-zA-Z]+\b
+        To match "V1:Reference"  (matches only "Reference"):	(?<=V1:)[a-zA-Z]+\b
+    -->
+    <referenceattribute>Number</referenceattribute>
+    <referenceexpression><![CDATA[[A-Z]{1,2}-[0-9]+]]></referenceexpression>
+
+    <link>
+        <Name>ChangeSet: {0}</Name>
+        <URL>http://MySourceControlServer/subversion/viewvc.cgi?view=rev&amp;revision={0}</URL>
+        <OnMenu>True</OnMenu>
+    </link>
+</configuration>
