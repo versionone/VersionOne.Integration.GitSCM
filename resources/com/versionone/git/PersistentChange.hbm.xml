@@ -8,6 +8,6 @@
     <id name="id" column="Id">
         <generator class="org.hibernate.id.TableHiLoGenerator"></generator>
     </id>
-    <property name="hash" unique="true" not-null="true" column="Hash" length="32" />
+    <property name="hash" unique="true" not-null="true" column="Hash" length="50" />
 </class>
 </hibernate-mapping>
