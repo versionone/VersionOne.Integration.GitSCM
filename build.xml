@@ -133,27 +133,13 @@
         <mkdir dir="${publish.git.dir}"/>
 
         <copy file="${distr.dir}/${jar.filename}" todir="${publish.git.dir}"/>
+        <copy file="${base.dir}/configuration.xml" todir="${publish.git.dir}"/>
 
         <copy todir="${publish.git.dir}/lib">
             <fileset dir="${lib.dir}/">
                 <exclude name="${lib.dir}/junit-4.4.jar"/>
             </fileset>
         </copy>
-        <!--
-        <copy file="${lib.dir}/VersionOne.APIClient.jar"
-            tofile="${publish.git.dir}/VersionOne.APIClient.jar"/>
-        <copy file="${lib.dir}/jsch-0.1.44.jar"
-            tofile="${publish.git.dir}/jsch-0.1.44.jar"/>
-        <copy file="${lib.dir}/org.eclipse.jgit-0.9.3.jar"
-            tofile="${publish.git.dir}/org.eclipse.jgit-0.9.3.jar"/>
-        <copy file="${lib.dir}/log4j-1.2.16.jar"
-            tofile="${publish.git.dir}/log4j-1.2.16.jar"/>
-        -->
-        <!--
-		<move todir="${publish.git.dir}/../doc">
-			<fileset dir="${doc.dir}"/>
-		</move>
-		-->
 
         <zip destfile="${publish.dir}/${zip.filename}">
             <fileset dir="${publish.dir}/tmpl/"/>
@@ -167,6 +153,8 @@
 				<include name="src/**/*"/>
 				<include name="tests/**/*"/>
 				<include name="lib/**/*"/>
+                <include name="configuration.xml"/>
+                <include name="log4j.properties"/>
 				<!--<include name="DocSource/**/*"/>-->
 			</fileset>
 		</zip>
