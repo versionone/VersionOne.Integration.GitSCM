@@ -165,6 +165,7 @@
 
     <target name="testing" depends="integration.compile.git">
         <mkdir dir="${junit.output.dir}"/>
+        <!-- copy test data for tests -->
         <copy todir="${bin.product.dir}/">
             <fileset dir="${tests.dir}/">
                 <include name="**/*.xml"/>

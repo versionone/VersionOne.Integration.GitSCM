@@ -30,6 +30,10 @@ public class Configuration {
     private String referenceExpression;
     @XmlElement(name = "Timeout")
     private int timeoutMillis;
+    @XmlElement(name = "AlwaysCreate")
+    private boolean alwaysCreate;
+    @XmlElement(name = "ChangeComment")
+    private String changeComment;
 
     private static Configuration configuration;
     private static final Logger LOG = Logger.getLogger("GitIntegration");
@@ -112,6 +116,14 @@ public class Configuration {
         return timeoutMillis;
     }
 
+    public boolean isAlwaysCreate() {
+        return alwaysCreate;
+    }
+
+    public String getChangeComment() {
+        return changeComment;
+    }
+
     public static class VersionOneConnection {
         @XmlElement(name = "Path")
         private String versionOnePath;
@@ -174,7 +186,7 @@ public class Configuration {
         public String getLinkUrlTemplate() {
             return linkUrlTemplate;
         }
-        public Boolean getLinkOnMenu() {
+        public Boolean isLinkOnMenu() {
             return linkOnMenu;
         }
     }

@@ -32,6 +32,8 @@ public class ConfigurationTester {
         Assert.assertEquals("Incorrect reference expression pattern.", "[A-Z]{1,2}-[0-9]+", config.getReferenceExpression());
         Assert.assertEquals("Incorrect link name template.", "ChangeSet: {0}", link.getLinkNameTemplate());
         Assert.assertEquals("Incorrect link URL template.", "http://github.com/account/{0}", link.getLinkUrlTemplate());
-        Assert.assertEquals("Incorrect show on menu settings.", true, link.getLinkOnMenu());
+        Assert.assertEquals("Incorrect show on menu settings.", true, link.isLinkOnMenu());
+        Assert.assertEquals("Incorrect comment for update.", "Updated by VersionOne.ServiceHost", config.getChangeComment());
+        Assert.assertEquals("Incorrect always create settings.", false, config.isAlwaysCreate());
     }
 }
