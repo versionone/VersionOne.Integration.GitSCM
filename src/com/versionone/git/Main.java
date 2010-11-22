@@ -31,7 +31,13 @@ public class Main {
 
         GitPollTask(Configuration configuration) throws ConnectorException {
             LOG.info("Creating service...");
-            service = new GitService(configuration);
+            IDbStorage storage = new DbStorage();
+            Configuration.GitSettings gitSettings = configuration.getGitSettings();
+            IGitConnector connector = new GitConnector(gitSettings.getPassword(), gitSettings.getPassphrase(),
+                gitSettings.getRepositoryPath(), gitSettings.getWatchedBranch(), gitSettings.getLocalDirectory(),
+                configuration.getReferenceExpression());
+            service = new GitService(configuration, storage, connector);
+            service.initialize();
             LOG.info("Service created.");
         }
 

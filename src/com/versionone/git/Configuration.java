@@ -62,6 +62,10 @@ public class Configuration {
         return configuration;
     }
 
+    public static void reset() {
+        configuration = null;
+    }
+
     private static Configuration loadConfiguration(String fileName) {
         Configuration config = null;
         InputStream stream = null;

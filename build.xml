@@ -89,7 +89,11 @@
 
     <path id="base.classpath">
         <fileset dir="${lib.dir}" includes="*.jar">
-            <exclude name="junit-4.4.jar"/> 
+            <exclude name="junit-4.4.jar"/>
+            <exclude name="hamcrest-core-1.1.jar" />
+            <exclude name="hamcrest-library-1.1.jar" />
+            <exclude name="jmock-2.5.1.jar" />
+            <exclude name="jmock-junit4-2.5.1.jar" />
         </fileset>
     </path>
     <pathconvert property="manifest.classpath" pathsep=" ">

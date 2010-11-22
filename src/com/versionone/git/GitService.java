@@ -2,7 +2,7 @@ package com.versionone.git;
 
 import org.apache.log4j.Logger;
 
-import java.util.List;
+import java.util.Collection;
 
 public class GitService {
 
@@ -13,22 +13,23 @@ public class GitService {
 
     private final Logger LOG = Logger.getLogger("GitIntegration");
 
-    public GitService(Configuration config) throws ConnectorException {
+    public GitService(Configuration config, IDbStorage storage, IGitConnector connector) {
         configuration = config;
-        storage = new DbStorage();
-        Configuration.GitSettings gitSettings = configuration.getGitSettings();
-        connector = new GitConnector(gitSettings.getPassword(), gitSettings.getPassphrase(),
-                gitSettings.getRepositoryPath(), gitSettings.getWatchedBranch(), gitSettings.getLocalDirectory(),
-                configuration.getReferenceExpression());
+
+        this.storage = storage;
+        this.connector = connector;
+    }
+
+    public void initialize() throws ConnectorException {
         connector.cleanupLocalDirectory();
         connector.initRepository();
     }
 
     public void onInterval() throws ConnectorException {
-        List<ChangeSetInfo> changes;
+        Collection<ChangeSetInfo> changes;
 
         if(configuration.getProcessingThroughBranchesName()) {
-            throw new UnsupportedOperationException("not yet done, there's a story for it");
+            changes = connector.getMergedBranches();
         } else {
             changes = connector.getBranchCommits();
         }
