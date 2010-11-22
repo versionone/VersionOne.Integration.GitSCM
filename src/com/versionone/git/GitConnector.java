@@ -16,10 +16,7 @@ import org.eclipse.jgit.transport.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,6 +67,7 @@ public class GitConnector implements IGitConnector {
         }
     }
 
+    // TODO refactor, the following methods look almost identical
     public List<ChangeSetInfo> getBranchCommits() throws ConnectorException {
         try {
             doFetch();
