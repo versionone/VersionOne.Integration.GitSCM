@@ -41,9 +41,9 @@ public class GitServiceTester {
         GitService service = new GitService(config, storageMock, gitConnectorMock);
 
         context.checking(new Expectations() {{
-            allowing(gitConnectorMock).cleanupLocalDirectory();
-            allowing(gitConnectorMock).initRepository();
-            allowing(gitConnectorMock).getBranchCommits(); will(returnValue(new LinkedList()));
+            oneOf(gitConnectorMock).cleanupLocalDirectory();
+            oneOf(gitConnectorMock).initRepository();
+            oneOf(gitConnectorMock).getBranchCommits(); will(returnValue(new LinkedList()));
         }});
 
         service.initialize();
@@ -63,17 +63,18 @@ public class GitServiceTester {
         changes.add(secondChange);
 
         context.checking(new Expectations() {{
-            allowing(gitConnectorMock).cleanupLocalDirectory();
-            allowing(gitConnectorMock).initRepository();
-            allowing(gitConnectorMock).getBranchCommits();
+            oneOf(gitConnectorMock).cleanupLocalDirectory();
+            oneOf(gitConnectorMock).initRepository();
+            oneOf(gitConnectorMock).getBranchCommits();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision());
             PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision());
-            allowing(storageMock).isChangePersisted(firstPersistentChange);
+            oneOf(storageMock).isChangePersisted(firstPersistentChange);
                 will(returnValue(false));
-            allowing(storageMock).persistChange(firstPersistentChange);
-            allowing(storageMock).isChangePersisted(secondPersistentChange);
+            oneOf(storageMock).persistChange(firstPersistentChange);
+            oneOf(storageMock).isChangePersisted(secondPersistentChange);
                 will(returnValue(true));
+            never(storageMock).persistChange(secondPersistentChange);
         }});
 
         service.initialize();
@@ -93,18 +94,18 @@ public class GitServiceTester {
         changes.add(secondChange);
 
         context.checking(new Expectations() {{
-            allowing(gitConnectorMock).cleanupLocalDirectory();
-            allowing(gitConnectorMock).initRepository();
-            allowing(gitConnectorMock).getMergedBranches();
+            oneOf(gitConnectorMock).cleanupLocalDirectory();
+            oneOf(gitConnectorMock).initRepository();
+            oneOf(gitConnectorMock).getMergedBranches();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision());
             PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision());
-            allowing(storageMock).isChangePersisted(firstPersistentChange);
+            oneOf(storageMock).isChangePersisted(firstPersistentChange);
                 will(returnValue(false));
-            allowing(storageMock).persistChange(firstPersistentChange);
-            allowing(storageMock).isChangePersisted(secondPersistentChange);
-                will(returnValue(true));
-            //allowing(storageMock).persistChange(secondPersistentChange);
+            oneOf(storageMock).persistChange(firstPersistentChange);
+            oneOf(storageMock).isChangePersisted(secondPersistentChange);
+                will(returnValue(false));
+            oneOf(storageMock).persistChange(secondPersistentChange);
         }});
 
         service.initialize();
