@@ -114,7 +114,6 @@
         </copy>
         <copy file="${base.dir}/log4j.properties"
             tofile="${bin.product.dir}/log4j.properties"/>
-
         <jar destfile="${distr.dir}/${jar.filename}" duplicate="preserve">
             <zipfileset dir="${bin.product.dir}" prefix=""/>
             <manifest>
@@ -166,7 +165,11 @@
 
     <target name="testing" depends="integration.compile.git">
         <mkdir dir="${junit.output.dir}"/>
-
+        <copy todir="${bin.product.dir}/">
+            <fileset dir="${tests.dir}/">
+                <include name="**/*.xml"/>
+            </fileset>
+        </copy>
         <junit fork="true" printsummary="withOutAndErr">
             <classpath>
                 <pathelement location="${bin.product.dir}"/>

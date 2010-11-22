@@ -13,11 +13,8 @@ import java.io.IOException;
 public class ConfigurationTester {
 
     @Test
-    @Ignore //TODO fix test
     public void configTest() throws IOException {
         Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
-        //System.out.println(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
-
         Configuration.VersionOneConnection v1 = config.getVersionOneConnection();
         Configuration.GitSettings git = config.getGitSettings();
         Configuration.Link link = config.getLink();
