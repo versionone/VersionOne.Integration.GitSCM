@@ -34,6 +34,8 @@ public class GitService {
             changes = connector.getBranchCommits();
         }
 
+        LOG.info("Found " + changes.size() + " changes to process.");
+
         for(ChangeSetInfo change : changes) {
             PersistentChange persistentChange = PersistentChange.createNew(change.getRevision());
 

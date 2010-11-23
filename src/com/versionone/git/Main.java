@@ -11,7 +11,6 @@ public class Main {
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public static void main(String[] arg) {
-        // TODO parse configuration
         LOG.info("Loading config..");
         Configuration configuration = Configuration.getInstance();
         LOG.info("Configuration loaded..");
@@ -43,13 +42,15 @@ public class Main {
 
         @Override
         public void run() {
-            LOG.info("Running processing..");
+            LOG.info("Processing new changes...");
+
             try {
                 service.onInterval();
             } catch(ConnectorException e) {
                 System.out.println("Fail: " + e.getInnerException().getMessage());
             }
-            LOG.info("Processing completed.");
+
+            LOG.info("Completed.");
         }
     }
 }
