@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface IGitConnector {
     void cleanupLocalDirectory();
-    void initRepository() throws ConnectorException;
-    List<ChangeSetInfo> getBranchCommits() throws ConnectorException;
-    List<ChangeSetInfo> getMergedBranches() throws ConnectorException;
+    void initRepository() throws GitException;
+    List<ChangeSetInfo> getBranchCommits() throws GitException;
+    List<ChangeSetInfo> getMergedBranches() throws GitException;
 }

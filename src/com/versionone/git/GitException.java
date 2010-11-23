@@ -1,10 +1,10 @@
 package com.versionone.git;
 
-public class ConnectorException extends Exception {
+public class GitException extends Exception {
 
     private final Exception innerException;
 
-    public ConnectorException(Exception ex) {
+    public GitException(Exception ex) {
         innerException = ex;
     }
 

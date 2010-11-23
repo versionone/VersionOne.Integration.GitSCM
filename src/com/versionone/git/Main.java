@@ -17,7 +17,7 @@ public class Main {
 
         try {
             timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
-        } catch(ConnectorException e) {
+        } catch(GitException e) {
             System.exit(-1);
         }
 
@@ -28,7 +28,7 @@ public class Main {
 
         private final GitService service;
 
-        GitPollTask(Configuration configuration) throws ConnectorException {
+        GitPollTask(Configuration configuration) throws GitException {
             LOG.info("Creating service...");
             IDbStorage storage = new DbStorage();
             Configuration.GitSettings gitSettings = configuration.getGitSettings();
@@ -46,7 +46,7 @@ public class Main {
 
             try {
                 service.onInterval();
-            } catch(ConnectorException e) {
+            } catch(GitException e) {
                 System.out.println("Fail: " + e.getInnerException().getMessage());
             }
 

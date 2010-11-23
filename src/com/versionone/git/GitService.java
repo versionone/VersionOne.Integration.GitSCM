@@ -20,12 +20,12 @@ public class GitService {
         this.connector = connector;
     }
 
-    public void initialize() throws ConnectorException {
+    public void initialize() throws GitException {
         connector.cleanupLocalDirectory();
         connector.initRepository();
     }
 
-    public void onInterval() throws ConnectorException {
+    public void onInterval() throws GitException {
         Collection<ChangeSetInfo> changes;
 
         if(configuration.getProcessingThroughBranchesName()) {

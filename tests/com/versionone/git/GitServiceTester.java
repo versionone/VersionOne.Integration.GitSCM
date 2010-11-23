@@ -35,7 +35,7 @@ public class GitServiceTester {
     }
 
     @Test
-    public void emptyChangesetTest() throws ConnectorException {
+    public void emptyChangesetTest() throws GitException {
         final Configuration config = getConfigurationWithBranchProcessingDisabled();
 
         GitService service = new GitService(config, storageMock, gitConnectorMock);
@@ -51,7 +51,7 @@ public class GitServiceTester {
     }
 
     @Test
-    public void branchCommitsTest() throws ConnectorException {
+    public void branchCommitsTest() throws GitException {
         final Configuration config = getConfigurationWithBranchProcessingDisabled();
 
         GitService service = new GitService(config, storageMock, gitConnectorMock);
@@ -82,7 +82,7 @@ public class GitServiceTester {
     }
 
     @Test
-    public void branchNamesTest() throws ConnectorException {
+    public void branchNamesTest() throws GitException {
         final Configuration config = getConfigurationWithBranchProcessingEnabled();
 
         GitService service = new GitService(config, storageMock, gitConnectorMock);

@@ -54,21 +54,21 @@ public class GitConnector implements IGitConnector {
         deleteDirectory(new File(localDirectory));
     }
 
-    public void initRepository() throws ConnectorException {
+    public void initRepository() throws GitException {
         try {
             cloneRepository();
             doFetch();
         } catch (IOException ex) {
             LOG.fatal(ex);
-            throw new ConnectorException(ex);
+            throw new GitException(ex);
         } catch (URISyntaxException ex) {
             LOG.fatal(ex);
-            throw new ConnectorException(ex);
+            throw new GitException(ex);
         }
     }
 
     // TODO refactor, the following methods look almost identical
-    public List<ChangeSetInfo> getBranchCommits() throws ConnectorException {
+    public List<ChangeSetInfo> getBranchCommits() throws GitException {
         try {
             doFetch();
 
@@ -82,14 +82,14 @@ public class GitConnector implements IGitConnector {
             return builder.build();
         } catch(NotSupportedException ex) {
             LOG.fatal(ex);
-            throw new ConnectorException(ex);
+            throw new GitException(ex);
         } catch(TransportException ex) {
             LOG.fatal(ex);
-            throw new ConnectorException(ex);
+            throw new GitException(ex);
         }
     }
 
-    public List<ChangeSetInfo> getMergedBranches() throws ConnectorException {
+    public List<ChangeSetInfo> getMergedBranches() throws GitException {
         try {
             doFetch();
 
@@ -103,15 +103,15 @@ public class GitConnector implements IGitConnector {
             return builder.build();
         } catch(NotSupportedException ex) {
             LOG.fatal(ex);
-            throw new ConnectorException(ex);
+            throw new GitException(ex);
         } catch(TransportException ex) {
             LOG.fatal(ex);
-            throw new ConnectorException(ex);
+            throw new GitException(ex);
         }
     }
 
     private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder, boolean useCommitMessages)
-            throws ConnectorException {
+            throws GitException {
         Map<String, Ref> refs = local.getAllRefs();
         for (String key : refs.keySet()) {
             System.out.println(key + " - " + refs.get(key).getName());
@@ -125,7 +125,7 @@ public class GitConnector implements IGitConnector {
             walk.markStart(walk.parseCommit(headId));//
         } catch (IOException ex) {
             LOG.fatal(ex);
-            throw new ConnectorException(ex);
+            throw new GitException(ex);
         }
 
         for (RevCommit commit : walk) {
