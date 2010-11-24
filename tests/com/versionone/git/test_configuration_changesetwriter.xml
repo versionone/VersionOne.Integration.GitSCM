@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+    <VersionOneConnection>
+        <Path>http://integsrv01/VersionOne10/</Path>
+        <UserName>admin</UserName>
+        <Password>admin</Password>
+    </VersionOneConnection>
+    <GitSettings>
+        <Path>github.com/Account.git</Path>
+        <Password>password</Password>
+        <SshPassphrase>passphrase</SshPassphrase>
+        <WatchedBranchName>master</WatchedBranchName>
+        <LocalDirectory>e:/gittmp/</LocalDirectory>
+    </GitSettings>
+
+    <BranchProcessing>false</BranchProcessing>
+    <Timeout>10000</Timeout>
+    <AlwaysCreate>false</AlwaysCreate>
+    <ChangeComment>Updated by VersionOne.ServiceHost</ChangeComment>
+    <!-- 
+        === Sample Regexes ===
+        To Match S-01001 (Matches "S-01001"):					[A-Z]{1,2}-[0-9]+
+        To match #Reference (matches only "Reference"):			(?<=#)[a-zA-Z]+\b
+        To match "V1:Reference"  (matches only "Reference"):	(?<=V1:)[a-zA-Z]+\b
+    -->
+    <ReferenceAttribute>Number</ReferenceAttribute>
+    <ReferenceExpression><![CDATA[[A-Z]{1,2}-[0-9]+]]></ReferenceExpression>
+
+    <Link>
+        <Name>ChangeSet: {0}</Name>
+        <URL>http://github.com/account/{0}</URL>
+        <OnMenu>true</OnMenu>
+    </Link>
+</Configuration>

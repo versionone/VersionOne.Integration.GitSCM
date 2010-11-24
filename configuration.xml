@@ -28,7 +28,7 @@
 
     <Link>
         <Name>ChangeSet: {0}</Name>
-        <URL>http://MySourceControlServer/subversion/viewvc.cgi?view=rev&amp;revision={0}</URL>
+        <URL>https://github.com/account/repo/commit/{0}</URL>
         <OnMenu>true</OnMenu>
     </Link>
 </Configuration>
