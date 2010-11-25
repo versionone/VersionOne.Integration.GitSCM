@@ -8,24 +8,25 @@ import java.text.DateFormat;
 import java.util.*;
 
 public class ChangeSetWriter implements IChangeSetWriter {
-    private final String metaUrlSuffix = "meta.v1/";
-    private final String dataUrlSuffix = "rest-1.v1/";
+
+    private final String META_URL_SUFFIX = "meta.v1/";
+    private final String DATA_URL_SUFFIX = "rest-1.v1/";
     private final String localUrlSuffix = "loc.v1/";
 
-    private final String changeSetTypeDef = "ChangeSet";
-    private final String linkTypeDef = "Link";
-    private final String primaryWorkitemTypeDef = "PrimaryWorkitem";
+    private final String CHANGESET_TYPE = "ChangeSet";
+    private final String LINK_TYPE = "Link";
+    private final String PRIMARY_WORKITEM_TYPE = "PrimaryWorkitem";
 
-    private final String nameAttrDef = "Name";
-    private final String descriptionAttrDef = "Description";
-    private final String referenceAttrDef = "Reference";
-    private final String urlAttrDef = "URL";
-    private final String onMenuAttrDef = "OnMenu";
-    private final String primaryWorkitemsAttrDef = "PrimaryWorkitems";
-    private final String linksAttrDef = "Links.URL";
-    private final String childrenMeAndDownAttrDef = "PrimaryWorkitem.ChildrenMeAndDown";
-    private final String storyName = "Plural'Story";
-    private final String defectName = "Plural'Defect";
+    private final String NAME_ATTRIBUTE = "Name";
+    private final String DESCRIPTION_ATTRIBUTE = "Description";
+    private final String REFERENCE_ATTRIBUTE = "Reference";
+    private final String URL_ATTRIBUTE = "URL";
+    private final String ON_MENU_ATTRIBUTE = "OnMenu";
+    private final String PRIMARY_WORKITEMS_ATTRIBUTE = "PrimaryWorkitems";
+    private final String LINKS_ATTRIBUTE = "Links.URL";
+    private final String CHILDREN_ME_AND_DOWN_ATTRIBUTE_PREFIX = "PrimaryWorkitem.ChildrenMeAndDown";
+    private final String STORY_NAME = "Plural'Story";
+    private final String DEFECT_NAME = "Plural'Defect";
 
     private IServices services;
     private IMetaModel metaModel;
@@ -38,27 +39,27 @@ public class ChangeSetWriter implements IChangeSetWriter {
     private final String changeComment;
     private final Logger LOG = Logger.getLogger("GitIntegration");
 
-    private IAssetType getChangeSetType(){
-        return metaModel.getAssetType(changeSetTypeDef);
+    private IAssetType getChangeSetType() {
+        return metaModel.getAssetType(CHANGESET_TYPE);
     }
 
-    private IAssetType getPrimaryWorkitemType(){
-        return metaModel.getAssetType(primaryWorkitemTypeDef);
+    private IAssetType getPrimaryWorkitemType() {
+        return metaModel.getAssetType(PRIMARY_WORKITEM_TYPE);
     }
 
-    private IAttributeDefinition getPrimaryWorkitemReference(){
-        return metaModel.getAttributeDefinition(childrenMeAndDownAttrDef + "." + referenceAttribute);
+    private IAttributeDefinition getPrimaryWorkitemReference() {
+        return metaModel.getAttributeDefinition(CHILDREN_ME_AND_DOWN_ATTRIBUTE_PREFIX + "." + referenceAttribute);
     }
     
-    private IAssetType getLinktType(){
-        return metaModel.getAssetType(linkTypeDef);
+    private IAssetType getLinkType() {
+        return metaModel.getAssetType(LINK_TYPE);
     }
 
-    private String getLocalizedString(String name){
+    private String getLocalizedString(String name) {
         return localizer.resolve(name);
     }
 
-    public ChangeSetWriter (Configuration config){
+    public ChangeSetWriter(Configuration config) {
         connectionInfo = config.getVersionOneConnection();
         linkInfo = config.getLink();
         referenceAttribute = config.getReferenceAttribute();
@@ -68,7 +69,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
 
     public void connect() throws VersionOneException {
         try {
-            V1APIConnector metaConnector = new V1APIConnector(connectionInfo.getPath() + metaUrlSuffix,
+            V1APIConnector metaConnector = new V1APIConnector(connectionInfo.getPath() + META_URL_SUFFIX,
                     connectionInfo.getUserName(), connectionInfo.getPassword());
             metaModel = new MetaModel(metaConnector);
 
@@ -76,46 +77,37 @@ public class ChangeSetWriter implements IChangeSetWriter {
                     connectionInfo.getUserName(), connectionInfo.getPassword());
             localizer = new Localizer(localizerConnector);
 
-            V1APIConnector dataConnector = new V1APIConnector(connectionInfo.getPath() + dataUrlSuffix,
+            V1APIConnector dataConnector = new V1APIConnector(connectionInfo.getPath() + DATA_URL_SUFFIX,
                     connectionInfo.getUserName(), connectionInfo.getPassword());
             services = new Services(metaModel, dataConnector);
-
-        } catch (Exception e) {
-            String message = "Connection error: " + e.getMessage();
+        } catch (Exception ex) {
+            String message = "Connection error: " + ex.getMessage();
             LOG.fatal(message);
-            throw new VersionOneException(message, e);
+            throw new VersionOneException(message, ex);
         }
     }
 
     public void publish(ChangeSetInfo changeSetInfo) throws VersionOneException {
-        String message = "Error during saving changeset: ";
+        final String errorMessagePrefix = "Error during saving changeset: ";
 
         List<Oid> affectedWorkitems = null;
 
         try {
             affectedWorkitems = getAffectedWorkitems(changeSetInfo.getReferences());
-
-        } catch (APIException e) {
-            LOG.error(message + e.getMessage());
-            throw new VersionOneException(message + e.getMessage(), e);
-
-        } catch (OidException e) {
-            LOG.error(message + e.getMessage());
-            throw new VersionOneException(message + e.getMessage(), e);
-
-        } catch (ConnectionException e) {
-            LOG.error(message + e.getMessage());
-            throw new VersionOneException(message + e.getMessage(), e);
+        } catch (APIException ex) {
+            logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
+        } catch (OidException ex) {
+            logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
+        } catch (ConnectionException ex) {
+            logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
         }
 
         Asset changeSet = null;
 
         try {
             changeSet = getChangeSet(changeSetInfo, affectedWorkitems);
-
-        } catch (V1Exception e) {
-            LOG.error(message + e.getMessage());
-            throw new VersionOneException(message + e.getMessage(), e);
+        } catch (V1Exception ex) {
+           logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
         }
 
         if (changeSet == null) {
@@ -131,43 +123,42 @@ public class ChangeSetWriter implements IChangeSetWriter {
 
             LOG.info(String.format("Changeset %1$s by %2$s on %3$s was saved.", savedAsset.getOid(), changeSetInfo.getAuthor(),
                     changeSetInfo.getChangeDate()));
-
-        } catch (APIException e) {
-            LOG.error(message + e.getMessage());
-            throw new VersionOneException(message + e.getMessage(), e);
-
-        } catch (V1Exception e) {
-            LOG.error(message + e.getMessage());
-            throw new VersionOneException(message + e.getMessage(), e);
+        } catch (V1Exception ex) {
+            logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
         }
     }
 
-    private void saveLinkInfo(Asset changeSet, ChangeSetInfo changeSetInfo) throws V1Exception, ConnectionException {
+    private void logAndThrow(String errorMessagePrefix, Exception ex) throws VersionOneException {
+        LOG.error(errorMessagePrefix + ex.getMessage());
+        throw new VersionOneException(errorMessagePrefix + ex.getMessage(), ex);
+    }
+
+    private void saveLinkInfo(Asset changeSet, ChangeSetInfo changeSetInfo) throws V1Exception {
         String name = linkInfo.getLinkNameTemplate().replace("{0}", changeSetInfo.getRevision());
         String url = linkInfo.getLinkUrlTemplate().replace("{0}", changeSetInfo.getRevision());
 
-        Attribute linkUrlAttribute = changeSet.getAttribute(getChangeSetType().getAttributeDefinition(linksAttrDef));
+        Attribute linkUrlAttribute = changeSet.getAttribute(getChangeSetType().getAttributeDefinition(LINKS_ATTRIBUTE));
 
         if (shouldCreateURL(url, linkUrlAttribute)) {
-            Asset newLink = services.createNew(getLinktType(), changeSet.getOid().getMomentless());
-            newLink.setAttributeValue(getLinktType().getAttributeDefinition(nameAttrDef), name);
-            newLink.setAttributeValue(getLinktType().getAttributeDefinition(urlAttrDef), url);
-            newLink.setAttributeValue(getLinktType().getAttributeDefinition(onMenuAttrDef), linkInfo.isLinkOnMenu());
+            Asset newLink = services.createNew(getLinkType(), changeSet.getOid().getMomentless());
+            newLink.setAttributeValue(getLinkType().getAttributeDefinition(NAME_ATTRIBUTE), name);
+            newLink.setAttributeValue(getLinkType().getAttributeDefinition(URL_ATTRIBUTE), url);
+            newLink.setAttributeValue(getLinkType().getAttributeDefinition(ON_MENU_ATTRIBUTE), linkInfo.isLinkOnMenu());
 
             services.save(newLink, changeComment);
         }
     }
 
     private Asset saveChangeSet(Asset changeSet, ChangeSetInfo changeSetInfo, List<Oid> workitems) throws V1Exception {
-        changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(nameAttrDef),
+        changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(NAME_ATTRIBUTE),
                 String.format("'%1$s' on '%2$s'", changeSetInfo.getAuthor(),
                 getFormattedTime(changeSetInfo.getChangeDate())));
 
-        changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(descriptionAttrDef),
+        changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(DESCRIPTION_ATTRIBUTE),
                 changeSetInfo.getMessage());
 
         for (Oid oid : workitems) {
-            changeSet.addAttributeValue(getChangeSetType().getAttributeDefinition(primaryWorkitemsAttrDef), oid);
+            changeSet.addAttributeValue(getChangeSetType().getAttributeDefinition(PRIMARY_WORKITEMS_ATTRIBUTE), oid);
         }
         
         services.save(changeSet, changeComment);
@@ -182,6 +173,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
 
         for (Object value : linkUrlAttribute.getValues()) {
             String strValue = value.toString();
+
             if (strValue.compareToIgnoreCase(url) == 0) {
                 return false;
             }
@@ -196,20 +188,20 @@ public class ChangeSetWriter implements IChangeSetWriter {
         return String.format("%1$s UTC%2$tz", formattedChangeDate, changeDate);
     }
 
-    private Asset getChangeSet(ChangeSetInfo changeSetInfo, List<Oid> affectedWorkitems) throws V1Exception, OidException, ConnectionException {
+    private Asset getChangeSet(ChangeSetInfo changeSetInfo, List<Oid> affectedWorkitems) throws V1Exception {
         Asset changeSet = null;
 
         Asset[] list = findExistingChangeset(changeSetInfo.getRevision()).getAssets();
 
         if (list.length > 0) {
-            changeSet = list[0]; //TODO: why the first element?
+            changeSet = list[0];
 
             LOG.info(String.format("Using existing Change Set: %1$s (%2$s)", changeSetInfo.getRevision(),
                     changeSet.getOid()));
         } else {
             if (shouldCreate(affectedWorkitems)) {
                 changeSet = services.createNew(getChangeSetType(), Oid.Null);
-                changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(referenceAttrDef),
+                changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(REFERENCE_ATTRIBUTE),
                         changeSetInfo.getRevision());
             } else {
                 LOG.info("No Change Set References. Ignoring Change Set: " + changeSetInfo.getRevision());
@@ -220,12 +212,12 @@ public class ChangeSetWriter implements IChangeSetWriter {
     }
 
     private QueryResult findExistingChangeset(String revision) throws OidException, APIException, ConnectionException {
-        FilterTerm term = new FilterTerm(getChangeSetType().getAttributeDefinition(referenceAttrDef));
+        FilterTerm term = new FilterTerm(getChangeSetType().getAttributeDefinition(REFERENCE_ATTRIBUTE));
         term.Equal(revision);
 
         Query q = new Query(getChangeSetType());
-        q.getSelection().add(getChangeSetType().getAttributeDefinition(referenceAttrDef));
-        q.getSelection().add(getChangeSetType().getAttributeDefinition(linksAttrDef));
+        q.getSelection().add(getChangeSetType().getAttributeDefinition(REFERENCE_ATTRIBUTE));
+        q.getSelection().add(getChangeSetType().getAttributeDefinition(LINKS_ATTRIBUTE));
         q.setFilter(term);
         q.setPaging(new Paging(0, 1));
 
@@ -243,8 +235,8 @@ public class ChangeSetWriter implements IChangeSetWriter {
             List<Oid> workitemOids = findWorkitemOid(ref);
 
             if (workitemOids.isEmpty()) {
-                LOG.info(String.format("No %1$s or %2$s related to reference: %3", getLocalizedString(storyName),
-                        getLocalizedString(defectName), ref));
+                LOG.info(String.format("No %1$s or %2$s related to reference: %3$s", getLocalizedString(STORY_NAME),
+                        getLocalizedString(DEFECT_NAME), ref));
                 continue;
             }
             primaryWorkitems.addAll(workitemOids);

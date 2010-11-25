@@ -10,23 +10,31 @@ public class Main {
     private final static Timer timer = new Timer();
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
-    public static void main(String[] arg) throws InterruptedException {
+    public static void main(String[] arg) {
         LOG.info("Loading config..");
         Configuration configuration = Configuration.getInstance();
         LOG.info("Configuration loaded..");
 
         try {
             timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
-        } catch(GitException e) {
-            System.exit(-1);
-        } catch (VersionOneException e) {
-            System.exit(-1);
+        } catch(GitException ex) {
+            fail();
+        } catch (VersionOneException ex) {
+            fail();
         }
 
         while(true) {
             /* do nothing, the job is done in background thread */
-            Thread.currentThread().sleep(1);
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ex) {
+                fail();
+            }
         }
+    }
+
+    public static void fail(){
+        System.exit(-1);
     }
 
     private static class GitPollTask extends TimerTask {
@@ -40,8 +48,8 @@ public class Main {
             IGitConnector gitConnector = new GitConnector(gitSettings.getPassword(), gitSettings.getPassphrase(),
                 gitSettings.getRepositoryPath(), gitSettings.getWatchedBranch(), gitSettings.getLocalDirectory(),
                 configuration.getReferenceExpression());
-            IChangeSetWriter v1Connetor = new ChangeSetWriter(configuration);
-            service = new GitService(configuration, storage, gitConnector, v1Connetor);
+            IChangeSetWriter changeSetWriter = new ChangeSetWriter(configuration);
+            service = new GitService(configuration, storage, gitConnector, changeSetWriter);
             service.initialize();
             LOG.info("Service created.");
         }
@@ -52,10 +60,10 @@ public class Main {
 
             try {
                 service.onInterval();
-            } catch(GitException e) {
-                System.out.println("Fail: " + e.getInnerException().getMessage());
-            } catch (VersionOneException e) {
-                System.out.println("Fail: " + e.getInnerException().getMessage());
+            } catch(GitException ex) {
+                System.out.println("Fail: " + ex.getInnerException().getMessage());
+            } catch (VersionOneException ex) {
+                System.out.println("Fail: " + ex.getInnerException().getMessage());
             }
 
             LOG.info("Completed.");
