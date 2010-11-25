@@ -42,7 +42,7 @@ public class ChangeSetWriterTester {
         refs.add("B-01112");
 
         Calendar cal =  GregorianCalendar.getInstance();
-        cal.set(2010, 12, 1);
+        cal.set(2010, 11, 1, 14, 43, 56);
         Date date = cal.getTime();
 
         ChangeSetInfo changeSet = new ChangeSetInfo("test author", "test message",  new LinkedList<String>(),
@@ -93,7 +93,7 @@ public class ChangeSetWriterTester {
     }
 
     private String getFormattedTime(Date changeDate) {
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
+        DateFormat dateFormatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
         String formattedChangeDate = dateFormatter.format(changeDate);
         return String.format("%1$s UTC%2$tz", formattedChangeDate, changeDate);
     }

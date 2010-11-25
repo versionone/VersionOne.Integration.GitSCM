@@ -191,7 +191,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
     }
 
     private String getFormattedTime(Date changeDate) {
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.SHORT);
+        DateFormat dateFormatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
         String formattedChangeDate = dateFormatter.format(changeDate);
         return String.format("%1$s UTC%2$tz", formattedChangeDate, changeDate);
     }
