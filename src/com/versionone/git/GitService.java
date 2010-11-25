@@ -15,18 +15,17 @@ public class GitService {
 
     private final Logger LOG = Logger.getLogger("GitIntegration");
 
-    public GitService(Configuration config, IDbStorage storage, IGitConnector gitConnector, IChangeSetWriter v1Connector) {
+    public GitService(Configuration config, IDbStorage storage, IGitConnector gitConnector, IChangeSetWriter v1ChangeSetWriter) {
         configuration = config;
 
         this.storage = storage;
         this.gitConnector = gitConnector;
-        this.v1ChangeSetWriter = v1Connector;
+        this.v1ChangeSetWriter = v1ChangeSetWriter;
     }
 
     public void initialize() throws GitException, VersionOneException {
         gitConnector.cleanupLocalDirectory();
         gitConnector.initRepository();
-        v1ChangeSetWriter.connect();
     }
 
     public void onInterval() throws GitException, VersionOneException {

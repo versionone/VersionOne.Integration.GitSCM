@@ -9,9 +9,11 @@ import java.util.*;
 
 public class ChangeSetWriter implements IChangeSetWriter {
 
-    private final String META_URL_SUFFIX = "meta.v1/";
-    private final String DATA_URL_SUFFIX = "rest-1.v1/";
-    private final String localUrlSuffix = "loc.v1/";
+    private final Configuration.Link linkInfo;
+    private final String referenceAttribute;
+    private final Boolean isAlwaysCreate;
+    private final String changeComment;
+    private final Logger LOG = Logger.getLogger("GitIntegration");
 
     private final String CHANGESET_TYPE = "ChangeSet";
     private final String LINK_TYPE = "Link";
@@ -28,63 +30,34 @@ public class ChangeSetWriter implements IChangeSetWriter {
     private final String STORY_NAME = "Plural'Story";
     private final String DEFECT_NAME = "Plural'Defect";
 
-    private IServices services;
-    private IMetaModel metaModel;
-    private ILocalizer localizer;
-
-    private final Configuration.VersionOneConnection connectionInfo;
-    private final Configuration.Link linkInfo;
-    private final String referenceAttribute;
-    private final Boolean isAlwaysCreate;
-    private final String changeComment;
-    private final Logger LOG = Logger.getLogger("GitIntegration");
+    private final IVersionOneConnector connector;
 
     private IAssetType getChangeSetType() {
-        return metaModel.getAssetType(CHANGESET_TYPE);
+        return connector.getMetaModel().getAssetType(CHANGESET_TYPE);
     }
 
     private IAssetType getPrimaryWorkitemType() {
-        return metaModel.getAssetType(PRIMARY_WORKITEM_TYPE);
+        return connector.getMetaModel().getAssetType(PRIMARY_WORKITEM_TYPE);
     }
 
     private IAttributeDefinition getPrimaryWorkitemReference() {
-        return metaModel.getAttributeDefinition(CHILDREN_ME_AND_DOWN_ATTRIBUTE_PREFIX + "." + referenceAttribute);
+        return connector.getMetaModel().getAttributeDefinition(CHILDREN_ME_AND_DOWN_ATTRIBUTE_PREFIX + "." + referenceAttribute);
     }
     
     private IAssetType getLinkType() {
-        return metaModel.getAssetType(LINK_TYPE);
+        return connector.getMetaModel().getAssetType(LINK_TYPE);
     }
 
     private String getLocalizedString(String name) {
-        return localizer.resolve(name);
+        return connector.getLocalizer().resolve(name);
     }
 
-    public ChangeSetWriter(Configuration config) {
-        connectionInfo = config.getVersionOneConnection();
+    public ChangeSetWriter(Configuration config, IVersionOneConnector v1Connector) {
+        connector = v1Connector;
         linkInfo = config.getLink();
         referenceAttribute = config.getReferenceAttribute();
         isAlwaysCreate = config.isAlwaysCreate();
         changeComment = config.getChangeComment();
-    }
-
-    public void connect() throws VersionOneException {
-        try {
-            V1APIConnector metaConnector = new V1APIConnector(connectionInfo.getPath() + META_URL_SUFFIX,
-                    connectionInfo.getUserName(), connectionInfo.getPassword());
-            metaModel = new MetaModel(metaConnector);
-
-            V1APIConnector localizerConnector = new V1APIConnector(connectionInfo.getPath() + localUrlSuffix,
-                    connectionInfo.getUserName(), connectionInfo.getPassword());
-            localizer = new Localizer(localizerConnector);
-
-            V1APIConnector dataConnector = new V1APIConnector(connectionInfo.getPath() + DATA_URL_SUFFIX,
-                    connectionInfo.getUserName(), connectionInfo.getPassword());
-            services = new Services(metaModel, dataConnector);
-        } catch (Exception ex) {
-            String message = "Connection error: " + ex.getMessage();
-            LOG.fatal(message);
-            throw new VersionOneException(message, ex);
-        }
     }
 
     public void publish(ChangeSetInfo changeSetInfo) throws VersionOneException {
@@ -140,12 +113,12 @@ public class ChangeSetWriter implements IChangeSetWriter {
         Attribute linkUrlAttribute = changeSet.getAttribute(getChangeSetType().getAttributeDefinition(LINKS_ATTRIBUTE));
 
         if (shouldCreateURL(url, linkUrlAttribute)) {
-            Asset newLink = services.createNew(getLinkType(), changeSet.getOid().getMomentless());
+            Asset newLink = connector.getServices().createNew(getLinkType(), changeSet.getOid().getMomentless());
             newLink.setAttributeValue(getLinkType().getAttributeDefinition(NAME_ATTRIBUTE), name);
             newLink.setAttributeValue(getLinkType().getAttributeDefinition(URL_ATTRIBUTE), url);
             newLink.setAttributeValue(getLinkType().getAttributeDefinition(ON_MENU_ATTRIBUTE), linkInfo.isLinkOnMenu());
 
-            services.save(newLink, changeComment);
+            connector.getServices().save(newLink, changeComment);
         }
     }
 
@@ -161,7 +134,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
             changeSet.addAttributeValue(getChangeSetType().getAttributeDefinition(PRIMARY_WORKITEMS_ATTRIBUTE), oid);
         }
         
-        services.save(changeSet, changeComment);
+        connector.getServices().save(changeSet, changeComment);
 
         return changeSet;
     }
@@ -200,7 +173,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
                     changeSet.getOid()));
         } else {
             if (shouldCreate(affectedWorkitems)) {
-                changeSet = services.createNew(getChangeSetType(), Oid.Null);
+                changeSet = connector.getServices().createNew(getChangeSetType(), Oid.Null);
                 changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(REFERENCE_ATTRIBUTE),
                         changeSetInfo.getRevision());
             } else {
@@ -221,7 +194,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
         q.setFilter(term);
         q.setPaging(new Paging(0, 1));
 
-        return services.retrieve(q);
+        return connector.getServices().retrieve(q);
     }
 
     private boolean shouldCreate(List<Oid> affectedWorkitems) {
@@ -252,7 +225,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
         term.Equal(reference);
         q.setFilter(term);
 
-        Asset[] list = services.retrieve(q).getAssets();
+        Asset[] list = connector.getServices().retrieve(q).getAssets();
 
         for (Asset asset : list){
             oids.add(asset.getOid());

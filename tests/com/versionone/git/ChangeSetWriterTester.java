@@ -8,8 +8,6 @@ import java.util.*;
 
 public class ChangeSetWriterTester {
     private Configuration config;
-    private IServices services;
-    private IMetaModel metaModel;
     private IAssetType changeSetType;
 
     private final String dataUrlSuffix = "rest-1.v1/";
@@ -20,20 +18,16 @@ public class ChangeSetWriterTester {
     private final String nameAttrDef = "Name";
     private final String descriptionAttrDef = "Description";
 
+    private IVersionOneConnector connector;
+
     @Before
-    public void before() {
+    public void before() throws VersionOneException {
         config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration_changesetwriter.xml").getPath());
         Configuration.VersionOneConnection connectionInfo = config.getVersionOneConnection();
-
-        V1APIConnector metaConnector = new V1APIConnector(connectionInfo.getPath() + metaUrlSuffix,
-                connectionInfo.getUserName(), connectionInfo.getPassword());
-        metaModel = new MetaModel(metaConnector);
-
-        V1APIConnector dataConnector = new V1APIConnector(connectionInfo.getPath() + dataUrlSuffix,
-            connectionInfo.getUserName(), connectionInfo.getPassword());
-        services = new Services(metaModel, dataConnector);
-
-        changeSetType = metaModel.getAssetType(changeSetTypeDef);    }
+        connector = new VersionOneConnector();
+        connector.connect(connectionInfo);
+        changeSetType = connector.getMetaModel().getAssetType(changeSetTypeDef);    
+    }
 
     @Test
     @Ignore
@@ -48,8 +42,7 @@ public class ChangeSetWriterTester {
         ChangeSetInfo changeSet = new ChangeSetInfo("test author", "test message",  new LinkedList<String>(),
                 "test_revision", date, refs);
 
-        ChangeSetWriter writer = new ChangeSetWriter(config);
-        writer.connect();
+        ChangeSetWriter writer = new ChangeSetWriter(config, connector);
         writer.publish(changeSet);
 
         Asset[] list = findExistingChangeset(changeSet.getRevision()).getAssets();
@@ -89,7 +82,7 @@ public class ChangeSetWriterTester {
         q.setFilter(term);
         q.setPaging(new Paging(0, 1));
 
-        return services.retrieve(q);
+        return connector.getServices().retrieve(q);
     }
 
     private String getFormattedTime(Date changeDate) {

@@ -45,7 +45,6 @@ public class GitServiceTester {
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).cleanupLocalDirectory();
             oneOf(gitConnectorMock).initRepository();
-            oneOf(v1ConnectorMock).connect();
             oneOf(gitConnectorMock).getBranchCommits(); will(returnValue(new LinkedList()));
         }});
 
@@ -68,7 +67,6 @@ public class GitServiceTester {
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).cleanupLocalDirectory();
             oneOf(gitConnectorMock).initRepository();
-            oneOf(v1ConnectorMock).connect();
             oneOf(gitConnectorMock).getBranchCommits();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision());
@@ -102,7 +100,6 @@ public class GitServiceTester {
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).cleanupLocalDirectory();
             oneOf(gitConnectorMock).initRepository();
-            oneOf(v1ConnectorMock).connect();
             oneOf(gitConnectorMock).getMergedBranches();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision());

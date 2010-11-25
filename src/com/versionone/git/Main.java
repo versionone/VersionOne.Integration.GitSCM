@@ -48,7 +48,9 @@ public class Main {
             IGitConnector gitConnector = new GitConnector(gitSettings.getPassword(), gitSettings.getPassphrase(),
                 gitSettings.getRepositoryPath(), gitSettings.getWatchedBranch(), gitSettings.getLocalDirectory(),
                 configuration.getReferenceExpression());
-            IChangeSetWriter changeSetWriter = new ChangeSetWriter(configuration);
+            IVersionOneConnector v1Connector = new VersionOneConnector();
+            v1Connector.connect(configuration.getVersionOneConnection());
+            IChangeSetWriter changeSetWriter = new ChangeSetWriter(configuration, v1Connector);
             service = new GitService(configuration, storage, gitConnector, changeSetWriter);
             service.initialize();
             LOG.info("Service created.");
