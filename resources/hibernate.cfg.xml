@@ -9,6 +9,8 @@
           <property name="show_sql">false</property>
           <property name="dialect">org.hibernate.dialect.DerbyDialect</property>
           <property name="hibernate.hbm2ddl.auto">update</property>
+          <property name="derby.stream.error.file">/logs/error.log</property>
+          <property name="derby.drda.traceDirectory">/logs</property>        
           <mapping resource="com/versionone/git/PersistentChange.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

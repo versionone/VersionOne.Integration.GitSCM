@@ -23,6 +23,7 @@
     <property name="res.dir" value="${basedir}/resources"/>    
     <property name="distr.dir" value="${basedir}/distr"/>
     <property name="tests.dir" value="${basedir}/tests"/>
+    <property name="servicewrapper.dir" value="${basedir}/ServiceWrapper"/>
 
 
     <!-- Build Directories -->
@@ -138,6 +139,11 @@
         <copy file="${distr.dir}/${jar.filename}" todir="${publish.git.dir}"/>
         <copy file="${base.dir}/configuration.xml" todir="${publish.git.dir}"/>
 
+
+        <copy todir="${publish.git.dir}">
+            <fileset dir="${servicewrapper.dir}/"/>
+        </copy>
+
         <copy todir="${publish.git.dir}/lib">
             <fileset dir="${lib.dir}/">
                 <exclude name="${lib.dir}/junit-4.4.jar"/>
@@ -154,6 +160,7 @@
 				<include name="build.xml"/>
 				<include name="resources/**/*"/>
 				<include name="src/**/*"/>
+                <include name="ServiceWrapper/**/*"/>
 				<include name="tests/**/*"/>
 				<include name="lib/**/*"/>
                 <include name="configuration.xml"/>
