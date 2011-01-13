@@ -15,9 +15,11 @@
     <property name="jar.filename" value="V1GitIntegration.jar"/>
     <property name="zip.filename" value="V1GitIntegration.${build.version}.zip"/>
     <property name="zip.source.filename" value="V1GitIntegration.Source.${build.version}.zip"/>
+    <property name="wrapper.licence.filename" value="wrapper-community-license-1.1.txt"/>
 
     <!-- Directories -->
     <property name="base.dir" value="."/>
+    <property name="service.dir" value="service"/>
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="src.dir" value="${basedir}/src"/>
     <property name="res.dir" value="${basedir}/resources"/>    
@@ -139,11 +141,15 @@
         <copy file="${distr.dir}/${jar.filename}" todir="${publish.git.dir}"/>
         <copy file="${base.dir}/configuration.xml" todir="${publish.git.dir}"/>
 
-
+        <!-- copy service wrapper-->
         <copy todir="${publish.git.dir}">
-            <fileset dir="${servicewrapper.dir}/"/>
+            <fileset dir="${servicewrapper.dir}/">
+                <exclude name="${wrapper.licence.filename}"/>
+            </fileset>
         </copy>
+        <copy file="${servicewrapper.dir}/${wrapper.licence.filename}" todir="${publish.git.dir}/${service.dir}/"/>
 
+        <!-- copy library -->
         <copy todir="${publish.git.dir}/lib">
             <fileset dir="${lib.dir}/">
                 <exclude name="${lib.dir}/junit-4.4.jar"/>
