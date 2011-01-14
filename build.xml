@@ -142,7 +142,7 @@
         <!-- copy configuration -->
         <copy file="${base.dir}/configuration.xml" todir="${publish.git.dir}"/>
         <!-- copy runner -->
-        <copy file="${base.dir}/run.bat" todir="${publish.git.dir}"/>
+        <copy file="${base.dir}/RunGitIntegration.bat" todir="${publish.git.dir}"/>
 
         <!-- copy service wrapper-->
         <copy todir="${publish.git.dir}">
