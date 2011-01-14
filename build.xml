@@ -139,7 +139,10 @@
         <mkdir dir="${publish.git.dir}"/>
 
         <copy file="${distr.dir}/${jar.filename}" todir="${publish.git.dir}"/>
+        <!-- copy configuration -->
         <copy file="${base.dir}/configuration.xml" todir="${publish.git.dir}"/>
+        <!-- copy runner -->
+        <copy file="${base.dir}/run.bat" todir="${publish.git.dir}"/>
 
         <!-- copy service wrapper-->
         <copy todir="${publish.git.dir}">
@@ -149,7 +152,7 @@
         </copy>
         <copy file="${servicewrapper.dir}/${wrapper.licence.filename}" todir="${publish.git.dir}/${service.dir}/"/>
 
-        <!-- copy library -->
+        <!-- copy libraries -->
         <copy todir="${publish.git.dir}/lib">
             <fileset dir="${lib.dir}/">
                 <exclude name="${lib.dir}/junit-4.4.jar"/>
