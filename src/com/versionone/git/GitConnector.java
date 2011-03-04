@@ -21,7 +21,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GitConnector implements IGitConnector {
-
     private FileRepository local;
     private RemoteConfig remoteConfig;
 
@@ -31,23 +30,22 @@ public class GitConnector implements IGitConnector {
     private final int timeout = 100;
 
     private final String url;
-
     private final String localDirectory;
     private final String watchedBranch;
-
+    private final boolean useBranchName;
     private final Pattern regexPattern;
 
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public GitConnector(String password, String passphrase, String url, String watchedBranch,
-                        String localDirectory, String regexPattern) {
+                        String localDirectory, String regexPattern, boolean useBranchName) {
         this.url = url;
         this.watchedBranch = watchedBranch;
         this.localDirectory = localDirectory;
+        this.useBranchName = useBranchName;
         this.regexPattern = Pattern.compile(regexPattern);
 
         SshSessionFactory.installWithCredentials(password, passphrase);
-
     }
 
     public void cleanupLocalDirectory() {
@@ -67,18 +65,22 @@ public class GitConnector implements IGitConnector {
         }
     }
 
-    // TODO refactor, the following methods look almost identical
-    public List<ChangeSetInfo> getBranchCommits() throws GitException {
+    public List<ChangeSetInfo> getCommits() throws GitException {
         try {
             doFetch();
 
             ChangeSetListBuilder builder = new ChangeSetListBuilder(regexPattern) {
                 public boolean shouldAdd(ChangeSetInfo changeSet) {
-                    return matchByPattern(changeSet.getMessage());
+                    if(useBranchName) {
+                        return changeSet.getReferences().size() > 0;
+                    } else {
+                        return matchByPattern(changeSet.getMessage());
+                    }
                 }
             };
 
-            traverseChanges(builder, true);
+            traverseChanges(builder);
+
             return builder.build();
         } catch(NotSupportedException ex) {
             LOG.fatal(ex);
@@ -89,28 +91,7 @@ public class GitConnector implements IGitConnector {
         }
     }
 
-    public List<ChangeSetInfo> getMergedBranches() throws GitException {
-        try {
-            doFetch();
-
-            ChangeSetListBuilder builder = new ChangeSetListBuilder(regexPattern) {
-                public boolean shouldAdd(ChangeSetInfo changeSet) {
-                    return changeSet.getReferences().size() > 0;
-                }
-            };
-
-            traverseChanges(builder, false);
-            return builder.build();
-        } catch(NotSupportedException ex) {
-            LOG.fatal(ex);
-            throw new GitException(ex);
-        } catch(TransportException ex) {
-            LOG.fatal(ex);
-            throw new GitException(ex);
-        }
-    }
-
-    private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder, boolean useCommitMessages)
+    private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder)
             throws GitException {
         Map<String, Ref> refs = local.getAllRefs();
         for (String key : refs.keySet()) {
@@ -135,13 +116,13 @@ public class GitConnector implements IGitConnector {
                     commit.getId().getName(),
                     new Date(commit.getCommitTime()));
 
-            if(useCommitMessages) {
-                fillReferences(info.getMessage(), info.getReferences());
-            } else {
+            if(useBranchName) {
                 List<String> branches = getBranchNames(commit);
                 for(String branch : branches) {
                     fillReferences(branch, info.getReferences());
                 }
+            } else {
+                fillReferences(info.getMessage(), info.getReferences());
             }
 
             builder.add(info);
@@ -163,7 +144,7 @@ public class GitConnector implements IGitConnector {
         Map<String, Ref> refs = local.getAllRefs();
 
         for (String key : refs.keySet()) {
-            AnyObjectId headId = null;
+            AnyObjectId headId;
             RevWalk walk = new RevWalk(local);
             walk.sort(RevSort.COMMIT_TIME_DESC);
             walk.sort(RevSort.TOPO);
@@ -219,7 +200,7 @@ public class GitConnector implements IGitConnector {
 		tn.setTimeout(this.timeout);
 
         try {
-			FetchResult fetchResult = tn.fetch(NullProgressMonitor.INSTANCE, null);
+            tn.fetch(NullProgressMonitor.INSTANCE, null);
 		} finally {
 			tn.close();
 		}

@@ -1,5 +1,6 @@
 package com.versionone.git;
 
+import com.versionone.git.configuration.Configuration;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Before;
@@ -10,22 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GitServiceTester {
-
-    private final String configurationPathMessages = GitServiceTester.class.getResource("test_configuration.xml").getPath();
-    private final String configurationPathBranchNames = GitServiceTester.class.getResource("test_configuration_branches.xml").getPath();
-
     private JUnit4Mockery context;
     private IGitConnector gitConnectorMock;
     private IDbStorage storageMock;
     private IChangeSetWriter v1ConnectorMock;
-
-    private Configuration getConfigurationWithBranchProcessingEnabled() {
-        return Configuration.getInstance(configurationPathBranchNames);
-    }
-
-    private Configuration getConfigurationWithBranchProcessingDisabled() {
-        return Configuration.getInstance(configurationPathMessages);
-    }
 
     @Before
     public void before() {
@@ -33,19 +22,16 @@ public class GitServiceTester {
         gitConnectorMock = context.mock(IGitConnector.class);
         storageMock = context.mock(IDbStorage.class);
         v1ConnectorMock = context.mock(IChangeSetWriter.class);
-        Configuration.reset();
     }
 
     @Test
     public void emptyChangesetTest() throws GitException, VersionOneException {
-        final Configuration config = getConfigurationWithBranchProcessingDisabled();
-
-        GitService service = new GitService(config, storageMock, gitConnectorMock, v1ConnectorMock);
+        GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock);
 
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).cleanupLocalDirectory();
             oneOf(gitConnectorMock).initRepository();
-            oneOf(gitConnectorMock).getBranchCommits(); will(returnValue(new LinkedList()));
+            oneOf(gitConnectorMock).getCommits(); will(returnValue(new LinkedList()));
         }});
 
         service.initialize();
@@ -54,9 +40,7 @@ public class GitServiceTester {
 
     @Test
     public void branchCommitsTest() throws GitException, VersionOneException {
-        final Configuration config = getConfigurationWithBranchProcessingDisabled();
-
-        GitService service = new GitService(config, storageMock, gitConnectorMock, v1ConnectorMock);
+        GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock);
 
         final ChangeSetInfo firstChange = new ChangeSetInfo("user", "first commit", "1", new Date());
         final ChangeSetInfo secondChange = new ChangeSetInfo("user", "second commit", "2", new Date());
@@ -67,7 +51,7 @@ public class GitServiceTester {
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).cleanupLocalDirectory();
             oneOf(gitConnectorMock).initRepository();
-            oneOf(gitConnectorMock).getBranchCommits();
+            oneOf(gitConnectorMock).getCommits();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision());
             PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision());
@@ -87,9 +71,7 @@ public class GitServiceTester {
 
     @Test
     public void branchNamesTest() throws GitException, VersionOneException {
-        final Configuration config = getConfigurationWithBranchProcessingEnabled();
-
-        GitService service = new GitService(config, storageMock, gitConnectorMock, v1ConnectorMock);
+        GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock);
 
         final ChangeSetInfo firstChange = new ChangeSetInfo("user", "first commit", "1", new Date());
         final ChangeSetInfo secondChange = new ChangeSetInfo("user", "second commit", "2", new Date());
@@ -100,7 +82,7 @@ public class GitServiceTester {
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).cleanupLocalDirectory();
             oneOf(gitConnectorMock).initRepository();
-            oneOf(gitConnectorMock).getMergedBranches();
+            oneOf(gitConnectorMock).getCommits();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision());
             PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision());

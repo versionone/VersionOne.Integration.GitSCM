@@ -1,17 +1,32 @@
 package com.versionone.git;
 
 import com.versionone.apiclient.*;
+import com.versionone.git.configuration.Configuration;
+import com.versionone.git.configuration.VersionOneSettings;
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.text.DateFormat;
 import java.util.*;
 
+@RunWith(value = Parameterized.class)
 public class ChangeSetWriterTester {
+    @Parameterized.Parameters
+    public static Collection<Object[]> generateData() {
+      Object[][] data = new Object[][] {
+              {true},
+              {true}
+      };
+
+      return Arrays.asList(data);
+    }
+
+    private boolean useProxy;
+
     private Configuration config;
     private IAssetType changeSetType;
 
-    private final String dataUrlSuffix = "rest-1.v1/";
-    private final String metaUrlSuffix = "meta.v1/";
     private final String changeSetTypeDef = "ChangeSet";
     private final String referenceAttrDef = "Reference";
     private final String linksAttrDef = "Links.URL";
@@ -20,17 +35,25 @@ public class ChangeSetWriterTester {
 
     private IVersionOneConnector connector;
 
+    public ChangeSetWriterTester(boolean useProxy) {
+        this.useProxy = useProxy;
+    }
+
     @Before
     public void before() throws VersionOneException {
         config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration_changesetwriter.xml").getPath());
-        Configuration.VersionOneConnection connectionInfo = config.getVersionOneConnection();
+        VersionOneSettings connectionInfo = config.getVersionOneSettings();
+
+        //overriding default settings from config file with test parameter
+        connectionInfo.getProxySettings().setUseProxy(useProxy);
+
         connector = new VersionOneConnector();
         connector.connect(connectionInfo);
         changeSetType = connector.getMetaModel().getAssetType(changeSetTypeDef);    
     }
 
     @Test
-    @Ignore
+    @Ignore("Integration test")
     public void publishTest() throws VersionOneException, APIException, OidException, ConnectionException {
         List<String> refs = new LinkedList<String>();
         refs.add("B-01112");

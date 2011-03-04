@@ -1,12 +1,13 @@
 package com.versionone.git;
 
+import com.versionone.git.configuration.Configuration;
+import com.versionone.git.configuration.GitSettings;
 import org.apache.log4j.Logger;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Main {
-
     private final static Timer timer = new Timer();
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
@@ -38,21 +39,33 @@ public class Main {
     }
 
     private static class GitPollTask extends TimerTask {
-
         private final GitService service;
 
         GitPollTask(Configuration configuration) throws GitException, VersionOneException {
             LOG.info("Creating service...");
+
             IDbStorage storage = new DbStorage();
-            Configuration.GitSettings gitSettings = configuration.getGitSettings();
-            IGitConnector gitConnector = new GitConnector(gitSettings.getPassword(), gitSettings.getPassphrase(),
-                gitSettings.getRepositoryPath(), gitSettings.getWatchedBranch(), gitSettings.getLocalDirectory(),
-                configuration.getReferenceExpression());
+
+            GitSettings gitSettings = configuration.getGitSettings();
+
+            IGitConnector gitConnector = new GitConnector(
+                    gitSettings.getPassword(),
+                    gitSettings.getPassphrase(),
+                    gitSettings.getRepositoryPath(),
+                    gitSettings.getWatchedBranch(),
+                    gitSettings.getLocalDirectory(),
+                    configuration.getReferenceExpression(),
+                    configuration.getUseBranchName()
+            );
+
             IVersionOneConnector v1Connector = new VersionOneConnector();
-            v1Connector.connect(configuration.getVersionOneConnection());
+            v1Connector.connect(configuration.getVersionOneSettings());
+
             IChangeSetWriter changeSetWriter = new ChangeSetWriter(configuration, v1Connector);
-            service = new GitService(configuration, storage, gitConnector, changeSetWriter);
+
+            service = new GitService(storage, gitConnector, changeSetWriter);
             service.initialize();
+
             LOG.info("Service created.");
         }
 

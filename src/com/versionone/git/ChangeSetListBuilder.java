@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public abstract class ChangeSetListBuilder {
-
     private final List<ChangeSetInfo> changes = new LinkedList<ChangeSetInfo>();
     private final Pattern regexp;
 

@@ -2,14 +2,15 @@ package com.versionone.git;
 
 import com.versionone.Oid;
 import com.versionone.apiclient.*;
+import com.versionone.git.configuration.Configuration;
+import com.versionone.git.configuration.Link;
 import org.apache.log4j.Logger;
 
 import java.text.DateFormat;
 import java.util.*;
 
 public class ChangeSetWriter implements IChangeSetWriter {
-
-    private final Configuration.Link linkInfo;
+    private final Link linkInfo;
     private final String referenceAttribute;
     private final Boolean isAlwaysCreate;
     private final String changeComment;

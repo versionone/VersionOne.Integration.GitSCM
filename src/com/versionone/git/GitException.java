@@ -1,7 +1,6 @@
 package com.versionone.git;
 
 public class GitException extends Exception {
-
     private final Exception innerException;
 
     public GitException(Exception ex) {

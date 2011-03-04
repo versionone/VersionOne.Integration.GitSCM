@@ -4,6 +4,12 @@
         <Path>http://VersionOne.com/VersionOne/</Path>
         <UserName>admin</UserName>
         <Password>adminpass</Password>
+        <ProxySettings>
+            <UseProxy>false</UseProxy>
+            <Path>http://proxy:3128/</Path>
+            <UserName>proxyUser</UserName>
+            <Password>proxyUserPass</Password>
+        </ProxySettings>
     </VersionOneConnection>
     <GitSettings>
         <Path>github.com/Account.git</Path>
@@ -13,7 +19,10 @@
         <LocalDirectory>e:/gittmp/</LocalDirectory>
     </GitSettings>
 
-    <BranchProcessing>false</BranchProcessing>
+    <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
+        If you want to search VersionOne item id in commit comments then set to false-->
+    <UseBranchName>false</UseBranchName>
+
     <Timeout>10000</Timeout>
     <AlwaysCreate>false</AlwaysCreate>
     <ChangeComment>Updated by VersionOne.ServiceHost</ChangeComment>
