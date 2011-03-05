@@ -12,9 +12,10 @@ public class Main {
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public static void main(String[] arg) {
-        LOG.info("Loading config..");
+        LOG.info("Git integration service is starting.");
+        LOG.info("Loading configuration...");
         Configuration configuration = Configuration.getInstance();
-        LOG.info("Configuration loaded..");
+        LOG.info("Configuration loaded.");
 
         try {
             timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
@@ -35,6 +36,7 @@ public class Main {
     }
 
     public static void fail(){
+        LOG.fatal("Closing application due to internal error.");
         System.exit(-1);
     }
 
@@ -77,8 +79,10 @@ public class Main {
                 service.onInterval();
             } catch(GitException ex) {
                 System.out.println("Fail: " + ex.getInnerException().getMessage());
+                LOG.fatal("Git service failed: " + ex.getInnerException().getMessage());
             } catch (VersionOneException ex) {
                 System.out.println("Fail: " + ex.getInnerException().getMessage());
+                LOG.fatal("VersionOne service failed: " + ex.getInnerException().getMessage());
             }
 
             LOG.info("Completed.");

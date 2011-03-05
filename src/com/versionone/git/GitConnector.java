@@ -57,10 +57,10 @@ public class GitConnector implements IGitConnector {
             cloneRepository();
             doFetch();
         } catch (IOException ex) {
-            LOG.fatal(ex);
+            LOG.fatal("Local repository creation failed : "+ ex.getMessage());
             throw new GitException(ex);
         } catch (URISyntaxException ex) {
-            LOG.fatal(ex);
+            LOG.fatal("Local repository creation failed : "+ ex.getMessage());
             throw new GitException(ex);
         }
     }
@@ -91,9 +91,9 @@ public class GitConnector implements IGitConnector {
         }
     }
 
-    private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder)
-            throws GitException {
+    private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder) throws GitException {
         Map<String, Ref> refs = local.getAllRefs();
+
         for (String key : refs.keySet()) {
             System.out.println(key + " - " + refs.get(key).getName());
         }
@@ -101,6 +101,7 @@ public class GitConnector implements IGitConnector {
         RevWalk walk = new RevWalk(local);
         walk.sort(RevSort.COMMIT_TIME_DESC);
         walk.sort(RevSort.TOPO);
+
         try {
             AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
             walk.markStart(walk.parseCommit(headId));//

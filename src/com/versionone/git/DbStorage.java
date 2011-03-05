@@ -23,7 +23,8 @@ public class DbStorage implements IDbStorage {
     }
 
     public List<PersistentChange> getPersistedChanges() {
-        return getSession().createCriteria(PersistentChange.class).list(); 
+        List changes = getSession().createCriteria(PersistentChange.class).list();
+        return (List<PersistentChange>)changes;
     }
 
     public void persistChange(PersistentChange change) {

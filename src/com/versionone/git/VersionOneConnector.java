@@ -34,9 +34,12 @@ public class VersionOneConnector implements IVersionOneConnector {
 
             V1APIConnector dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, connectionInfo.getUserName(),
                     connectionInfo.getPassword(), proxy);
+
             services = new Services(metaModel, dataConnector);
+            services.getLoggedIn();
+            LOG.info("Connection to VersionOne server established.");
         } catch (Exception ex) {
-            String message = "Connection error: " + ex.getMessage();
+            String message = "Connection to VersionOne server failed. Please, check address, credentials and proxy settings.";
             LOG.fatal(message);
             throw new VersionOneException(message, ex);
         }

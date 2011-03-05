@@ -68,11 +68,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
 
         try {
             affectedWorkitems = getAffectedWorkitems(changeSetInfo.getReferences());
-        } catch (APIException ex) {
-            logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
-        } catch (OidException ex) {
-            logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
-        } catch (ConnectionException ex) {
+        } catch (Exception ex) {
             logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
         }
 
@@ -80,7 +76,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
 
         try {
             changeSet = getChangeSet(changeSetInfo, affectedWorkitems);
-        } catch (V1Exception ex) {
+        } catch (Exception ex) {
            logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
         }
 
@@ -97,7 +93,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
 
             LOG.info(String.format("Changeset %1$s by %2$s on %3$s was saved.", savedAsset.getOid(), changeSetInfo.getAuthor(),
                     changeSetInfo.getChangeDate()));
-        } catch (V1Exception ex) {
+        } catch (Exception ex) {
             logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
         }
     }

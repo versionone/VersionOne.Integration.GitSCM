@@ -20,6 +20,7 @@ public class GitService {
     public void initialize() throws GitException, VersionOneException {
         gitConnector.cleanupLocalDirectory();
         gitConnector.initRepository();
+        LOG.info("Connection to Git server established.");
     }
 
     public void onInterval() throws GitException, VersionOneException {
