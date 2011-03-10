@@ -15,7 +15,7 @@
     <property name="jar.filename" value="V1GitIntegration.jar"/>
     <property name="zip.filename" value="V1GitIntegration.${build.version}.zip"/>
     <property name="zip.source.filename" value="V1GitIntegration.Source.${build.version}.zip"/>
-    <property name="wrapper.licence.filename" value="wrapper-community-license-1.1.txt"/>
+    <property name="wrapper.licence.filename" value="LICENSE.txt"/>
 
     <!-- Directories -->
     <property name="base.dir" value="."/>

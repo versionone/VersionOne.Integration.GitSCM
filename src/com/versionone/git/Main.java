@@ -1,91 +1,21 @@
 package com.versionone.git;
 
-import com.versionone.git.configuration.Configuration;
-import com.versionone.git.configuration.GitSettings;
 import org.apache.log4j.Logger;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class Main {
-    private final static Timer timer = new Timer();
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public static void main(String[] arg) {
-        LOG.info("Git integration service is starting.");
-        LOG.info("Loading configuration...");
-        Configuration configuration = Configuration.getInstance();
-        LOG.info("Configuration loaded.");
-
-        try {
-            timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
-        } catch(GitException ex) {
-            fail();
-        } catch (VersionOneException ex) {
-            fail();
-        }
+        ServiceHandler.start(arg);
 
         while(true) {
             /* do nothing, the job is done in background thread */
             try {
-                Thread.sleep(1);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
-                fail();
+                LOG.fatal("Closing application due to internal error.");
+                System.exit(-1);
             }
-        }
-    }
-
-    public static void fail(){
-        LOG.fatal("Closing application due to internal error.");
-        System.exit(-1);
-    }
-
-    private static class GitPollTask extends TimerTask {
-        private final GitService service;
-
-        GitPollTask(Configuration configuration) throws GitException, VersionOneException {
-            LOG.info("Creating service...");
-
-            IDbStorage storage = new DbStorage();
-
-            GitSettings gitSettings = configuration.getGitSettings();
-
-            IGitConnector gitConnector = new GitConnector(
-                    gitSettings.getPassword(),
-                    gitSettings.getPassphrase(),
-                    gitSettings.getRepositoryPath(),
-                    gitSettings.getWatchedBranch(),
-                    gitSettings.getLocalDirectory(),
-                    configuration.getReferenceExpression(),
-                    configuration.getUseBranchName()
-            );
-
-            IVersionOneConnector v1Connector = new VersionOneConnector();
-            v1Connector.connect(configuration.getVersionOneSettings());
-
-            IChangeSetWriter changeSetWriter = new ChangeSetWriter(configuration, v1Connector);
-
-            service = new GitService(storage, gitConnector, changeSetWriter);
-            service.initialize();
-
-            LOG.info("Service created.");
-        }
-
-        @Override
-        public void run() {
-            LOG.info("Processing new changes...");
-
-            try {
-                service.onInterval();
-            } catch(GitException ex) {
-                System.out.println("Fail: " + ex.getInnerException().getMessage());
-                LOG.fatal("Git service failed: " + ex.getInnerException().getMessage());
-            } catch (VersionOneException ex) {
-                System.out.println("Fail: " + ex.getInnerException().getMessage());
-                LOG.fatal("VersionOne service failed: " + ex.getInnerException().getMessage());
-            }
-
-            LOG.info("Completed.");
         }
     }
 }
