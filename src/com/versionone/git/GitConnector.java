@@ -6,6 +6,7 @@ import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.NullProgressMonitor;
+import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevSort;
@@ -49,10 +50,12 @@ public class GitConnector implements IGitConnector {
     }
 
     public void cleanupLocalDirectory() {
+    	LOG.debug("cleanupLocalDirectory");
         deleteDirectory(new File(localDirectory));
     }
 
     public void initRepository() throws GitException {
+    	LOG.debug("initRepository");
         try {
             cloneRepository();
             doFetch();
@@ -92,12 +95,17 @@ public class GitConnector implements IGitConnector {
     }
 
     private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder) throws GitException {
-        Map<String, Ref> refs = local.getAllRefs();
-
-        for (String key : refs.keySet()) {
-            System.out.println(key + " - " + refs.get(key).getName());
-        }
-
+    	
+    	if(LOG.isDebugEnabled()) {
+	        Map<String, Ref> refs = local.getAllRefs();
+	
+	        LOG.debug("Available Branches");
+	        for (String key : refs.keySet()) {
+	            LOG.debug("    " + key + " - " + refs.get(key).getName());
+	        }
+	        LOG.debug("We are going to process branch " + Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
+    	}
+    	
         RevWalk walk = new RevWalk(local);
         walk.sort(RevSort.COMMIT_TIME_DESC);
         walk.sort(RevSort.TOPO);
@@ -169,6 +177,7 @@ public class GitConnector implements IGitConnector {
     }
 
     private void cloneRepository() throws IOException, URISyntaxException {
+    	LOG.info("Clone Repository");
         local = new FileRepository(localDirectory);
         local.create();
 
@@ -197,11 +206,19 @@ public class GitConnector implements IGitConnector {
     }
 
 	private void doFetch() throws NotSupportedException, TransportException {
+		LOG.info("Fetch Repository");
 		final Transport tn = Transport.open(local, remoteConfig);
 		tn.setTimeout(this.timeout);
 
         try {
-            tn.fetch(NullProgressMonitor.INSTANCE, null);
+//            tn.fetch(NullProgressMonitor.INSTANCE, null);
+        	tn.fetch(new ProgressMonitor(){
+				@Override public void beginTask(String taskName, int totalSubTask) {LOG.debug("Begin Task " + taskName + ". Total Subtask " + totalSubTask);}
+				@Override public void start(int totalTask) {LOG.debug("Start.  Total Task " + totalTask);}
+				@Override public void update(int arg0) {}
+				@Override public void endTask() {}
+				@Override public boolean isCancelled() {return false;}}
+        	, null);
 		} finally {
 			tn.close();
 		}

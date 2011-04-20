@@ -18,6 +18,7 @@ public class GitService {
     }
 
     public void initialize() throws GitException, VersionOneException {
+    	LOG.info("Initialize Git Service");
         gitConnector.cleanupLocalDirectory();
         gitConnector.initRepository();
         LOG.info("Connection to Git server established.");
@@ -25,7 +26,7 @@ public class GitService {
 
     public void onInterval() throws GitException, VersionOneException {
         Collection<ChangeSetInfo> changes = gitConnector.getCommits();
-        LOG.info("Found " + changes.size() + " changes to process.");
+        LOG.debug("Found " + changes.size() + " changes to process.");
 
         for(ChangeSetInfo change : changes) {
             PersistentChange persistentChange = PersistentChange.createNew(change.getRevision());
@@ -33,9 +34,9 @@ public class GitService {
             if(!storage.isChangePersisted(persistentChange)) {
                 v1ChangeSetWriter.publish(change);
                 storage.persistChange(persistentChange);
-                LOG.info("Change published to VersionOne server: " + change.getRevision());
+                LOG.debug("Change published to VersionOne server: " + change.getRevision());
             } else {
-                LOG.info("Change already processed: " + change.getRevision());
+                LOG.debug("Change already processed: " + change.getRevision());
             }
         }
     }
