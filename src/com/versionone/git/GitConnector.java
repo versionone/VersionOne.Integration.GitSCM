@@ -51,7 +51,9 @@ public class GitConnector implements IGitConnector {
 
     public void cleanupLocalDirectory() {
     	LOG.debug("cleanupLocalDirectory");
-        deleteDirectory(new File(localDirectory));
+        if (!deleteDirectory(new File(localDirectory))) {
+                LOG.error(localDirectory + " can't be cleaned up");
+        }
     }
 
     public void initRepository() throws GitException {
@@ -114,16 +116,18 @@ public class GitConnector implements IGitConnector {
             AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
             walk.markStart(walk.parseCommit(headId));//
         } catch (IOException ex) {
-            LOG.fatal(ex);
+            LOG.fatal(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch + " can't be processed.", ex);
             throw new GitException(ex);
         }
 
         for (RevCommit commit : walk) {
+            // jGit returns data in second.
+            long millisecond = commit.getCommitTime() *  1000l;
             ChangeSetInfo info = new ChangeSetInfo(
                     commit.getAuthorIdent().getName(),
                     commit.getFullMessage().trim(),
                     commit.getId().getName(),
-                    new Date(commit.getCommitTime()));
+                    new Date(millisecond));
 
             if(useBranchName) {
                 List<String> branches = getBranchNames(commit);
