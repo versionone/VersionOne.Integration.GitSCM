@@ -20,7 +20,7 @@
     <!-- Directories -->
     <property name="base.dir" value="."/>
     <property name="service.dir" value="service"/>
-    <property name="lib.dir" value="${basedir}/doc"/>
+    <property name="doc.dir" value="${basedir}/doc"/>
     <property name="lib.dir" value="${basedir}/lib"/>
     <property name="src.dir" value="${basedir}/src"/>
     <property name="res.dir" value="${basedir}/resources"/>    
