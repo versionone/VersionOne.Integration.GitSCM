@@ -21,7 +21,7 @@
 
     <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
         If you want to search VersionOne item id in commit comments then set to false-->
-    <UseBranchName>true</UseBranchName>
+    <UseBranchName>false</UseBranchName>
 
     <Timeout>10000</Timeout>
     <AlwaysCreate>false</AlwaysCreate>
