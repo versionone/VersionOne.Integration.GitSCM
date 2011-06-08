@@ -162,7 +162,7 @@
 
         <!-- copy docs -->
         <copy todir="${publish.git.dir}/doc">
-            <fileset dir="${doc.dir}/*"/>
+            <fileset dir="${doc.dir}"/>
         </copy>
 		
         <zip destfile="${publish.dir}/${zip.filename}">
