@@ -1,0 +1,350 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>VersionOne Git Integration</title>
+	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
+        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
+    </head>
+
+    <body>
+	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+<td style="width:10%"/>
+			    <td valign="top" class="pagebody">
+				    <div class="pageheader">
+					    <span class="pagetitle">
+                            VersionOne Git Integration
+                                                    </span>
+				    </div>
+				    <div class="pagesubheading">
+					    This page last changed on Jun 08, 2011 by <font color="#0050B2">jerry</font>.
+                                    </div>
+
+				    <style type='text/css'>/*<![CDATA[*/
+div.rbtoc1307566688275 {margin-left: 0px;padding: 0px;}
+div.rbtoc1307566688275 ul {list-style: none;margin-left: 0px;}
+div.rbtoc1307566688275 li {margin-left: 0px;padding-left: 0px;}
+
+/*]]>*/</style><div class='rbtoc1307566688275'>
+<ul>
+    <li><span class='TOCOutline'>1</span> <a href='#VersionOneGitIntegration-Description'>Description</a></li>
+    <li><span class='TOCOutline'>2</span> <a href='#VersionOneGitIntegration-SystemRequirements'>System Requirements</a></li>
+    <li><span class='TOCOutline'>3</span> <a href='#VersionOneGitIntegration-Download'>Download</a></li>
+    <li><span class='TOCOutline'>4</span> <a href='#VersionOneGitIntegration-Installation'>Installation</a></li>
+    <li><span class='TOCOutline'>5</span> <a href='#VersionOneGitIntegration-Configuration'>Configuration</a></li>
+<ul>
+    <li><span class='TOCOutline'>5.1</span> <a href='#VersionOneGitIntegration-ConfiguretheIntegration'>Configure the Integration </a></li>
+</ul>
+</ul></div>
+
+<h2><a name="VersionOneGitIntegration-Description"></a>Description</h2>
+<p>The VersionOne Git Integration (V1Git) creates a record of Git changesets in VersionOne, so the development team can quickly view all of the code changes for a story or defect. This visibility can be useful when tracking down defects or performing code reviews.</p>
+
+<p>Once V1Git has been installed, development team members include a story or defect ID, such as “S-01454” in their Git commit messages. V1Git checks each commit message for IDs and creates a changeset within VersionOne linted to the stories or defects matching the entered IDs. A changeset is the collection of changes for a single revision in Git. The changesets for each story or defect are viewable on the details page of that item in VersionOne. Additionally, V1Git has the capability to create link on the changeset in VersionOne that navigates to the changeset in a Git repository viewer</p>
+
+<p>The following sequence diagram illustrates how V1Git interacts with Git and VersionOne.<br/>
+<span class="error">!Sequence.png|thumbnail!</span></p>
+
+<h2><a name="VersionOneGitIntegration-SystemRequirements"></a>System Requirements</h2>
+<ul>
+	<li>VersionOne: 7.1 or above, including Team Edition</li>
+	<li>Integration Server:
+	<ul>
+		<li>Operating System &#8211; Windows 2003, 2008</li>
+		<li>Java &#8211; 1.6</li>
+	</ul>
+	</li>
+	<li>Git Server:
+	<ul>
+		<li>Tested with GitHub</li>
+	</ul>
+	</li>
+</ul>
+
+
+<h2><a name="VersionOneGitIntegration-Download"></a>Download</h2>
+<p>The latest version of V1Git is available from <a href="http://community.versionone.com/Downloads/default.aspx">the VersionOne Community site </a></p>
+
+<h2><a name="VersionOneGitIntegration-Installation"></a>Installation </h2>
+<p>These installation instructions assume that Git is already installed, configured, and working properly.</p>
+<ol>
+	<li>Determine Install Location<br/>
+V1Git can be installed on any server with network access to both VersionOne and Git.  Exact placement should be determined by your internal software management requirements. The integration server must meet the System Requirements stated above.<br class="atl-forced-newline" />
+<br class="atl-forced-newline" /></li>
+	<li>Extract Files<br/>
+Download V1Git using the link above and extract it into a folder of your choice.<br class="atl-forced-newline" />
+<br class="atl-forced-newline" /></li>
+	<li>Configure<br/>
+Instructions for configuring V1Git are located below in the <a href="#VersionOneGitIntegration-ConfigureServiceHost">"Configure The Integration"</a> section<br class="atl-forced-newline" />
+<br class="atl-forced-newline" /></li>
+	<li>Start integration<br/>
+Open up the command prompt, navigate to your installation folder, and run the following command:
+<blockquote><p><tt>RunGitIntegration.bat</tt></p></blockquote>
+<p>If you have configured your system properly, you should see several [Info] messages followed by a [Startup] message.<br class="atl-forced-newline" />
+<br class="atl-forced-newline" /></p></li>
+	<li>Test the integration<br/>
+To ensure the integration is working, perform the following steps:
+	<ol>
+		<li>Commit a change to your Git repository with a message of “test”. You should see the following output:
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[Info] Publishing ChangeSet: #, <span class="code-quote">"test"</span>; No References found.
+[Info] No Change Set References. Ignoring Change Set: #
+</pre>
+</div></div></li>
+		<li>Commit a change to your svn repository with a message of <em>"S-01001"</em>. You should see the following output:
+<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
+<pre class="code-java">
+[Info] Publishing ChangeSet: #, <span class="code-quote">"S-01001"</span>; references: S-01001
+</pre>
+</div></div></li>
+		<li>Shut down the service host by pressing “Q” in the console window.<br class="atl-forced-newline" />
+<br class="atl-forced-newline" /></li>
+	</ol>
+	</li>
+	<li>Install as a Windows Service<br/>
+The download package contains a sub-directory called <em>"service"</em>.  This directory contains the batch files necessary to install and uninstall the service depending on your platform. </li>
+</ol>
+<ul>
+	<li>Use InstallService_x32.bat to install the integration as a service on a 32 bit Windows operating system</li>
+	<li>Use InstallService_x64.bat to install the integration as a service on a 64 bit Windows operating system<br/>
+This command installs the service so it will will run under the account NT AUTHORITY\Local Service. Local Service must be given access privileges to the directory where V1Git was installed so it can store its state and write to log files. Follow the steps below to change the security on the installation directory:
+	<ol>
+		<li>Right click the installation folder from Windows Explorer.</li>
+		<li>Select "properties".</li>
+		<li>Select the "Security" tab.</li>
+		<li>Click the "Add" button.</li>
+		<li>Enter "Local Service" and click "OK".</li>
+		<li>Click the "Allow" checkbox for the "Full Control" row .</li>
+		<li>Click "OK" to save the changes.</li>
+	</ol>
+	</li>
+</ul>
+
+
+<h2><a name="VersionOneGitIntegration-Configuration"></a>Configuration</h2>
+<h3><a name="VersionOneGitIntegration-ConfiguretheIntegration"></a>Configure the Integration<a name="VersionOneGitIntegration-ConfigureServiceHost"></a> </h3>
+
+<p>Configuration file is config.xml<br/>
+edit this file with any text editor (i.e. notepad)</p>
+
+<p><b>VersionOneConnection</b> element specifies connection to VersionOne server</p>
+<div class='table-wrap'>
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>Element</th>
+<th class='confluenceTh'>Description</th>
+<th class='confluenceTh'>Example</th>
+</tr>
+<tr>
+<td class='confluenceTd'> Path </td>
+<td class='confluenceTd'> URL to VersionOne Server </td>
+<td class='confluenceTd'> <a href="http://localhost/versionone">http://localhost/versionone</a> </td>
+</tr>
+<tr>
+<td class='confluenceTd'> UserName </td>
+<td class='confluenceTd'> Valid VersionOne user </td>
+<td class='confluenceTd'> admin </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Password </td>
+<td class='confluenceTd'> Password for user </td>
+<td class='confluenceTd'> admin </td>
+</tr>
+</tbody></table>
+</div>
+
+<p><b>ProxySettings</b> element specifies Proxy settings for VersionOne connection</p>
+<div class='table-wrap'>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'> UseProxy </td>
+<td class='confluenceTd'> Indicates if the connection uses a proxy </td>
+<td class='confluenceTd'> false </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Path </td>
+<td class='confluenceTd'> URL of Proxy Server </td>
+<td class='confluenceTd'> <a href="http://proxyserver:3128">http://proxyserver:3128</a> </td>
+</tr>
+<tr>
+<td class='confluenceTd'> UserName </td>
+<td class='confluenceTd'> Username for proxy </td>
+<td class='confluenceTd'> proxyUser </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Password </td>
+<td class='confluenceTd'> Password for Proxy user </td>
+<td class='confluenceTd'> proxyUserPass </td>
+</tr>
+</tbody></table>
+</div>
+
+
+<p><b>GitSettings</b> element specifies connection to Git server</p>
+<div class='table-wrap'>
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>Element</th>
+<th class='confluenceTh'>Description</th>
+<th class='confluenceTh'>Example</th>
+</tr>
+<tr>
+<td class='confluenceTd'> Path </td>
+<td class='confluenceTd'> Path to GitHub Repository </td>
+<td class='confluenceTd'>&nbsp;</td>
+</tr>
+<tr>
+<td class='confluenceTd'> Password </td>
+<td class='confluenceTd'> Password for repository </td>
+<td class='confluenceTd'>&nbsp;</td>
+</tr>
+<tr>
+<td class='confluenceTd'> SshPassphrase </td>
+<td class='confluenceTd'>&nbsp;</td>
+<td class='confluenceTd'>&nbsp;</td>
+</tr>
+<tr>
+<td class='confluenceTd'> WatchedBranchName </td>
+<td class='confluenceTd'> Name of branch to watch </td>
+<td class='confluenceTd'> master </td>
+</tr>
+<tr>
+<td class='confluenceTd'> LocalDirectory </td>
+<td class='confluenceTd'> Name of a local directory to use </td>
+<td class='confluenceTd'> C:\\V1Integrations\\Git<br class="atl-forced-newline" />Code </td>
+</tr>
+</tbody></table>
+</div>
+
+
+<p>The remaining elements control integration behavior</p>
+<div class='table-wrap'>
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>Element</th>
+<th class='confluenceTh'>Description</th>
+<th class='confluenceTh'>Example</th>
+</tr>
+<tr>
+<td class='confluenceTd'> UseBranchName </td>
+<td class='confluenceTd'> Enables parsing branch name as VersionOne item id </td>
+<td class='confluenceTd'> true to enable, false to search commit comments for ID </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Timeout </td>
+<td class='confluenceTd'> Sleep time, in milliseconds, between polls to Git </td>
+<td class='confluenceTd'> 60000 = 1 minute </td>
+</tr>
+<tr>
+<td class='confluenceTd'> AlwaysCreate </td>
+<td class='confluenceTd'> Determines if the integration always creates a changeset. </td>
+<td class='confluenceTd'> false </td>
+</tr>
+<tr>
+<td class='confluenceTd'> ChangeComment </td>
+<td class='confluenceTd'>&nbsp;</td>
+<td class='confluenceTd'> Updated by Git </td>
+</tr>
+<tr>
+<td class='confluenceTd'> ReferenceAttribute </td>
+<td class='confluenceTd'> VersionOne Attribute to use when searching for assets to link </td>
+<td class='confluenceTd'> Number </td>
+</tr>
+<tr>
+<td class='confluenceTd'> ReferenceExpression </td>
+<td class='confluenceTd'> The Regular Expression to use when searching Git Comments for VersionOne Identifiers </td>
+<td class='confluenceTd'> [A&#45;Z{1,2}-0&#45;9+]] </td>
+</tr>
+</tbody></table>
+</div>
+
+
+<p><b>Link</b> element describes how links are created in VersionOne</p>
+<div class='table-wrap'>
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'>Element</th>
+<th class='confluenceTh'>Description</th>
+<th class='confluenceTh'>Example</th>
+</tr>
+<tr>
+<td class='confluenceTd'> Name </td>
+<td class='confluenceTd'> The name of the link in VersionOne. Supports parameter replacement for Git commit ID </td>
+<td class='confluenceTd'> ChangeSet: {0} </td>
+</tr>
+<tr>
+<td class='confluenceTd'> URL </td>
+<td class='confluenceTd'> URL to Git Commit Supports parameter replacement for Git commit ID  </td>
+<td class='confluenceTd'> 
+<a href="https://github.com/myrepo/myproject/commit/\">https://github.com/myrepo/myproject/commit/\</a>
+<p>{0} </p></td>
+</tr>
+<tr>
+<td class='confluenceTd'> OnMenu </td>
+<td class='confluenceTd'> Determines if the link appears on the VersionOne Details page tab </td>
+<td class='confluenceTd'> true </td>
+</tr>
+</tbody></table>
+</div>
+
+
+<div class="code panel" style="border-width: 1px;"><div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Example Configuration</b></div><div class="codeContent panelContent">
+<pre class="code-java">
+&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"utf-8"</span> ?&gt;
+&lt;Configuration&gt;
+    &lt;VersionOneConnection&gt;
+        &lt;Path&gt;http:<span class="code-comment">//server/versionone/&lt;/Path&gt;
+</span>        &lt;UserName&gt;admin&lt;/UserName&gt;
+        &lt;Password&gt;admin&lt;/Password&gt;
+        &lt;ProxySettings&gt;
+            &lt;UseProxy&gt;<span class="code-keyword">false</span>&lt;/UseProxy&gt;
+            &lt;Path&gt;http:<span class="code-comment">//proxyserver:3128/&lt;/Path&gt;
+</span>            &lt;UserName&gt;proxyUser&lt;/UserName&gt;
+            &lt;Password&gt;proxyUserPass&lt;/Password&gt;
+        &lt;/ProxySettings&gt;
+    &lt;/VersionOneConnection&gt;
+    &lt;GitSettings&gt;
+        &lt;Path&gt;github.com/Account.git&lt;/Path&gt;
+        &lt;Password&gt;password&lt;/Password&gt;
+        &lt;SshPassphrase&gt;passphrase&lt;/SshPassphrase&gt;
+        &lt;WatchedBranchName&gt;master&lt;/WatchedBranchName&gt;
+        &lt;LocalDirectory&gt;C:/V1Integrations/Git/Code&lt;/LocalDirectory&gt;
+    &lt;/GitSettings&gt;
+
+    &lt;!-- Set UseBranchName to <span class="code-keyword">true</span> to enable parsing branch name as VersionOne item id.
+        If you want to search VersionOne item id in commit comments then set to <span class="code-keyword">false</span>--&gt;
+    &lt;UseBranchName&gt;<span class="code-keyword">false</span>&lt;/UseBranchName&gt;
+
+    &lt;Timeout&gt;10000&lt;/Timeout&gt;
+    &lt;AlwaysCreate&gt;<span class="code-keyword">false</span>&lt;/AlwaysCreate&gt;
+    &lt;ChangeComment&gt;Updated by Git&lt;/ChangeComment&gt;
+    &lt;!-- 
+        === Sample Regexes ===
+        To Match S-01001 (Matches <span class="code-quote">"S-01001"</span>):					[A-Z]{1,2}-[0-9]+
+        To match #Reference (matches only <span class="code-quote">"Reference"</span>):			(?&lt;=#)[a-zA-Z]+\b
+        To match <span class="code-quote">"V1:Reference"</span>  (matches only <span class="code-quote">"Reference"</span>):	(?&lt;=V1:)[a-zA-Z]+\b
+    --&gt;
+    &lt;ReferenceAttribute&gt;<span class="code-object">Number</span>&lt;/ReferenceAttribute&gt;
+    &lt;ReferenceExpression&gt;&lt;![CDATA[[A-Z]{1,2}-[0-9]+]]&gt;&lt;/ReferenceExpression&gt;
+
+    &lt;Link&gt;
+        &lt;Name&gt;ChangeSet: {0}&lt;/Name&gt;
+        &lt;URL&gt;https:<span class="code-comment">//github.com/account/repo/commit/{0}&lt;/URL&gt;
+</span>        &lt;OnMenu&gt;<span class="code-keyword">true</span>&lt;/OnMenu&gt;
+    &lt;/Link&gt;
+&lt;/Configuration&gt;
+</pre>
+</div></div>
+
+                    			    </td>
+<td style="width:10%"/>
+		    </tr>
+	    </table>
+ 	    <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
+		    <tr>
+			    <td align="left"><font color="grey">Document generated on Jun 08, 2011 16:58</font></td>
+		    </tr>
+	    </table> 
+    </body>
+</html>
