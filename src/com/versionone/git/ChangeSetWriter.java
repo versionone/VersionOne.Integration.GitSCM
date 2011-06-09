@@ -59,6 +59,9 @@ public class ChangeSetWriter implements IChangeSetWriter {
         referenceAttribute = config.getReferenceAttribute();
         isAlwaysCreate = config.isAlwaysCreate();
         changeComment = config.getChangeComment();
+		
+		if(isAlwaysCreate)
+			LOG.info("Always Create a VersionOne ChangeSet");
     }
 
     public void publish(ChangeSetInfo changeSetInfo) throws VersionOneException {
