@@ -35,15 +35,17 @@ public class GitConnector implements IGitConnector {
     private final String watchedBranch;
     private final boolean useBranchName;
     private final Pattern regexPattern;
+    private final boolean alwaysCreate;
 
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public GitConnector(String password, String passphrase, String url, String watchedBranch,
-                        String localDirectory, String regexPattern, boolean useBranchName) {
+                        String localDirectory, String regexPattern, boolean useBranchName, boolean alwaysCreate) {
         this.url = url;
         this.watchedBranch = watchedBranch;
         this.localDirectory = localDirectory;
         this.useBranchName = useBranchName;
+        this.alwaysCreate = alwaysCreate;
         this.regexPattern = Pattern.compile(regexPattern);
 
         SshSessionFactory.installWithCredentials(password, passphrase);
@@ -76,6 +78,10 @@ public class GitConnector implements IGitConnector {
 
             ChangeSetListBuilder builder = new ChangeSetListBuilder(regexPattern) {
                 public boolean shouldAdd(ChangeSetInfo changeSet) {
+                    if(alwaysCreate){
+                        return true;
+                    }
+
                     if(useBranchName) {
                         return changeSet.getReferences().size() > 0;
                     } else {

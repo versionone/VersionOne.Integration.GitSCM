@@ -94,8 +94,8 @@ public class ChangeSetWriter implements IChangeSetWriter {
                 saveLinkInfo(savedAsset, changeSetInfo);
             }
 
-            LOG.info(String.format("Changeset %1$s by %2$s on %3$s was saved.", savedAsset.getOid(), changeSetInfo.getAuthor(),
-                    changeSetInfo.getChangeDate()));
+            LOG.info(String.format("Changeset %1$s (%2$s) by %3$s on %4$s was saved.", changeSetInfo.getRevision(),  savedAsset.getOid(),
+                    changeSetInfo.getAuthor(), changeSetInfo.getChangeDate()));
         } catch (Exception ex) {
             logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
         }
