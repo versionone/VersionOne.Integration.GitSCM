@@ -60,8 +60,9 @@ public class ChangeSetWriter implements IChangeSetWriter {
         isAlwaysCreate = config.isAlwaysCreate();
         changeComment = config.getChangeComment();
 		
-		if(isAlwaysCreate)
+		if(isAlwaysCreate) {
 			LOG.info("Always Create a VersionOne ChangeSet");
+        }
     }
 
     public void publish(ChangeSetInfo changeSetInfo) throws VersionOneException {

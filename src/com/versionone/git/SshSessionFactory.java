@@ -1,10 +1,10 @@
 package com.versionone.git;
 
 import com.jcraft.jsch.Session;
+import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.OpenSshConfig;
-import org.eclipse.jgit.transport.SshConfigSessionFactory;
 
-public class SshSessionFactory extends SshConfigSessionFactory {
+public class SshSessionFactory extends JschConfigSessionFactory {
 	private String password;
     private String passphrase;
 
