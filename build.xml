@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!--(c) Copyright 2010, VersionOne, Inc. All rights reserved. (c)-->
 <project name="V1GIT">
     <!-- Compiler settings -->
     <property name="compiler.debug" value="on"/>
