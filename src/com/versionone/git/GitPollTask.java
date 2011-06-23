@@ -25,7 +25,8 @@ public class GitPollTask extends TimerTask {
                 gitSettings.getLocalDirectory(),
                 configuration.getReferenceExpression(),
                 configuration.getUseBranchName(),
-                configuration.isAlwaysCreate());
+                configuration.isAlwaysCreate(),
+                storage);
 
         IVersionOneConnector v1Connector = new VersionOneConnector();
         v1Connector.connect(configuration.getVersionOneSettings());

@@ -1,18 +1,18 @@
 package com.versionone.git;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jgit.errors.NotSupportedException;
-import org.eclipse.jgit.errors.TransportException;
-import org.eclipse.jgit.lib.AnyObjectId;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.NullProgressMonitor;
-import org.eclipse.jgit.lib.ProgressMonitor;
-import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.LogCommand;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.errors.*;
+import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
+import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,16 +36,18 @@ public class GitConnector implements IGitConnector {
     private final boolean useBranchName;
     private final Pattern regexPattern;
     private final boolean alwaysCreate;
+    private final IDbStorage storage;
 
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public GitConnector(String password, String passphrase, String url, String watchedBranch,
-                        String localDirectory, String regexPattern, boolean useBranchName, boolean alwaysCreate) {
+                        String localDirectory, String regexPattern, boolean useBranchName, boolean alwaysCreate, IDbStorage storage) {
         this.url = url;
         this.watchedBranch = watchedBranch;
         this.localDirectory = localDirectory;
         this.useBranchName = useBranchName;
         this.alwaysCreate = alwaysCreate;
+        this.storage = storage;
         this.regexPattern = Pattern.compile(regexPattern);
 
         SshSessionFactory.installWithCredentials(password, passphrase);
@@ -102,31 +104,52 @@ public class GitConnector implements IGitConnector {
         }
     }
 
-    private List<ChangeSetInfo> traverseChanges(ChangeSetListBuilder builder) throws GitException {
-    	
+    private void traverseChanges(ChangeSetListBuilder builder) throws GitException {
+        Git git = new Git(local);
+        LogCommand logCommand = git.log();
+
     	if(LOG.isDebugEnabled()) {
 	        Map<String, Ref> refs = local.getAllRefs();
-	
+
 	        LOG.debug("Available Branches");
 	        for (String key : refs.keySet()) {
 	            LOG.debug("    " + key + " - " + refs.get(key).getName());
 	        }
 	        LOG.debug("We are going to process branch " + Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
     	}
-    	
-        RevWalk walk = new RevWalk(local);
-        walk.sort(RevSort.COMMIT_TIME_DESC);
-        walk.sort(RevSort.TOPO);
+
+        Iterable<RevCommit> commits = null;
 
         try {
             AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
-            walk.markStart(walk.parseCommit(headId));//
+            String headHash = headId.getName();
+            String persistedHash = storage.getLastCommit();
+
+            if(persistedHash != null){
+                AnyObjectId persistedHeadId = local.resolve(persistedHash);
+                LOG.debug("Processing commits from the last head: " + persistedHash);
+                logCommand.addRange(persistedHeadId, headId);
+            } else {
+                LOG.debug("Information about last head commit is not found. Processing commits from the beginning.");
+                logCommand.add(headId);
+            }
+
+            if(!headHash.equals(persistedHash)){
+                commits = logCommand.call();
+                storage.persistLastCommit(headHash);
+            } else {
+                LOG.debug("There is no new commits since last run.");
+                return;
+            }
         } catch (IOException ex) {
             LOG.fatal(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch + " can't be processed.", ex);
             throw new GitException(ex);
+        } catch (NoHeadException ex) {
+            LOG.fatal("Can't find starting revision.", ex);
+            throw new GitException(ex);
         }
 
-        for (RevCommit commit : walk) {
+        for (RevCommit commit : commits) {
             // jGit returns data in second.
             long millisecond = commit.getCommitTime() *  1000l;
             ChangeSetInfo info = new ChangeSetInfo(
@@ -146,8 +169,6 @@ public class GitConnector implements IGitConnector {
 
             builder.add(info);
         }
-
-        return builder.build();
     }
 
     private void fillReferences(String message, List<String> references) {

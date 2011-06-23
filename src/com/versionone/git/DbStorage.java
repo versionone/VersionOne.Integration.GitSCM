@@ -1,16 +1,16 @@
 package com.versionone.git;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
+import javax.xml.transform.Result;
+import java.io.Console;
 import java.util.List;
 
 public class DbStorage implements IDbStorage {
+    private final String LAST_COMMIT_HASH = "LastCommitHash";
     private final Session session;
 
     private Session getSession() {
@@ -40,5 +40,23 @@ public class DbStorage implements IDbStorage {
                 .add(Restrictions.eq("hash", change.getHash()));
         Integer count = (Integer) criteria.setProjection(Projections.rowCount()).uniqueResult();
         return count > 0;
+    }
+
+    public void persistLastCommit(String commitHash) {
+        DictionaryItem lastHash = new DictionaryItem();
+        lastHash.setId(LAST_COMMIT_HASH);
+        lastHash.setValue(commitHash);
+
+        Transaction tr = getSession().beginTransaction();
+        getSession().saveOrUpdate(lastHash);
+        tr.commit();
+        getSession().flush();
+    }
+
+    public String getLastCommit(){
+        Criteria criteria = getSession().createCriteria(DictionaryItem.class).add(Restrictions.eq("id", LAST_COMMIT_HASH));
+        DictionaryItem result = (DictionaryItem)criteria.uniqueResult();
+        getSession().evict(result);
+        return result == null ? null : result.getValue();
     }
 }

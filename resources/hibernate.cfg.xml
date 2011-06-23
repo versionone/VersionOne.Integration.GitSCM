@@ -10,5 +10,6 @@
           <property name="dialect">org.hibernate.dialect.DerbyDialect</property>
           <property name="hibernate.hbm2ddl.auto">update</property>
           <mapping resource="com/versionone/git/PersistentChange.hbm.xml" />
+          <mapping resource="com/versionone/git/Dictionary.hbm.xml" />
     </session-factory>
 </hibernate-configuration>
