@@ -24,17 +24,20 @@ public class VersionOneConnector implements IVersionOneConnector {
             String path = connectionInfo.getPath();
             ProxyProvider proxy = getProxy(connectionInfo.getProxySettings());
 
-            V1APIConnector metaConnector = new V1APIConnector(path + META_URL_SUFFIX, connectionInfo.getUserName(),
-                    connectionInfo.getPassword(), proxy);
+            V1APIConnector metaConnector = new V1APIConnector(path + META_URL_SUFFIX, proxy);
             metaModel = new MetaModel(metaConnector);
 
             V1APIConnector localizerConnector = new V1APIConnector(path + LOCALIZER_URL_SUFFIX, connectionInfo.getUserName(),
                     connectionInfo.getPassword(), proxy);
             localizer = new Localizer(localizerConnector);
+            V1APIConnector dataConnector;
 
-            V1APIConnector dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, connectionInfo.getUserName(),
+            if (connectionInfo.getIntegratedAuth() != null && connectionInfo.getIntegratedAuth()) {
+                dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, proxy);
+            } else {
+                dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, connectionInfo.getUserName(),
                     connectionInfo.getPassword(), proxy);
-
+            }
             services = new Services(metaModel, dataConnector);
             services.getLoggedIn();
             LOG.info("Connection to VersionOne server established.");

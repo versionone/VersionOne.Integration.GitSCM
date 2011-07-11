@@ -4,6 +4,7 @@
         <Path>http://integsrv01.internal.corp/VersionOne10/</Path>
         <UserName>admin</UserName>
         <Password>admin</Password>
+        <IntegratedAuth>false</IntegratedAuth>
         <ProxySettings>
             <UseProxy>false</UseProxy>
             <Path>http://integvm01:3128/</Path>

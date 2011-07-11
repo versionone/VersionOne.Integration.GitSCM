@@ -6,10 +6,18 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/Changes" />
+      <excludeFolder url="file://$MODULE_DIR$/Common" />
+      <excludeFolder url="file://$MODULE_DIR$/ServiceWrapper" />
+      <excludeFolder url="file://$MODULE_DIR$/_publish" />
+      <excludeFolder url="file://$MODULE_DIR$/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/distr" />
+      <excludeFolder url="file://$MODULE_DIR$/junit" />
+      <excludeFolder url="file://$MODULE_DIR$/logs" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="Unnamed" level="project" />
   </component>
 </module>
 

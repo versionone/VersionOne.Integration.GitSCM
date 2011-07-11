@@ -15,6 +15,9 @@ public class VersionOneSettings {
     @XmlElement(name = "ProxySettings")
     private ProxySettings proxySettings;
 
+    @XmlElement(name = "IntegratedAuth")
+    private Boolean integratedAuth;
+
     public String getPath() {
         return versionOnePath;
     }
@@ -29,5 +32,9 @@ public class VersionOneSettings {
 
     public ProxySettings getProxySettings() {
         return proxySettings;
+    }
+
+    public Boolean getIntegratedAuth() {
+        return integratedAuth;
     }
 }

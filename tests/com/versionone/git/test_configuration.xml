@@ -4,6 +4,7 @@
         <Path>http://VersionOne.com/VersionOne/</Path>
         <UserName>admin</UserName>
         <Password>adminpass</Password>
+        <IntegratedAuth>true</IntegratedAuth>
         <ProxySettings>
             <UseProxy>false</UseProxy>
             <Path>http://proxy:3128/</Path>

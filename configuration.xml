@@ -4,6 +4,8 @@
         <Path>http://server/versionone/</Path>
         <UserName>admin</UserName>
         <Password>admin</Password>
+        <!-- true - not use UserName and Password data-->
+        <IntegratedAuth>true</IntegratedAuth>
         <ProxySettings>
             <UseProxy>false</UseProxy>
             <Path>http://proxyserver:3128/</Path>

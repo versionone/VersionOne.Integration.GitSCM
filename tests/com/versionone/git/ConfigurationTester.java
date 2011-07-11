@@ -20,6 +20,7 @@ public class ConfigurationTester {
         Assert.assertEquals("VersionOne path is incorrect.", "http://VersionOne.com/VersionOne/", v1.getPath());
         Assert.assertEquals("VersionOne user name is incorrect.", "admin", v1.getUserName());
         Assert.assertEquals("VersionOne password is incorrect.", "adminpass", v1.getPassword());
+        Assert.assertEquals("Integrated Windows Authentication is not correct .", true, v1.getIntegratedAuth());
         Assert.assertEquals("Incorrect settings for using proxy.", false, proxy.getUseProxy());
         Assert.assertEquals("Proxy path is incorrect.", "http://proxy:3128/", proxy.getPath());
         Assert.assertEquals("Proxy user name is incorrect.", "proxyUser", proxy.getUserName());
