@@ -17,15 +17,15 @@
                                                     </span>
 				    </div>
 				    <div class="pagesubheading">
-					    This page last changed on Jun 10, 2011 by <font color="#0050B2">jerry</font>.
+					    This page last changed on Jul 11, 2011 by <font color="#0050B2">jerry</font>.
                                     </div>
 
 				    <style type='text/css'>/*<![CDATA[*/
-div.rbtoc1307706701710 {margin-left: 0px;padding: 0px;}
-div.rbtoc1307706701710 ul {list-style: none;margin-left: 0px;}
-div.rbtoc1307706701710 li {margin-left: 0px;padding-left: 0px;}
+div.rbtoc1310395573218 {margin-left: 0px;padding: 0px;}
+div.rbtoc1310395573218 ul {list-style: none;margin-left: 0px;}
+div.rbtoc1310395573218 li {margin-left: 0px;padding-left: 0px;}
 
-/*]]>*/</style><div class='rbtoc1307706701710'>
+/*]]>*/</style><div class='rbtoc1310395573218'>
 <ul>
     <li><span class='TOCOutline'>1</span> <a href='#VersionOneGitIntegration-Description'>Description</a></li>
     <li><span class='TOCOutline'>2</span> <a href='#VersionOneGitIntegration-SystemRequirements'>System Requirements</a></li>
@@ -43,7 +43,7 @@ div.rbtoc1307706701710 li {margin-left: 0px;padding-left: 0px;}
 <p>Once V1Git has been installed, development team members include a story or defect ID, such as “S-01454” in their Git commit messages. V1Git checks each commit message for IDs and creates a changeset within VersionOne linted to the stories or defects matching the entered IDs. A changeset is the collection of changes for a single revision in Git. The changesets for each story or defect are viewable on the details page of that item in VersionOne. Additionally, V1Git has the capability to create link on the changeset in VersionOne that navigates to the changeset in a Git repository viewer</p>
 
 <p>The following sequence diagram illustrates how V1Git interacts with Git and VersionOne.<br/>
-<span class="image-wrap" style=""><a class="confluence-thumbnail-link 602x520" href='http://confluence/download/attachments/10912683/Sequence.png'><img src="attachments/thumbnails/10912683/11468806" border="0"/></a></span></p>
+<span class="image-wrap" style=""><a class="confluence-thumbnail-link 602x520" href='http://confluence/download/attachments/10912683/Sequence.png'><img src="attachments/thumbnails/10912683/11468806" style="border: 0px solid black"/></a></span></p>
 
 <h2><a name="VersionOneGitIntegration-SystemRequirements"></a>System Requirements</h2>
 <ul>
@@ -86,8 +86,8 @@ Open up the command prompt, navigate to your installation folder, and run the fo
 <blockquote><p><tt>RunGitIntegration.bat</tt></p></blockquote>
 <p>You should see output similar to the following:</p>
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
-<pre class="code-java">
-2011-06-09 16:35:59 GitIntegration [INFO] Git integration service is starting.
+<div id="root">
+		<pre class="theme: Confluence; brush: java; gutter: false">2011-06-09 16:35:59 GitIntegration [INFO] Git integration service is starting.
 2011-06-09 16:35:59 GitIntegration [INFO] Loading configuration...
 2011-06-09 16:35:59 GitIntegration [INFO] Configuration loaded.
 2011-06-09 16:35:59 GitIntegration [INFO] Creating service...
@@ -97,20 +97,21 @@ Open up the command prompt, navigate to your installation folder, and run the fo
 2011-06-09 16:36:08 GitIntegration [INFO] Fetch Repository
 2011-06-09 16:37:45 GitIntegration [INFO] Connection to Git server established.
 2011-06-09 16:37:45 GitIntegration [INFO] Service created.
-2011-06-09 16:37:45 GitIntegration [INFO] Processing <span class="code-keyword">new</span> changes...
+2011-06-09 16:37:45 GitIntegration [INFO] Processing new changes...
 2011-06-09 16:37:45 GitIntegration [INFO] Fetch Repository
-2011-06-09 16:37:47 GitIntegration [INFO] Completed.
-</pre>
+2011-06-09 16:37:47 GitIntegration [INFO] Completed.</pre>
+		</div>
 </div></div>
 <p>The last 3 lines are repeated each time the integration checks the repository for changes.<br class="atl-forced-newline" />
 <br class="atl-forced-newline" /></p></li>
 	<li>Test the integration<br/>
 To ensure the integration is working, commit and push a change to your Git repository that includes a VersionOne identifier (i.e. "S-01001 testing the git integration"). The next time the integration polls Git, you should see something similar to the following
 <div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
-<pre class="code-java">
-2011-06-09 16:45:45 GitIntegration [INFO] Fetch Repository
+<div id="root">
+		<pre class="theme: Confluence; brush: java; gutter: false">2011-06-09 16:45:45 GitIntegration [INFO] Fetch Repository
 2011-06-09 16:45:47 GitIntegration [INFO] Changeset ChangeSet:263587:733085 by Jerry Odenwelder on Thu Jun 09 16:45:32 EDT 2011 was saved.
 2011-06-09 16:45:48 GitIntegration [INFO] Completed.</pre>
+		</div>
 </div></div>
 <p><br class="atl-forced-newline" /></p></li>
 	<li>Install as a Windows Service<br/>
@@ -153,7 +154,7 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
 </tr>
 <tr>
 <td class='confluenceTd'> UserName </td>
-<td class='confluenceTd'> Valid VersionOne user </td>
+<td class='confluenceTd'> Valid VersionOne user. </td>
 <td class='confluenceTd'> admin </td>
 </tr>
 <tr>
@@ -164,6 +165,7 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
 </tbody></table>
 </div>
 
+<div class='panelMacro'><table class='infoMacro'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="images/icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>If your VersionOne instance is configured for Windows Integrated Authentication, you need to leave the UserName and Password elements blank.</td></tr></table></div>
 <p>The nested <b>ProxySettings</b> element specifies proxy settings for your VersionOne connection.</p>
 <div class='table-wrap'>
 <table class='confluenceTable'><tbody>
@@ -227,8 +229,7 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
 <tr>
 <td class='confluenceTd'> LocalDirectory </td>
 <td class='confluenceTd'> Name of a local directory to use </td>
-<td class='confluenceTd'> <div class="" align='center'>C:/V1Integrations/Git/Code</div>
- </td>
+<td class='confluenceTd'>&nbsp;</td>
 </tr>
 </tbody></table>
 </div>
@@ -244,7 +245,7 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
 </tr>
 <tr>
 <td class='confluenceTd'> UseBranchName </td>
-<td class='confluenceTd'> Determines where the integration looks for VersionOne identifiers. <ul><li>When set to true, the integration parses branch names.</li><li>When set to false, the integration parses commit comments.</li></ul> </td>
+<td class='confluenceTd'> Determines where the integration looks for VersionOne identifiers.  </td>
 <td class='confluenceTd'> false </td>
 </tr>
 <tr>
@@ -254,7 +255,7 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
 </tr>
 <tr>
 <td class='confluenceTd'> AlwaysCreate </td>
-<td class='confluenceTd'> Determines when the integration creates a VersionOne ChangeSet.<ul><li>When set to true, ChangeSets are always created.</li><li>When set to false, ChangeSets are only created when they contain VersionOne identifiers.</li></ul> </td>
+<td class='confluenceTd'> Determines when the integration creates a VersionOne ChangeSet. </td>
 <td class='confluenceTd'> false </td>
 </tr>
 <tr>
@@ -292,12 +293,11 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
 <tr>
 <td class='confluenceTd'> URL </td>
 <td class='confluenceTd'> The contents of this element are used to create a URL to the actual Git commit.  The {0} is replaced with the Git commit identifier</td>
-<td class='confluenceTd'> <div class="" align='center'><a href="https://github.com/myrepo/myproject/commit/">https://github.com/myrepo/myproject/commit/</a>{0} </div>
-  </td>
+<td class='confluenceTd'>&nbsp;</td>
 </tr>
 <tr>
 <td class='confluenceTd'> OnMenu </td>
-<td class='confluenceTd'> Determines if the Link Title appears on the Story or Defect Details page in VersionOne.<ul><li>When set to true, the Title appears on the menu</li><li>When set to false, the title does not appear on the menu.</li></ul> </td>
+<td class='confluenceTd'> Determines if the Link Title appears on the Story or Defect Details page in VersionOne. </td>
 <td class='confluenceTd'> true </td>
 </tr>
 </tbody></table>
@@ -306,17 +306,17 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
 
 <h4><a name="VersionOneGitIntegration-ExampleConfigurationFile"></a>Example Configuration File</h4>
 <div class="code panel" style="border-width: 1px;"><div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Example Configuration</b></div><div class="codeContent panelContent">
-<pre class="code-java">
-&lt;?xml version=<span class="code-quote">"1.0"</span> encoding=<span class="code-quote">"utf-8"</span> ?&gt;
+<div id="root">
+		<pre class="theme: Confluence; brush: java; gutter: false">&lt;?xml version="1.0" encoding="utf-8" ?&gt;
 &lt;Configuration&gt;
     &lt;VersionOneConnection&gt;
-        &lt;Path&gt;http:<span class="code-comment">//server/versionone/&lt;/Path&gt;
-</span>        &lt;UserName&gt;admin&lt;/UserName&gt;
+        &lt;Path&gt;http://server/versionone/&lt;/Path&gt;
+        &lt;UserName&gt;admin&lt;/UserName&gt;
         &lt;Password&gt;admin&lt;/Password&gt;
         &lt;ProxySettings&gt;
-            &lt;UseProxy&gt;<span class="code-keyword">false</span>&lt;/UseProxy&gt;
-            &lt;Path&gt;http:<span class="code-comment">//proxyserver:3128/&lt;/Path&gt;
-</span>            &lt;UserName&gt;proxyUser&lt;/UserName&gt;
+            &lt;UseProxy&gt;false&lt;/UseProxy&gt;
+            &lt;Path&gt;http://proxyserver:3128/&lt;/Path&gt;
+            &lt;UserName&gt;proxyUser&lt;/UserName&gt;
             &lt;Password&gt;proxyUserPass&lt;/Password&gt;
         &lt;/ProxySettings&gt;
     &lt;/VersionOneConnection&gt;
@@ -328,29 +328,29 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
         &lt;LocalDirectory&gt;C:/V1Integrations/Git/Code&lt;/LocalDirectory&gt;
     &lt;/GitSettings&gt;
 
-    &lt;!-- Set UseBranchName to <span class="code-keyword">true</span> to enable parsing branch name as VersionOne item id.
-        If you want to search VersionOne item id in commit comments then set to <span class="code-keyword">false</span>--&gt;
-    &lt;UseBranchName&gt;<span class="code-keyword">false</span>&lt;/UseBranchName&gt;
+    &lt;!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
+        If you want to search VersionOne item id in commit comments then set to false--&gt;
+    &lt;UseBranchName&gt;false&lt;/UseBranchName&gt;
 
     &lt;Timeout&gt;10000&lt;/Timeout&gt;
-    &lt;AlwaysCreate&gt;<span class="code-keyword">false</span>&lt;/AlwaysCreate&gt;
+    &lt;AlwaysCreate&gt;false&lt;/AlwaysCreate&gt;
     &lt;ChangeComment&gt;Updated by Git&lt;/ChangeComment&gt;
     &lt;!-- 
         === Sample Regexes ===
-        To Match S-01001 (Matches <span class="code-quote">"S-01001"</span>):			[A-Z]{1,2}-[0-9]+
-        To match #Reference (matches only <span class="code-quote">"Reference"</span>):		(?&lt;=#)[a-zA-Z]+\b
-        To match <span class="code-quote">"V1:Reference"</span>  (matches only <span class="code-quote">"Reference"</span>):	(?&lt;=V1:)[a-zA-Z]+\b
+        To Match S-01001 (Matches "S-01001"):			[A-Z]{1,2}-[0-9]+
+        To match #Reference (matches only "Reference"):		(?&lt;=#)[a-zA-Z]+\b
+        To match "V1:Reference"  (matches only "Reference"):	(?&lt;=V1:)[a-zA-Z]+\b
     --&gt;
-    &lt;ReferenceAttribute&gt;<span class="code-object">Number</span>&lt;/ReferenceAttribute&gt;
+    &lt;ReferenceAttribute&gt;Number&lt;/ReferenceAttribute&gt;
     &lt;ReferenceExpression&gt;&lt;![CDATA[[A-Z]{1,2}-[0-9]+]]&gt;&lt;/ReferenceExpression&gt;
 
     &lt;Link&gt;
         &lt;Name&gt;ChangeSet: {0}&lt;/Name&gt;
-        &lt;URL&gt;https:<span class="code-comment">//github.com/account/repo/commit/{0}&lt;/URL&gt;
-</span>        &lt;OnMenu&gt;<span class="code-keyword">true</span>&lt;/OnMenu&gt;
+        &lt;URL&gt;https://github.com/account/repo/commit/{0}&lt;/URL&gt;
+        &lt;OnMenu&gt;true&lt;/OnMenu&gt;
     &lt;/Link&gt;
-&lt;/Configuration&gt;
-</pre>
+&lt;/Configuration&gt;</pre>
+		</div>
 </div></div>
 
                     			    </td>
@@ -359,7 +359,7 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
 	    </table>
  	    <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
 		    <tr>
-			    <td align="left"><font color="grey">Document generated on Jun 29, 2011 09:31</font></td>
+			    <td align="left"><font color="grey">Document generated on Jul 11, 2011 10:46</font></td>
 		    </tr>
 	    </table> 
     </body>
