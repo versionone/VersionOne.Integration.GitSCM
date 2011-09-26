@@ -19,8 +19,8 @@
       <root url="jar://$PROJECT_DIR$/lib/VersionOne.ObjectModel.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jmock-2.5.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/javassist-3.4.GA.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/org.eclipse.jgit-0.9.3.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/slf4j-log4j12-1.5.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/org.eclipse.jgit-1.1.0.201109151100-r.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

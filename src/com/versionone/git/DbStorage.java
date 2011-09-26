@@ -5,8 +5,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
-import javax.xml.transform.Result;
-import java.io.Console;
 import java.util.List;
 
 public class DbStorage implements IDbStorage {
