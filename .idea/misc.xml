@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DependencyValidationManager">
-    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  <component name="BuildJarProjectSettings">
+    <option name="BUILD_JARS_ON_MAKE" value="false" />
+  </component>
+  <component name="CCaseConfig">
+    <option name="checkoutReserved" value="false" />
+    <option name="markExternalChangeAsUpToDate" value="true" />
+    <option name="checkInUseHijack" value="true" />
+    <option name="useUcmModel" value="true" />
+    <option name="isOffline" value="false" />
+    <option name="synchOutside" value="false" />
+    <option name="isHistoryResticted" value="true" />
+    <option name="useIdenticalSwitch" value="true" />
+    <option name="synchActivitiesOnRefresh" value="true" />
+    <option name="lastScr" value="" />
+    <option name="scrTextFileName" value="" />
+    <option name="historyRevisionsNumber" value="4" />
   </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
+  <component name="IdProvider" IDEtalkID="AD86F07CEC87A47351485B6A328CBCD1" />
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
     <option name="OPTION_SCOPE" value="protected" />
@@ -23,25 +38,108 @@
     <option name="LOCALE" />
     <option name="OPEN_IN_BROWSER" value="true" />
   </component>
+  <component name="MavenBuildProjectComponent">
+    <option name="mavenExecutable" value="" />
+    <option name="Settings File" value="D:\Documents and Settings\Solomin\.m2\settings.xml" />
+    <option name="mavenCommandLineParams" value="" />
+    <option name="vmOptions" value="" />
+    <option name="useMavenEmbedder" value="false" />
+    <option name="useFilter" value="false" />
+    <option name="Batch Mode" value="false" />
+    <option name="Check Plugin Updates" value="false" />
+    <option name="Debug" value="false" />
+    <option name="Errors" value="false" />
+    <option name="Fail At End" value="false" />
+    <option name="Fail Fast" value="false" />
+    <option name="Fail Never" value="false" />
+    <option name="Lax Checksums" value="false" />
+    <option name="No Plugin Registry" value="false" />
+    <option name="No Plugin Updates" value="false" />
+    <option name="Non Recursive" value="false" />
+    <option name="Offline" value="false" />
+    <option name="Reactor" value="false" />
+    <option name="Strict Checksums" value="false" />
+    <option name="Update Plugins" value="false" />
+    <option name="Update Snapshots" value="false" />
+    <option name="Skip Tests" value="false" />
+    <pom-list />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="E:/TESTING/GIT/Jgit_source_1.1.0/pom.xml" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
-  <component name="SvnBranchConfigurationManager">
-    <option name="myConfigurationMap">
-      <map>
-        <entry key="$PROJECT_DIR$">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="trunkUrl" value="" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-      </map>
+  <component name="ResourceManagerContainer">
+    <option name="myResourceBundles">
+      <value>
+        <list size="0" />
+      </value>
     </option>
+  </component>
+  <component name="StarteamConfiguration">
+    <option name="SERVER" value="" />
+    <option name="PORT" value="49201" />
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="PROJECT" value="" />
+    <option name="VIEW" value="" />
+    <option name="ALTERNATIVE_WORKING_PATH" value="" />
+    <option name="LOCK_ON_CHECKOUT" value="false" />
+    <option name="UNLOCK_ON_CHECKIN" value="false" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
     <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+  <component name="VssConfiguration">
+    <option name="CLIENT_PATH" value="" />
+    <option name="SRCSAFEINI_PATH" value="" />
+    <option name="USER_NAME" value="" />
+    <option name="PWD" value="" />
+    <CheckoutOptions>
+      <option name="COMMENT" value="" />
+      <option name="DO_NOT_GET_LATEST_VERSION" value="false" />
+      <option name="REPLACE_WRITABLE" value="false" />
+      <option name="RECURSIVE" value="false" />
+    </CheckoutOptions>
+    <CheckinOptions>
+      <option name="COMMENT" value="" />
+      <option name="KEEP_CHECKED_OUT" value="false" />
+      <option name="RECURSIVE" value="false" />
+    </CheckinOptions>
+    <AddOptions>
+      <option name="STORE_ONLY_LATEST_VERSION" value="false" />
+      <option name="CHECK_OUT_IMMEDIATELY" value="false" />
+    </AddOptions>
+    <UndocheckoutOptions>
+      <option name="MAKE_WRITABLE" value="false" />
+      <option name="REPLACE_LOCAL_COPY" value="2" />
+      <option name="RECURSIVE" value="false" />
+    </UndocheckoutOptions>
+    <GetOptions>
+      <option name="REPLACE_WRITABLE" value="0" />
+      <option name="MAKE_WRITABLE" value="false" />
+      <option name="ANSWER_NEGATIVELY" value="false" />
+      <option name="ANSWER_POSITIVELY" value="false" />
+      <option name="RECURSIVE" value="false" />
+      <option name="VERSION" />
+    </GetOptions>
+  </component>
+  <component name="XPathView.XPathProjectComponent">
+    <history />
+    <find-history />
+  </component>
+  <component name="com.sixrr.metrics.MetricsReloaded">
+    <option name="selectedProfile" value="Default" />
+    <option name="autoscroll" value="false" />
+    <option name="showOnlyWarnings" value="false" />
   </component>
 </project>
 

@@ -6,23 +6,24 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @XmlRootElement(name="Configuration")
 public class Configuration {
     @XmlElement(name = "VersionOneConnection")
     private VersionOneSettings versionOneSettings;
     @XmlElement(name = "GitSettings")
-    private GitSettings gitSettings;
+    @XmlElementWrapper(name = "GitsSettings")
+    private List<GitSettings> gitSettings;
     @XmlElement(name = "Link")
     private Link link;
 
-    @XmlElement(name = "UseBranchName")
-    private Boolean useBranchName;
     @XmlElement(name = "ReferenceAttribute")
     private String referenceAttribute;
     @XmlElement(name = "ReferenceExpression")
@@ -94,7 +95,7 @@ public class Configuration {
         return versionOneSettings;
     }
 
-    public GitSettings getGitSettings() {
+    public List<GitSettings> getGitSettings() {
         return gitSettings;
     }
 
@@ -108,10 +109,6 @@ public class Configuration {
 
     public String getReferenceExpression() {
         return referenceExpression;
-    }
-
-    public Boolean getUseBranchName() {
-        return useBranchName;
     }
 
     public int getTimeoutMillis() {

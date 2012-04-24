@@ -15,14 +15,15 @@ public class ChangeSetWriterTester {
     @Parameterized.Parameters
     public static Collection<Object[]> generateData() {
       Object[][] data = new Object[][] {
-              {true},
-              {true}
+              {true, "B-01013"},
+              {false, "B-01014"}
       };
 
       return Arrays.asList(data);
     }
 
     private boolean useProxy;
+    private String workitemNumber = "B-01013";
 
     private Configuration config;
     private IAssetType changeSetType;
@@ -33,10 +34,12 @@ public class ChangeSetWriterTester {
     private final String nameAttrDef = "Name";
     private final String descriptionAttrDef = "Description";
 
+
     private IVersionOneConnector connector;
 
-    public ChangeSetWriterTester(boolean useProxy) {
+    public ChangeSetWriterTester(boolean useProxy, String workitemNumber) {
         this.useProxy = useProxy;
+        this.workitemNumber = workitemNumber;
     }
 
     @Before
@@ -53,10 +56,10 @@ public class ChangeSetWriterTester {
     }
 
     @Test
-    @Ignore("Integration test")
+    @Ignore("Integration test. Set real workitem in generateData() method.")
     public void publishTest() throws VersionOneException, APIException, OidException, ConnectionException {
         List<String> refs = new LinkedList<String>();
-        refs.add("B-01112");
+        refs.add(workitemNumber);
 
         Calendar cal =  GregorianCalendar.getInstance();
         cal.set(2010, 11, 1, 14, 43, 56);

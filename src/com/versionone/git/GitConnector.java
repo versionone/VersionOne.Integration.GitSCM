@@ -10,9 +10,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.*;
-import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,36 +116,7 @@ public class GitConnector implements IGitConnector {
 	        LOG.debug("We are going to process branch " + Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
     	}
 
-        Iterable<RevCommit> commits = null;
-
-        try {
-            AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
-            String headHash = headId.getName();
-            String persistedHash = storage.getLastCommit();
-
-            if(persistedHash != null){
-                AnyObjectId persistedHeadId = local.resolve(persistedHash);
-                LOG.debug("Processing commits from the last head: " + persistedHash);
-                logCommand.addRange(persistedHeadId, headId);
-            } else {
-                LOG.debug("Information about last head commit is not found. Processing commits from the beginning.");
-                logCommand.add(headId);
-            }
-
-            if(!headHash.equals(persistedHash)){
-                commits = logCommand.call();
-                storage.persistLastCommit(headHash);
-            } else {
-                LOG.debug("There is no new commits since last run.");
-                return;
-            }
-        } catch (IOException ex) {
-            LOG.fatal(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch + " can't be processed.", ex);
-            throw new GitException(ex);
-        } catch (NoHeadException ex) {
-            LOG.fatal("Can't find starting revision.", ex);
-            throw new GitException(ex);
-        }
+        Iterable<RevCommit> commits = getCommits(logCommand);
 
         for (RevCommit commit : commits) {
             // jGit returns data in second.
@@ -169,6 +138,39 @@ public class GitConnector implements IGitConnector {
 
             builder.add(info);
         }
+    }
+
+    private Iterable<RevCommit> getCommits(LogCommand logCommand) throws GitException {
+        Iterable<RevCommit> commits;
+        try {
+            AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
+            String headHash = headId.getName();
+            String persistedHash = storage.getLastCommit();
+
+            if(persistedHash != null){
+                AnyObjectId persistedHeadId = local.resolve(persistedHash);
+                LOG.debug("Processing commits from the last head: " + persistedHash);
+                logCommand.addRange(persistedHeadId, headId);
+            } else {
+                LOG.debug("Information about last head commit is not found. Processing commits from the beginning.");
+                logCommand.add(headId);
+            }
+
+            if(!headHash.equals(persistedHash)){
+                commits = logCommand.call();
+                storage.persistLastCommit(headHash);
+            } else {
+                LOG.debug("There is no new commits since last run.");
+                return new ArrayList<RevCommit>();
+            }
+        } catch (IOException ex) {
+            LOG.fatal(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch + " can't be processed.", ex);
+            throw new GitException(ex);
+        } catch (NoHeadException ex) {
+            LOG.fatal("Can't find starting revision.", ex);
+            throw new GitException(ex);
+        }
+        return commits;
     }
 
     private void fillReferences(String message, List<String> references) {

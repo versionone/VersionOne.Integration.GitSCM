@@ -13,6 +13,8 @@ public class GitSettings {
     private String passphrase;
     @XmlElement(name = "LocalDirectory")
     private String localDirectory;
+    @XmlElement(name = "UseBranchName")
+    private Boolean useBranchName;
 
     public String getRepositoryPath() {
         return repositoryPath;
@@ -28,5 +30,9 @@ public class GitSettings {
     }
     public String getWatchedBranch() {
         return watchedBranch;
+    }
+
+    public Boolean getUseBranchName() {
+        return useBranchName;
     }
 }

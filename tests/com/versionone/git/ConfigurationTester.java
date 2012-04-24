@@ -14,9 +14,11 @@ public class ConfigurationTester {
         Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
         VersionOneSettings v1 = config.getVersionOneSettings();
         ProxySettings proxy = v1.getProxySettings();
-        GitSettings git = config.getGitSettings();
-        Link link = config.getLink();
 
+        Assert.assertEquals("Incorrect amount of git repositories.", 2, config.getGitSettings().size());
+
+        GitSettings git = config.getGitSettings().get(0);
+        Link link = config.getLink();
         Assert.assertEquals("VersionOne path is incorrect.", "http://VersionOne.com/VersionOne/", v1.getPath());
         Assert.assertEquals("VersionOne user name is incorrect.", "admin", v1.getUserName());
         Assert.assertEquals("VersionOne password is incorrect.", "adminpass", v1.getPassword());
@@ -30,7 +32,7 @@ public class ConfigurationTester {
         Assert.assertEquals("Git passphrase is incorrect.", "passphrase", git.getPassphrase());
         Assert.assertEquals("Git branch name is incorrect.", "master", git.getWatchedBranch());
         Assert.assertEquals("Git local directory is incorrect.", "e:/gittmp/", git.getLocalDirectory());
-        Assert.assertEquals("Incorrect settings for processing through branch name.", false, config.getUseBranchName());
+        Assert.assertEquals("Incorrect settings for processing through branch name.", false, git.getUseBranchName());
         Assert.assertEquals("Incorrect settings for timeout.", 10000, config.getTimeoutMillis());
         Assert.assertEquals("Incorrect reference attribute name.", "Number", config.getReferenceAttribute());
         Assert.assertEquals("Incorrect reference expression pattern.", "[A-Z]{1,2}-[0-9]+", config.getReferenceExpression());
@@ -39,5 +41,13 @@ public class ConfigurationTester {
         Assert.assertEquals("Incorrect show on menu settings.", true, link.isLinkOnMenu());
         Assert.assertEquals("Incorrect comment for update.", "Updated by VersionOne.ServiceHost", config.getChangeComment());
         Assert.assertEquals("Incorrect always create settings.", false, config.isAlwaysCreate());
+
+        GitSettings git2 = config.getGitSettings().get(1);
+        Assert.assertEquals("Git repository path is incorrect.", "github.com/Account2.git", git2.getRepositoryPath());
+        Assert.assertEquals("Git password is incorrect.", "password2", git2.getPassword());
+        Assert.assertEquals("Git passphrase is incorrect.", "passphrase2", git2.getPassphrase());
+        Assert.assertEquals("Git branch name is incorrect.", "master2", git2.getWatchedBranch());
+        Assert.assertEquals("Git local directory is incorrect.", "e:/gittmp2/", git2.getLocalDirectory());
+        Assert.assertEquals("Incorrect settings for processing through branch name.", true, git2.getUseBranchName());
     }
 }

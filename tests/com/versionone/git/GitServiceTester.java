@@ -1,6 +1,5 @@
 package com.versionone.git;
 
-import com.versionone.git.configuration.Configuration;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Before;

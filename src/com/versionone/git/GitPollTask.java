@@ -15,7 +15,7 @@ public class GitPollTask extends TimerTask {
 
         IDbStorage storage = new DbStorage();
 
-        GitSettings gitSettings = configuration.getGitSettings();
+        GitSettings gitSettings = configuration.getGitSettings().get(0);
 
         IGitConnector gitConnector = new GitConnector(
                 gitSettings.getPassword(),
@@ -24,7 +24,7 @@ public class GitPollTask extends TimerTask {
                 gitSettings.getWatchedBranch(),
                 gitSettings.getLocalDirectory(),
                 configuration.getReferenceExpression(),
-                configuration.getUseBranchName(),
+                gitSettings.getUseBranchName(),
                 configuration.isAlwaysCreate(),
                 storage);
 
