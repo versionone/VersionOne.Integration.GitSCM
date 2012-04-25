@@ -28,7 +28,6 @@ public class GitServiceTester {
         GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock);
 
         context.checking(new Expectations() {{
-            oneOf(gitConnectorMock).cleanupLocalDirectory();
             oneOf(gitConnectorMock).initRepository();
             oneOf(gitConnectorMock).getCommits(); will(returnValue(new LinkedList()));
         }});
@@ -48,7 +47,6 @@ public class GitServiceTester {
         changes.add(secondChange);
 
         context.checking(new Expectations() {{
-            oneOf(gitConnectorMock).cleanupLocalDirectory();
             oneOf(gitConnectorMock).initRepository();
             oneOf(gitConnectorMock).getCommits();
                 will(returnValue(changes));
@@ -79,7 +77,6 @@ public class GitServiceTester {
         changes.add(secondChange);
 
         context.checking(new Expectations() {{
-            oneOf(gitConnectorMock).cleanupLocalDirectory();
             oneOf(gitConnectorMock).initRepository();
             oneOf(gitConnectorMock).getCommits();
                 will(returnValue(changes));

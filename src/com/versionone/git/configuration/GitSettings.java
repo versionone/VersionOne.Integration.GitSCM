@@ -11,28 +11,52 @@ public class GitSettings {
     private String password;
     @XmlElement(name = "SshPassphrase")
     private String passphrase;
-    @XmlElement(name = "LocalDirectory")
-    private String localDirectory;
     @XmlElement(name = "UseBranchName")
     private Boolean useBranchName;
 
     public String getRepositoryPath() {
         return repositoryPath;
     }
+
     public String getPassword() {
         return password;
     }
+
     public String getPassphrase() {
         return passphrase;
     }
-    public String getLocalDirectory() {
-        return localDirectory;
-    }
+
     public String getWatchedBranch() {
         return watchedBranch;
     }
 
     public Boolean getUseBranchName() {
         return useBranchName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GitSettings that = (GitSettings) o;
+
+        if (passphrase != null ? !passphrase.equals(that.passphrase) : that.passphrase != null) return false;
+        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        if (!repositoryPath.equals(that.repositoryPath)) return false;
+        if (!useBranchName.equals(that.useBranchName)) return false;
+        if (!watchedBranch.equals(that.watchedBranch)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = repositoryPath.hashCode();
+        result = 31 * result + watchedBranch.hashCode();
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (passphrase != null ? passphrase.hashCode() : 0);
+        result = 31 * result + useBranchName.hashCode();
+        return result;
     }
 }

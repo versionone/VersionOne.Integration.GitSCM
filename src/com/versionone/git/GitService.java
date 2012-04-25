@@ -17,9 +17,8 @@ public class GitService {
         this.v1ChangeSetWriter = v1ChangeSetWriter;
     }
 
-    public void initialize() throws GitException, VersionOneException {
+    public void initialize() throws GitException {
     	LOG.info("Initialize Git Service");
-        gitConnector.cleanupLocalDirectory();
         gitConnector.initRepository();
         LOG.info("Connection to Git server established.");
     }

@@ -31,7 +31,7 @@ public class ConfigurationTester {
         Assert.assertEquals("Git password is incorrect.", "password", git.getPassword());
         Assert.assertEquals("Git passphrase is incorrect.", "passphrase", git.getPassphrase());
         Assert.assertEquals("Git branch name is incorrect.", "master", git.getWatchedBranch());
-        Assert.assertEquals("Git local directory is incorrect.", "e:/gittmp/", git.getLocalDirectory());
+        Assert.assertEquals("Git local directory is incorrect.", "e:/gittmp/", config.getLocalDirectory());
         Assert.assertEquals("Incorrect settings for processing through branch name.", false, git.getUseBranchName());
         Assert.assertEquals("Incorrect settings for timeout.", 10000, config.getTimeoutMillis());
         Assert.assertEquals("Incorrect reference attribute name.", "Number", config.getReferenceAttribute());
@@ -47,7 +47,6 @@ public class ConfigurationTester {
         Assert.assertEquals("Git password is incorrect.", "password2", git2.getPassword());
         Assert.assertEquals("Git passphrase is incorrect.", "passphrase2", git2.getPassphrase());
         Assert.assertEquals("Git branch name is incorrect.", "master2", git2.getWatchedBranch());
-        Assert.assertEquals("Git local directory is incorrect.", "e:/gittmp2/", git2.getLocalDirectory());
         Assert.assertEquals("Incorrect settings for processing through branch name.", true, git2.getUseBranchName());
     }
 }

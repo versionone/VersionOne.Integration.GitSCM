@@ -18,7 +18,6 @@
             <Password>password</Password>
             <SshPassphrase>passphrase</SshPassphrase>
             <WatchedBranchName>master</WatchedBranchName>
-            <LocalDirectory>e:/gittmp/</LocalDirectory>
             <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
                 If you want to search VersionOne item id in commit comments then set to false-->
             <UseBranchName>false</UseBranchName>
@@ -28,13 +27,13 @@
             <Password>password2</Password>
             <SshPassphrase>passphrase2</SshPassphrase>
             <WatchedBranchName>master2</WatchedBranchName>
-            <LocalDirectory>e:/gittmp2/</LocalDirectory>
             <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
                 If you want to search VersionOne item id in commit comments then set to false-->
             <UseBranchName>true</UseBranchName>
         </GitSettings>
     </GitsSettings>
 
+    <LocalDirectory>e:/gittmp/</LocalDirectory>
     <Timeout>10000</Timeout>
     <AlwaysCreate>false</AlwaysCreate>
     <ChangeComment>Updated by VersionOne.ServiceHost</ChangeComment>

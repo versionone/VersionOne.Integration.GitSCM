@@ -51,13 +51,6 @@ public class GitConnector implements IGitConnector {
         SshSessionFactory.installWithCredentials(password, passphrase);
     }
 
-    public void cleanupLocalDirectory() {
-    	LOG.debug("cleanupLocalDirectory");
-        if (!deleteDirectory(new File(localDirectory))) {
-                LOG.error(localDirectory + " can't be cleaned up");
-        }
-    }
-
     public void initRepository() throws GitException {
     	LOG.debug("initRepository");
         try {
@@ -150,6 +143,7 @@ public class GitConnector implements IGitConnector {
             if(persistedHash != null){
                 AnyObjectId persistedHeadId = local.resolve(persistedHash);
                 LOG.debug("Processing commits from the last head: " + persistedHash);
+                //here we get lock for directory
                 logCommand.addRange(persistedHeadId, headId);
             } else {
                 LOG.debug("Information about last head commit is not found. Processing commits from the beginning.");
@@ -236,6 +230,8 @@ public class GitConnector implements IGitConnector {
 		local.getConfig().setString("branch", branchName, "merge", remoteBranchName); //$NON-NLS-1$ //$NON-NLS-2$
 
 		local.getConfig().save();
+
+        local.close();
     }
 
 	private void doFetch() throws NotSupportedException, TransportException {
@@ -255,19 +251,5 @@ public class GitConnector implements IGitConnector {
 		} finally {
 			tn.close();
 		}
-	}
-
-	private static boolean deleteDirectory(File dir) {
-		if (dir.isDirectory()) {
-			for (String child : dir.list()) {
-				boolean success = deleteDirectory(new File(dir, child));
-
-                if (!success) {
-					return false;
-				}
-			}
-		}
-
-        return dir.delete();
 	}
 }

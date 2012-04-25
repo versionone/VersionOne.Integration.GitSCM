@@ -23,7 +23,8 @@ public class Configuration {
     private List<GitSettings> gitSettings;
     @XmlElement(name = "Link")
     private Link link;
-
+    @XmlElement(name = "LocalDirectory")
+    private String localDirectory;
     @XmlElement(name = "ReferenceAttribute")
     private String referenceAttribute;
     @XmlElement(name = "ReferenceExpression")
@@ -121,5 +122,9 @@ public class Configuration {
 
     public String getChangeComment() {
         return changeComment;
+    }
+
+    public String getLocalDirectory() {
+        return localDirectory;
     }
 }

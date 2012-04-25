@@ -17,8 +17,6 @@ public class ServiceHandler {
 
         try {
             timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
-        } catch(GitException ex) {
-            fail();
         } catch (VersionOneException ex) {
             fail();
         }

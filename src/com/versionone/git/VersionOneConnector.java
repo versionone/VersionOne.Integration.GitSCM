@@ -32,12 +32,7 @@ public class VersionOneConnector implements IVersionOneConnector {
             localizer = new Localizer(localizerConnector);
             V1APIConnector dataConnector;
 
-            if (connectionInfo.getIntegratedAuth() != null && connectionInfo.getIntegratedAuth()) {
-                dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, proxy);
-            } else {
-                dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, connectionInfo.getUserName(),
-                    connectionInfo.getPassword(), proxy);
-            }
+            dataConnector = getDataConnector(connectionInfo);
             services = new Services(metaModel, dataConnector);
             services.getLoggedIn();
             LOG.info("Connection to VersionOne server established.");
@@ -46,6 +41,19 @@ public class VersionOneConnector implements IVersionOneConnector {
             LOG.fatal(message);
             throw new VersionOneException(message, ex);
         }
+    }
+
+    private V1APIConnector getDataConnector(VersionOneSettings connectionInfo) {
+        String path = connectionInfo.getPath();
+        ProxyProvider proxy = getProxy(connectionInfo.getProxySettings());
+        V1APIConnector dataConnector;
+        if (connectionInfo.getIntegratedAuth() != null && connectionInfo.getIntegratedAuth()) {
+            dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, proxy);
+        } else {
+            dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, connectionInfo.getUserName(),
+                connectionInfo.getPassword(), proxy);
+        }
+        return dataConnector;
     }
 
     private ProxyProvider getProxy(ProxySettings settings) {
