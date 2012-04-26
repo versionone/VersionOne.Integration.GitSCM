@@ -240,7 +240,6 @@ public class GitConnector implements IGitConnector {
 		tn.setTimeout(this.timeout);
 
         try {
-//            tn.fetch(NullProgressMonitor.INSTANCE, null);
         	tn.fetch(new ProgressMonitor(){
 				@Override public void beginTask(String taskName, int totalSubTask) {LOG.debug("Begin Task " + taskName + ". Total Subtask " + totalSubTask);}
 				@Override public void start(int totalTask) {LOG.debug("Start.  Total Task " + totalTask);}

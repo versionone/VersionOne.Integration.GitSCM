@@ -31,6 +31,15 @@
                 If you want to search VersionOne item id in commit comments then set to false-->
             <UseBranchName>true</UseBranchName>
         </GitSettings>
+        <GitSettings>
+            <Path>github.com/Account.git</Path>
+            <Password>password</Password>
+            <SshPassphrase>passphrase</SshPassphrase>
+            <WatchedBranchName>master</WatchedBranchName>
+            <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
+                If you want to search VersionOne item id in commit comments then set to false-->
+            <UseBranchName>false</UseBranchName>
+        </GitSettings>
     </GitsSettings>
 
     <LocalDirectory>e:/gittmp/</LocalDirectory>

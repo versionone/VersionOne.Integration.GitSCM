@@ -15,7 +15,7 @@ public class ConfigurationTester {
         VersionOneSettings v1 = config.getVersionOneSettings();
         ProxySettings proxy = v1.getProxySettings();
 
-        Assert.assertEquals("Incorrect amount of git repositories.", 2, config.getGitSettings().size());
+        Assert.assertEquals("Incorrect amount of git repositories.", 3, config.getGitSettings().size());
 
         GitSettings git = config.getGitSettings().get(0);
         Link link = config.getLink();
@@ -48,5 +48,23 @@ public class ConfigurationTester {
         Assert.assertEquals("Git passphrase is incorrect.", "passphrase2", git2.getPassphrase());
         Assert.assertEquals("Git branch name is incorrect.", "master2", git2.getWatchedBranch());
         Assert.assertEquals("Incorrect settings for processing through branch name.", true, git2.getUseBranchName());
+    }
+
+    @Test
+    public void gitSettingsNotEquals() {
+        Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
+        GitSettings git1 = config.getGitSettings().get(0);
+        GitSettings git2 = config.getGitSettings().get(1);
+
+        Assert.assertFalse(git1.equals(git2));
+    }
+
+    @Test
+    public void gitSettingsEquals() {
+        Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
+        GitSettings git1 = config.getGitSettings().get(0);
+        GitSettings git2 = config.getGitSettings().get(2);
+
+        Assert.assertTrue(git1.equals(git2));
     }
 }

@@ -17,7 +17,7 @@ public class GitPollTask extends TimerTask {
     private Map<GitSettings, GitService> gitServices = new HashMap<GitSettings, GitService>();
 
     GitPollTask(Configuration configuration) throws VersionOneException {
-        LOG.info("Creating service...");
+        LOG.info("Creating services...");
         this.configuration = configuration;
 
         IVersionOneConnector v1Connector = new VersionOneConnector();
@@ -25,13 +25,16 @@ public class GitPollTask extends TimerTask {
 
         changeSetWriter = new ChangeSetWriter(configuration, v1Connector);
         cleanupLocalDirectory();
-        gitServiceinItialize();
+        gitServiceInitialize();
 
-        LOG.info("Service created.");
+        LOG.info("Services created.");
     }
 
-    public void gitServiceinItialize() {
-        for (int gitRepositoryIndex = 0; gitRepositoryIndex < configuration.getGitSettings().size(); gitRepositoryIndex ++) {
+    public void gitServiceInitialize() {
+        int amountOfServices = configuration.getGitSettings().size();
+        LOG.info("Creating services (" + amountOfServices + ")...");
+
+        for (int gitRepositoryIndex = 0; gitRepositoryIndex < amountOfServices; gitRepositoryIndex ++) {
             GitSettings gitSettings = configuration.getGitSettings().get(gitRepositoryIndex);
             GitService service = getGitService(gitRepositoryIndex);
             if (service != null) {
@@ -78,7 +81,7 @@ public class GitPollTask extends TimerTask {
                 gitSettings.getPassphrase(),
                 gitSettings.getRepositoryPath(),
                 gitSettings.getWatchedBranch(),
-                configuration.getLocalDirectory() + "/" + gitRepository + "Repo",
+                String.format("%s/%sRepo", configuration.getLocalDirectory(), gitRepository),
                 configuration.getReferenceExpression(),
                 gitSettings.getUseBranchName(),
                 configuration.isAlwaysCreate(),
@@ -102,20 +105,15 @@ public class GitPollTask extends TimerTask {
 
     private void cleanupLocalDirectory() {
         LOG.debug("cleanupLocalDirectory");
+
         if (!Utilities.deleteDirectory(new File(configuration.getLocalDirectory()))) {
             LOG.error(configuration.getLocalDirectory() + " can't be cleaned up");
         }
 
-        createLocalDirectory(new File(configuration.getLocalDirectory()));
-    }
-
-    private boolean createLocalDirectory(File dir) {
-        boolean result = dir.mkdir();
+        boolean result = new File(configuration.getLocalDirectory()).mkdir();
 
         if (!result) {
-            LOG.error(dir.getPath() + " can't be created.");
+            LOG.error(configuration.getLocalDirectory() + " can't be created");
         }
-
-        return result;
     }
 }
