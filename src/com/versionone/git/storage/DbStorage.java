@@ -1,4 +1,4 @@
-package com.versionone.git;
+package com.versionone.git.storage;
 
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
@@ -35,15 +35,17 @@ public class DbStorage implements IDbStorage {
     public boolean isChangePersisted(PersistentChange change) {
         Criteria criteria = getSession()
                 .createCriteria(PersistentChange.class)
-                .add(Restrictions.eq("hash", change.getHash()));
+                .add(Restrictions.eq("hash", change.getHash()))
+                .add(Restrictions.eq("repositoryId", change.getRepositoryId()));
         Integer count = (Integer) criteria.setProjection(Projections.rowCount()).uniqueResult();
         return count > 0;
     }
 
-    public void persistLastCommit(String commitHash) {
-        DictionaryItem lastHash = new DictionaryItem();
-        lastHash.setId(LAST_COMMIT_HASH);
+    public void persistLastCommit(String commitHash, String repositoryId) {
+        LastProcessedItem lastHash = new LastProcessedItem();
+        //lastHash.setId(LAST_COMMIT_HASH + "||" + repositoryId);
         lastHash.setValue(commitHash);
+        lastHash.setRepositoryId(repositoryId);
 
         Transaction tr = getSession().beginTransaction();
         getSession().saveOrUpdate(lastHash);
@@ -51,9 +53,12 @@ public class DbStorage implements IDbStorage {
         getSession().flush();
     }
 
-    public String getLastCommit(){
-        Criteria criteria = getSession().createCriteria(DictionaryItem.class).add(Restrictions.eq("id", LAST_COMMIT_HASH));
-        DictionaryItem result = (DictionaryItem)criteria.uniqueResult();
+    public String getLastCommit(String repositoryId){
+        Criteria criteria = getSession().
+                                    createCriteria(LastProcessedItem.class).
+                                    //add(Restrictions.eq("id", LAST_COMMIT_HASH + "||" + repositoryId)).
+                                    add(Restrictions.eq("repositoryId", repositoryId));
+        LastProcessedItem result = (LastProcessedItem)criteria.uniqueResult();
         getSession().evict(result);
         return result == null ? null : result.getValue();
     }

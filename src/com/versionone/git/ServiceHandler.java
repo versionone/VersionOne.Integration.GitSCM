@@ -3,6 +3,7 @@ package com.versionone.git;
 import com.versionone.git.configuration.Configuration;
 import org.apache.log4j.Logger;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Timer;
 
 public class ServiceHandler {
@@ -18,12 +19,15 @@ public class ServiceHandler {
         try {
             timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
         } catch (VersionOneException ex) {
-            fail();
+            fail(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            fail(ex);
         }
     }
 
-    public static void fail(){
-        LOG.fatal("Closing application due to internal error.");
+    public static void fail(Exception ex){
+        LOG.fatal("Closing application due to internal error:");
+        LOG.fatal(ex.getMessage());
         System.exit(-1);
     }
 

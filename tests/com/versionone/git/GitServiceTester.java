@@ -1,5 +1,7 @@
 package com.versionone.git;
 
+import com.versionone.git.storage.IDbStorage;
+import com.versionone.git.storage.PersistentChange;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Before;
@@ -25,7 +27,7 @@ public class GitServiceTester {
 
     @Test
     public void emptyChangesetTest() throws GitException, VersionOneException {
-        GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock);
+        GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock, "repo id");
 
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).initRepository();
@@ -38,7 +40,8 @@ public class GitServiceTester {
 
     @Test
     public void branchCommitsTest() throws GitException, VersionOneException {
-        GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock);
+        final String repositoryId = "repo id";
+        GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock, repositoryId);
 
         final ChangeSetInfo firstChange = new ChangeSetInfo("user", "first commit", "1", new Date());
         final ChangeSetInfo secondChange = new ChangeSetInfo("user", "second commit", "2", new Date());
@@ -50,8 +53,8 @@ public class GitServiceTester {
             oneOf(gitConnectorMock).initRepository();
             oneOf(gitConnectorMock).getCommits();
                 will(returnValue(changes));
-            PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision());
-            PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision());
+            PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision(), repositoryId);
+            PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision(), repositoryId);
             oneOf(storageMock).isChangePersisted(firstPersistentChange);
                 will(returnValue(false));
             oneOf(v1ConnectorMock).publish(firstChange);
@@ -68,7 +71,8 @@ public class GitServiceTester {
 
     @Test
     public void branchNamesTest() throws GitException, VersionOneException {
-        GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock);
+        final String repositoryId = "repo id";
+        GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock, repositoryId);
 
         final ChangeSetInfo firstChange = new ChangeSetInfo("user", "first commit", "1", new Date());
         final ChangeSetInfo secondChange = new ChangeSetInfo("user", "second commit", "2", new Date());
@@ -80,8 +84,8 @@ public class GitServiceTester {
             oneOf(gitConnectorMock).initRepository();
             oneOf(gitConnectorMock).getCommits();
                 will(returnValue(changes));
-            PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision());
-            PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision());
+            PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision(), repositoryId);
+            PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision(), repositoryId);
             oneOf(storageMock).isChangePersisted(firstPersistentChange);
                 will(returnValue(false));
             oneOf(v1ConnectorMock).publish(firstChange);

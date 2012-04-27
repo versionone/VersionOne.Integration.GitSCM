@@ -1,5 +1,7 @@
 package com.versionone.git;
 
+import com.versionone.git.configuration.GitSettings;
+import com.versionone.git.storage.IDbStorage;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
@@ -12,7 +14,6 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -27,32 +28,30 @@ public class GitConnector implements IGitConnector {
     private final String remoteName = "origin";
 
     private final int timeout = 100;
+    private GitSettings gitSettings;
 
-    private final String url;
-    private final String localDirectory;
-    private final String watchedBranch;
-    private final boolean useBranchName;
     private final Pattern regexPattern;
     private final boolean alwaysCreate;
+    private final String localDirectory;
     private final IDbStorage storage;
+    private final String repositoryId;
 
     private static final Logger LOG = Logger.getLogger("GitIntegration");
-
-    public GitConnector(String password, String passphrase, String url, String watchedBranch,
-                        String localDirectory, String regexPattern, boolean useBranchName, boolean alwaysCreate, IDbStorage storage) {
-        this.url = url;
-        this.watchedBranch = watchedBranch;
+    public GitConnector(GitSettings gitSettings, String localDirectory, String regexPattern,
+                        boolean alwaysCreate, IDbStorage storage, String repositoryId) {
+        this.gitSettings = gitSettings;
         this.localDirectory = localDirectory;
-        this.useBranchName = useBranchName;
         this.alwaysCreate = alwaysCreate;
         this.storage = storage;
         this.regexPattern = Pattern.compile(regexPattern);
+        this.repositoryId = repositoryId;
 
-        SshSessionFactory.installWithCredentials(password, passphrase);
+        SshSessionFactory.installWithCredentials(gitSettings.getPassword(), gitSettings.getPassphrase());
     }
 
     public void initRepository() throws GitException {
     	LOG.debug("initRepository");
+
         try {
             cloneRepository();
             doFetch();
@@ -75,7 +74,7 @@ public class GitConnector implements IGitConnector {
                         return true;
                     }
 
-                    if(useBranchName) {
+                    if(gitSettings.getUseBranchName()) {
                         return changeSet.getReferences().size() > 0;
                     } else {
                         return matchByPattern(changeSet.getMessage());
@@ -106,7 +105,7 @@ public class GitConnector implements IGitConnector {
 	        for (String key : refs.keySet()) {
 	            LOG.debug("    " + key + " - " + refs.get(key).getName());
 	        }
-	        LOG.debug("We are going to process branch " + Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
+	        LOG.debug("We are going to process branch " + Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + gitSettings.getWatchedBranch());
     	}
 
         Iterable<RevCommit> commits = getCommits(logCommand);
@@ -120,7 +119,7 @@ public class GitConnector implements IGitConnector {
                     commit.getId().getName(),
                     new Date(millisecond));
 
-            if(useBranchName) {
+            if(gitSettings.getUseBranchName()) {
                 List<String> branches = getBranchNames(commit);
                 for(String branch : branches) {
                     fillReferences(branch, info.getReferences());
@@ -136,9 +135,9 @@ public class GitConnector implements IGitConnector {
     private Iterable<RevCommit> getCommits(LogCommand logCommand) throws GitException {
         Iterable<RevCommit> commits;
         try {
-            AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch);
+            AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + gitSettings.getWatchedBranch());
             String headHash = headId.getName();
-            String persistedHash = storage.getLastCommit();
+            String persistedHash = storage.getLastCommit(repositoryId);
 
             if(persistedHash != null){
                 AnyObjectId persistedHeadId = local.resolve(persistedHash);
@@ -152,13 +151,13 @@ public class GitConnector implements IGitConnector {
 
             if(!headHash.equals(persistedHash)){
                 commits = logCommand.call();
-                storage.persistLastCommit(headHash);
+                storage.persistLastCommit(headHash, repositoryId);
             } else {
                 LOG.debug("There is no new commits since last run.");
                 return new ArrayList<RevCommit>();
             }
         } catch (IOException ex) {
-            LOG.fatal(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + watchedBranch + " can't be processed.", ex);
+            LOG.fatal(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + gitSettings.getWatchedBranch() + " can't be processed.", ex);
             throw new GitException(ex);
         } catch (NoHeadException ex) {
             LOG.fatal("Can't find starting revision.", ex);
@@ -208,7 +207,7 @@ public class GitConnector implements IGitConnector {
         local = new FileRepository(localDirectory);
         local.create();
 
-        URIish uri = new URIish(url);
+        URIish uri = new URIish(gitSettings.getRepositoryPath());
 
 		remoteConfig = new RemoteConfig(local.getConfig(), remoteName);
 		remoteConfig.addURI(uri);

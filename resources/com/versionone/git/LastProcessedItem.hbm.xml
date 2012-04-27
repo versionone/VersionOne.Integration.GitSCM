@@ -3,9 +3,9 @@
       "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
           "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="com.versionone.git">
-<class name="DictionaryItem" table="Dictionary">
-    <id name="id" column="Id" />
+<hibernate-mapping package="com.versionone.git.storage">
+<class name="LastProcessedItem" table="LastProcessedItems">
+    <id name="repositoryId" column="RepositoryId" length="50"/>
     <property name="value" column="Value" length="50" />
 </class>
 </hibernate-mapping>

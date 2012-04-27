@@ -9,14 +9,12 @@ import com.versionone.apiclient.IAssetType;
 import com.versionone.apiclient.IAttributeDefinition;
 import com.versionone.apiclient.IMetaModel;
 import com.versionone.apiclient.IServices;
-import com.versionone.apiclient.OidException;
 import com.versionone.apiclient.Query;
 import com.versionone.apiclient.QueryResult;
 import com.versionone.apiclient.V1Exception;
 import com.versionone.git.configuration.Configuration;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 
 public class ChangeSetWriterUnitTester {
-
     //private JUnit4Mockery context;
     private Mockery mockery = new Mockery() {
         {
@@ -42,7 +39,6 @@ public class ChangeSetWriterUnitTester {
 
     @Before
     public void before() {
-        //context = new JUnit4Mockery();
         gitConnectorMock = mockery.mock(IGitConnector.class);
         v1ServiceMock = mockery.mock(IServices.class);
         v1ConnectorMock = mockery.mock(VersionOneConnector.class);
@@ -51,7 +47,7 @@ public class ChangeSetWriterUnitTester {
     }
 
     @Test
-    public void publish() throws VersionOneException, V1Exception, APIException, ConnectionException {
+    public void publish() throws VersionOneException, V1Exception, ConnectionException {
         Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
         ChangeSetWriter writer = new ChangeSetWriter(config, v1ConnectorMock);
         List<String> references = Arrays.asList("D-00001");
