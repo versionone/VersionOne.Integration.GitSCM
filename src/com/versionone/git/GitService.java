@@ -22,7 +22,6 @@ public class GitService {
     }
 
     public void initialize() throws GitException {
-    	LOG.info(String.format("Initialize Git Service (%s)", repositoryId));
         gitConnector.initRepository();
         LOG.info("Connection to Git server established.");
     }

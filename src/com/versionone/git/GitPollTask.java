@@ -49,7 +49,6 @@ public class GitPollTask extends TimerTask {
         LOG.info("Services created.");
     }
 
-
     @Override
     public void run() {
         LOG.info("Processing new changes...");
@@ -85,6 +84,7 @@ public class GitPollTask extends TimerTask {
                 storage, repositoryId);
         GitService service = new GitService(storage, gitConnector, changeSetWriter, repositoryId);
 
+        LOG.info(String.format("Initialize Git Service (%s)", gitSettings.getRepositoryPath()));
         return initializeGitService(service) ? service : null;
     }
 

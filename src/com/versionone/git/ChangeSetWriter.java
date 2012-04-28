@@ -16,20 +16,20 @@ public class ChangeSetWriter implements IChangeSetWriter {
     private final String changeComment;
     private final Logger LOG = Logger.getLogger("GitIntegration");
 
-    private final String CHANGESET_TYPE = "ChangeSet";
-    private final String LINK_TYPE = "Link";
-    private final String PRIMARY_WORKITEM_TYPE = "PrimaryWorkitem";
+    private static final String CHANGESET_TYPE = "ChangeSet";
+    private static final String LINK_TYPE = "Link";
+    private static final String PRIMARY_WORKITEM_TYPE = "PrimaryWorkitem";
 
-    private final String NAME_ATTRIBUTE = "Name";
-    private final String DESCRIPTION_ATTRIBUTE = "Description";
-    private final String REFERENCE_ATTRIBUTE = "Reference";
-    private final String URL_ATTRIBUTE = "URL";
-    private final String ON_MENU_ATTRIBUTE = "OnMenu";
-    private final String PRIMARY_WORKITEMS_ATTRIBUTE = "PrimaryWorkitems";
-    private final String LINKS_ATTRIBUTE = "Links.URL";
-    private final String CHILDREN_ME_AND_DOWN_ATTRIBUTE_PREFIX = "PrimaryWorkitem.ChildrenMeAndDown";
-    private final String STORY_NAME = "Plural'Story";
-    private final String DEFECT_NAME = "Plural'Defect";
+    private static final String NAME_ATTRIBUTE = "Name";
+    private static final String DESCRIPTION_ATTRIBUTE = "Description";
+    private static final String REFERENCE_ATTRIBUTE = "Reference";
+    private static final String URL_ATTRIBUTE = "URL";
+    private static final String ON_MENU_ATTRIBUTE = "OnMenu";
+    private static final String PRIMARY_WORKITEMS_ATTRIBUTE = "PrimaryWorkitems";
+    private static final String LINKS_ATTRIBUTE = "Links.URL";
+    private static final String CHILDREN_ME_AND_DOWN_ATTRIBUTE_PREFIX = "PrimaryWorkitem.ChildrenMeAndDown";
+    private static final String STORY_NAME = "Plural'Story";
+    private static final String DEFECT_NAME = "Plural'Defect";
 
     private final IVersionOneConnector connector;
 
@@ -44,7 +44,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
     private IAttributeDefinition getPrimaryWorkitemReference() {
         return connector.getMetaModel().getAttributeDefinition(CHILDREN_ME_AND_DOWN_ATTRIBUTE_PREFIX + "." + referenceAttribute);
     }
-    
+
     private IAssetType getLinkType() {
         return connector.getMetaModel().getAssetType(LINK_TYPE);
     }

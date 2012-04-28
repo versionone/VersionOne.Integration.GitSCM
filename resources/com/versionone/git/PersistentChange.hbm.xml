@@ -6,9 +6,9 @@
 <hibernate-mapping package="com.versionone.git.storage">
 <class name="PersistentChange" table="PersistentChange">
     <id name="id" column="Id">
-        <generator class="org.hibernate.id.TableHiLoGenerator"></generator>
+        <generator class="org.hibernate.id.TableHiLoGenerator"/>
     </id>
-    <property name="hash" unique="true" not-null="true" column="Hash" length="50" />
+    <property name="hash" not-null="true" column="Hash" length="50" />
     <property name="repositoryId" not-null="true" column="RepositoryId" length="50" />
 </class>
 </hibernate-mapping>
