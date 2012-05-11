@@ -127,10 +127,9 @@ deactivate Git
 						folder of your choice.</p>
 				</li>
 				<li>Configure
-					<p>
-						Instructions for configuring V1Git are located below in the <a
-							href="#VersionOneGitIntegration-ConfigureServiceHost">"Configure
-							The Integration"</a> section
+					<p>Instructions for configuring V1Git are located below in the <a
+							href="#VersionOneGitIntegration-ConfigureServiceHost">Configure
+							The Integration</a> section
 					</p>
 				</li>
 				<li>Start integration
@@ -162,7 +161,7 @@ deactivate Git
 				<li>Test the integration
 					<p>To ensure the integration is working, commit and push a
 						change to your Git repository that includes a VersionOne
-						identifier (i.e. "S-01001 testing the git integration"). The next
+						identifier (i.e. &quot;S-01001 testing the git integration&quot;). The next
 						time the integration polls Git, you should see something similar
 						to the following:</p> <code>
 <pre>
@@ -173,8 +172,7 @@ deactivate Git
 					</code>
 				</li>
 				<li>Install as a Windows Service
-					<p>
-						The download package contains a sub-directory called <em>"service"</em>.
+					<p>The download package contains a sub-directory called <em>&quot;service&quot;</em>.
 						This directory contains the batch files necessary to install and
 						uninstall the service depending on your platform.
 					</p>
@@ -184,8 +182,7 @@ deactivate Git
 						<li>Use InstallService_x64.bat to install the integration as
 							a service on a 64 bit Windows operating system</li>
 					</ul>
-					<p>
-						The service is installed to run under the <em>"Local Service"</em>
+					<p>The service is installed to run under the <em>&quot;Local Service&quot;</em>
 						account. Local Service must be given access privileges to the
 						directory where V1Git was installed so the integration can store
 						its state and write log files. Follow the steps below to change
@@ -194,12 +191,12 @@ deactivate Git
 					<ol>
 						<li>Right click the installation folder from Windows
 							Explorer.</li>
-						<li>Select "properties".</li>
-						<li>Select the "Security" tab.</li>
-						<li>Click the "Add" button.</li>
-						<li>Enter "Local Service" and click "OK".</li>
-						<li>Click the "Allow" checkbox for the "Full Control" row .</li>
-						<li>Click "OK" to save the changes.</li>
+						<li>Select &quot;properties&quot;.</li>
+						<li>Select the &quot;Security&quot; tab.</li>
+						<li>Click the &quot;Add&quot; button.</li>
+						<li>Enter &quot;Local Service&quot; and click &quot;OK&quot;.</li>
+						<li>Click the &quot;Allow&quot; checkbox for the &quot;Full Control&quot; row .</li>
+						<li>Click &quot;OK&quot; to save the changes.</li>
 					</ol>
 				</li>
 			</ol>
@@ -217,8 +214,7 @@ deactivate Git
 				notepad.exe), change the configuration parameters listed below, and
 				save your changes.</p>
 
-			<p>
-				The <b>VersionOneConnection</b> element specifies how the
+			<p>The <b>VersionOneConnection</b> element specifies how the
 				integration connects to your VersionOne server.
 			</p>
 			<table>
@@ -248,8 +244,7 @@ deactivate Git
 			<p class='info'>If your VersionOne instance is configured for
 				Windows Integrated Authentication, you need to leave the UserName
 				and Password elements blank.</p>
-			<p>
-				The nested <b>ProxySettings</b> element specifies proxy settings for
+			<p>The nested <b>ProxySettings</b> element specifies proxy settings for
 				your VersionOne connection.
 			</p>
 			<table>
@@ -282,9 +277,9 @@ deactivate Git
 				</tbody>
 			</table>
 
-			<p>
-				The <b>GitSettings</b> element specifies how the integration
-				connects to your Git server.
+			<p>The <b>GitSettings</b> element specifies how the integration
+				connects to your Git server. To connect with multiple repositories,
+				simply add more GitSettings elements.
 			</p>
 			<table>
 				<tbody>
@@ -369,8 +364,7 @@ deactivate Git
 			</table>
 
 
-			<p>
-				The <b>Link</b> element specifies how Links are created in
+			<p>The <b>Link</b> element specifies how Links are created in
 				VersionOne
 			</p>
 			<table>
@@ -409,7 +403,7 @@ deactivate Git
 			</h3>
 			<code>
 <pre>
-&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
 &lt;Configuration&gt;
     &lt;VersionOneConnection&gt;
         &lt;Path&gt;http://server/versionone/&lt;/Path&gt;
@@ -439,9 +433,9 @@ deactivate Git
     &lt;ChangeComment&gt;Updated by Git&lt;/ChangeComment&gt;
     &lt;!-- 
         === Sample Regexes ===
-        To Match S-01001 (Matches "S-01001"):			[A-Z]{1,2}-[0-9]+
-        To match #Reference (matches only "Reference"):		(?&lt;=#)[a-zA-Z]+\b
-        To match "V1:Reference"  (matches only "Reference"):	(?&lt;=V1:)[a-zA-Z]+\b
+        To Match S-01001 (Matches &quot;S-01001&quot;):			[A-Z]{1,2}-[0-9]+
+        To match #Reference (matches only &quot;Reference&quot;):		(?&lt;=#)[a-zA-Z]+\b
+        To match &quot;V1:Reference&quot;  (matches only &quot;Reference&quot;):	(?&lt;=V1:)[a-zA-Z]+\b
     --&gt;
     &lt;ReferenceAttribute&gt;Number&lt;/ReferenceAttribute&gt;
     &lt;ReferenceExpression&gt;&lt;![CDATA[[A-Z]{1,2}-[0-9]+]]&gt;&lt;/ReferenceExpression&gt;
