@@ -1,93 +1,147 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-    <head>
-        <title>VersionOne Git Integration</title>
-	    <link rel="stylesheet" href="styles/site.css" type="text/css" />
-        <META http-equiv="Content-Type" content="text/html; charset=UTF-8">	    
-    </head>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>VersionOne Git Integration</title>
+<link rel="stylesheet" href="styles/help.css" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div class="main">
+		<h1>VersionOne JIRA Integration</h1>
+		<h2>Introduction</h2>
+		<h2>Contents</h2>
+		<ul>
+			<li><a href='#VersionOneGitIntegration-Description'>Description</a></li>
+			<li><a href='#VersionOneGitIntegration-SystemRequirements'>System
+					Requirements</a></li>
+			<li><a href='#VersionOneGitIntegration-Download'>Download</a></li>
+			<li><a href='#VersionOneGitIntegration-Installation'>Installation</a></li>
+			<li><a href='#VersionOneGitIntegration-Configuration'>Configuration</a>
+				<ul>
+					<li><a
+						href='#VersionOneGitIntegration-ConfiguretheIntegration'>Configure
+							the Integration</a></li>
+					<li><a
+						href='#VersionOneGitIntegration-ExampleConfigurationFile'>Example
+							Configuration File</a></li>
+				</ul></li>
+		</ul>
 
-    <body>
-	    <table class="pagecontent" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
-		    <tr>
-<td style="width:10%"/>
-			    <td valign="top" class="pagebody">
-				    <div class="pageheader">
-					    <span class="pagetitle">
-                            VersionOne Git Integration
-                                                    </span>
-				    </div>
-				    <div class="pagesubheading">
-					    This page last changed on Jul 11, 2011 by <font color="#0050B2">jerry</font>.
-                                    </div>
+		<h2>
+			<a name="VersionOneGitIntegration-Description"></a>Description
+		</h2>
+		<p>The VersionOne Git Integration (V1Git) creates a record of Git
+			changesets in VersionOne, so the development team can quickly view
+			all of the code changes for a story or defect. This visibility can be
+			useful when tracking down defects or performing code reviews.</p>
 
-				    <style type='text/css'>/*<![CDATA[*/
-div.rbtoc1310395573218 {margin-left: 0px;padding: 0px;}
-div.rbtoc1310395573218 ul {list-style: none;margin-left: 0px;}
-div.rbtoc1310395573218 li {margin-left: 0px;padding-left: 0px;}
+		<p>Once V1Git has been installed, development team members include
+			a story or defect ID, such as “S-01454” in their Git commit messages.
+			V1Git checks each commit message for IDs and creates a changeset
+			within VersionOne linted to the stories or defects matching the
+			entered IDs. A changeset is the collection of changes for a single
+			revision in Git. The changesets for each story or defect are viewable
+			on the details page of that item in VersionOne. Additionally, V1Git
+			has the capability to create link on the changeset in VersionOne that
+			navigates to the changeset in a Git repository viewer</p>
 
-/*]]>*/</style><div class='rbtoc1310395573218'>
-<ul>
-    <li><span class='TOCOutline'>1</span> <a href='#VersionOneGitIntegration-Description'>Description</a></li>
-    <li><span class='TOCOutline'>2</span> <a href='#VersionOneGitIntegration-SystemRequirements'>System Requirements</a></li>
-    <li><span class='TOCOutline'>3</span> <a href='#VersionOneGitIntegration-Download'>Download</a></li>
-    <li><span class='TOCOutline'>4</span> <a href='#VersionOneGitIntegration-Installation'>Installation</a></li>
-    <li><span class='TOCOutline'>5</span> <a href='#VersionOneGitIntegration-Configuration'>Configuration</a></li>
-<ul>
-    <li><span class='TOCOutline'>5.1</span> <a href='#VersionOneGitIntegration-ConfiguretheIntegration'>Configure the Integration </a></li>
-</ul>
-</ul></div>
+		<p>
+			The following sequence diagram illustrates how V1Git interacts with
+			Git and VersionOne.<br />
+			<div class=wsd wsd_style="qsd">
+<pre>
+title Git Integration Sequence
 
-<h2><a name="VersionOneGitIntegration-Description"></a>Description</h2>
-<p>The VersionOne Git Integration (V1Git) creates a record of Git changesets in VersionOne, so the development team can quickly view all of the code changes for a story or defect. This visibility can be useful when tracking down defects or performing code reviews.</p>
+Integration->Git: Any changes?
+activate Git
+Git->Integration: No
+deactivate Git
 
-<p>Once V1Git has been installed, development team members include a story or defect ID, such as “S-01454” in their Git commit messages. V1Git checks each commit message for IDs and creates a changeset within VersionOne linted to the stories or defects matching the entered IDs. A changeset is the collection of changes for a single revision in Git. The changesets for each story or defect are viewable on the details page of that item in VersionOne. Additionally, V1Git has the capability to create link on the changeset in VersionOne that navigates to the changeset in a Git repository viewer</p>
+Developer->Git: Commit change
+Integration->Git: Any changes?
+activate Git
+Git->Integration: Yes
+deactivate Git
+activate Integration
+Integration->VersionOne: Create ChangeSet
+Integration->VersionOne: Relate ChangeSet to WorkItems
+Integration->VersionOne: Link to Git
+deactivate Integration
 
-<p>The following sequence diagram illustrates how V1Git interacts with Git and VersionOne.<br/>
-<span class="image-wrap" style=""><a class="confluence-thumbnail-link 602x520" href='http://confluence/download/attachments/10912683/Sequence.png'><img src="attachments/thumbnails/10912683/11468806" style="border: 0px solid black"/></a></span></p>
+Integration->Git: Any changes?
+activate Git
+Git->Integration: No
+deactivate Git
+</pre>
+			</div>
+			<script type="text/javascript"
+				src="http://www.websequencediagrams.com/service.js"></script>
 
-<h2><a name="VersionOneGitIntegration-SystemRequirements"></a>System Requirements</h2>
-<ul>
-	<li>VersionOne
-	<ul>
-		<li>7.1 or above, including Team Edition</li>
-	</ul>
-	</li>
-	<li>Integration Server:
-	<ul>
-		<li>Java SDK &#8211; minimum 1.6</li>
-		<li>Tested on Windows 2003, 2008</li>
-	</ul>
-	</li>
-	<li>Git Server:
-	<ul>
-		<li>Tested with GitHub</li>
-	</ul>
-	</li>
-</ul>
+			<h2>
+				<a name="VersionOneGitIntegration-SystemRequirements"></a>System
+				Requirements
+			</h2>
+			<ul>
+				<li>VersionOne:
+					<ul>
+						<li>7.1 or above, including Team Edition</li>
+					</ul>
+				</li>
+				<li>Integration Server:
+					<ul>
+						<li>Java SDK 1.6 or above</li>
+					</ul>
+				</li>
+				<li>Git Server:
+					<ul>
+						<li>Tested with GitHub</li>
+					</ul>
+				</li>
+			</ul>
 
 
-<h2><a name="VersionOneGitIntegration-Download"></a>Download</h2>
-<p>The latest version of V1Git is available from <a href="http://community.versionone.com/Downloads/default.aspx">the VersionOne Community site </a></p>
+			<h2>
+				<a name="VersionOneGitIntegration-Download"></a>Download
+			</h2>
+			<p>
+				The latest version of V1Git is available from <a
+					href="http://community.versionone.com/Downloads/default.aspx">the
+					VersionOne Community site </a>
+			</p>
 
-<h2><a name="VersionOneGitIntegration-Installation"></a>Installation </h2>
-<p>These installation instructions assume that Git is already installed, configured, and working properly.</p>
-<ol>
-	<li>Determine Install Location<br/>
-V1Git can be installed on any server with network access to both VersionOne and Git.  Exact placement should be determined by your internal software management requirements. The integration server must meet the System Requirements stated above.<br class="atl-forced-newline" />
-<br class="atl-forced-newline" /></li>
-	<li>Extract Files<br/>
-Download V1Git using the link above and extract it into a folder of your choice.<br class="atl-forced-newline" />
-<br class="atl-forced-newline" /></li>
-	<li>Configure<br/>
-Instructions for configuring V1Git are located below in the <a href="#VersionOneGitIntegration-ConfigureServiceHost">"Configure The Integration"</a> section<br class="atl-forced-newline" />
-<br class="atl-forced-newline" /></li>
-	<li>Start integration<br/>
-Open up the command prompt, navigate to your installation folder, and run the following command:
-<blockquote><p><tt>RunGitIntegration.bat</tt></p></blockquote>
-<p>You should see output similar to the following:</p>
-<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
-<div id="root">
-		<pre class="theme: Confluence; brush: java; gutter: false">2011-06-09 16:35:59 GitIntegration [INFO] Git integration service is starting.
+			<h2>
+				<a name="VersionOneGitIntegration-Installation"></a>Installation
+			</h2>
+			<p>These installation instructions assume that Git is already
+				installed, configured, and working properly.</p>
+			<ol>
+				<li>Determine Install Location
+					<p>V1Git can be installed on any server with network access to
+						both VersionOne and Git. Exact placement should be determined by
+						your internal software management requirements. The integration
+						server must meet the System Requirements stated above.</p>
+				</li>
+				<li>Extract Files
+					<p>Download V1Git using the link above and extract it into a
+						folder of your choice.</p>
+				</li>
+				<li>Configure
+					<p>
+						Instructions for configuring V1Git are located below in the <a
+							href="#VersionOneGitIntegration-ConfigureServiceHost">"Configure
+							The Integration"</a> section
+					</p>
+				</li>
+				<li>Start integration
+					<p>
+						Open up the command prompt, navigate to your installation folder,
+						and run the following command:<br />
+						<code>RunGitIntegration.bat</code>
+						<p>You should see output similar to the following:</p>
+						<code>
+<pre>
+2011-06-09 16:35:59 GitIntegration [INFO] Git integration service is starting.
 2011-06-09 16:35:59 GitIntegration [INFO] Loading configuration...
 2011-06-09 16:35:59 GitIntegration [INFO] Configuration loaded.
 2011-06-09 16:35:59 GitIntegration [INFO] Creating service...
@@ -99,215 +153,263 @@ Open up the command prompt, navigate to your installation folder, and run the fo
 2011-06-09 16:37:45 GitIntegration [INFO] Service created.
 2011-06-09 16:37:45 GitIntegration [INFO] Processing new changes...
 2011-06-09 16:37:45 GitIntegration [INFO] Fetch Repository
-2011-06-09 16:37:47 GitIntegration [INFO] Completed.</pre>
-		</div>
-</div></div>
-<p>The last 3 lines are repeated each time the integration checks the repository for changes.<br class="atl-forced-newline" />
-<br class="atl-forced-newline" /></p></li>
-	<li>Test the integration<br/>
-To ensure the integration is working, commit and push a change to your Git repository that includes a VersionOne identifier (i.e. "S-01001 testing the git integration"). The next time the integration polls Git, you should see something similar to the following
-<div class="code panel" style="border-width: 1px;"><div class="codeContent panelContent">
-<div id="root">
-		<pre class="theme: Confluence; brush: java; gutter: false">2011-06-09 16:45:45 GitIntegration [INFO] Fetch Repository
+2011-06-09 16:37:47 GitIntegration [INFO] Completed.
+</pre>
+						</code>
+						<p>The last 3 lines are repeated each time the integration
+							checks the repository for changes.</p>
+				</li>
+				<li>Test the integration
+					<p>To ensure the integration is working, commit and push a
+						change to your Git repository that includes a VersionOne
+						identifier (i.e. "S-01001 testing the git integration"). The next
+						time the integration polls Git, you should see something similar
+						to the following:</p> <code>
+<pre>
+2011-06-09 16:45:45 GitIntegration [INFO] Fetch Repository
 2011-06-09 16:45:47 GitIntegration [INFO] Changeset ChangeSet:263587:733085 by Jerry Odenwelder on Thu Jun 09 16:45:32 EDT 2011 was saved.
-2011-06-09 16:45:48 GitIntegration [INFO] Completed.</pre>
-		</div>
-</div></div>
-<p><br class="atl-forced-newline" /></p></li>
-	<li>Install as a Windows Service<br/>
-The download package contains a sub-directory called <em>"service"</em>.  This directory contains the batch files necessary to install and uninstall the service depending on your platform. 
-	<ul>
-		<li>Use InstallService_x32.bat to install the integration as a service on a 32 bit Windows operating system</li>
-		<li>Use InstallService_x64.bat to install the integration as a service on a 64 bit Windows operating system<br class="atl-forced-newline" />
-<br class="atl-forced-newline" />
-The service is installed to run under the <em>"Local Service"</em> account. Local Service must be given access privileges to the directory where V1Git was installed so the integration can store its state and write log files. Follow the steps below to change the security on the installation directory:</li>
-	</ul>
-	<ol>
-		<li>Right click the installation folder from Windows Explorer.</li>
-		<li>Select "properties".</li>
-		<li>Select the "Security" tab.</li>
-		<li>Click the "Add" button.</li>
-		<li>Enter "Local Service" and click "OK".</li>
-		<li>Click the "Allow" checkbox for the "Full Control" row .</li>
-		<li>Click "OK" to save the changes.</li>
-	</ol>
-	</li>
-</ol>
+2011-06-09 16:45:48 GitIntegration [INFO] Completed.
+</pre>
+					</code>
+				</li>
+				<li>Install as a Windows Service
+					<p>
+						The download package contains a sub-directory called <em>"service"</em>.
+						This directory contains the batch files necessary to install and
+						uninstall the service depending on your platform.
+					</p>
+					<ul>
+						<li>Use InstallService_x32.bat to install the integration as
+							a service on a 32 bit Windows operating system</li>
+						<li>Use InstallService_x64.bat to install the integration as
+							a service on a 64 bit Windows operating system</li>
+					</ul>
+					<p>
+						The service is installed to run under the <em>"Local Service"</em>
+						account. Local Service must be given access privileges to the
+						directory where V1Git was installed so the integration can store
+						its state and write log files. Follow the steps below to change
+						the security on the installation directory:
+					</p>
+					<ol>
+						<li>Right click the installation folder from Windows
+							Explorer.</li>
+						<li>Select "properties".</li>
+						<li>Select the "Security" tab.</li>
+						<li>Click the "Add" button.</li>
+						<li>Enter "Local Service" and click "OK".</li>
+						<li>Click the "Allow" checkbox for the "Full Control" row .</li>
+						<li>Click "OK" to save the changes.</li>
+					</ol>
+				</li>
+			</ol>
 
 
-<h2><a name="VersionOneGitIntegration-Configuration"></a>Configuration</h2>
-<h3><a name="VersionOneGitIntegration-ConfiguretheIntegration"></a>Configure the Integration<a name="VersionOneGitIntegration-ConfigureServiceHost"></a> </h3>
-<p>Open the file configuration.xml in a text editor (i.e. notepad.exe), change the configuration parameters listed below, and save your changes.</p>
+			<h2>
+				<a name="VersionOneGitIntegration-Configuration"></a>Configuration
+			</h2>
+			<h3>
+				<a name="VersionOneGitIntegration-ConfiguretheIntegration"></a>Configure
+				the Integration<a
+					name="VersionOneGitIntegration-ConfigureServiceHost"></a>
+			</h3>
+			<p>Open the file configuration.xml in a text editor (i.e.
+				notepad.exe), change the configuration parameters listed below, and
+				save your changes.</p>
 
-<p>The <b>VersionOneConnection</b> element specifies how the integration connects to your VersionOne server.  </p>
-<div class='table-wrap'>
-<table class='confluenceTable'><tbody>
-<tr>
-<th class='confluenceTh'>Element</th>
-<th class='confluenceTh'>Description</th>
-<th class='confluenceTh'>Example</th>
-</tr>
-<tr>
-<td class='confluenceTd'> Path </td>
-<td class='confluenceTd'> URL to VersionOne Server </td>
-<td class='confluenceTd'> <a href="http://localhost/versionone">http://localhost/versionone</a> </td>
-</tr>
-<tr>
-<td class='confluenceTd'> UserName </td>
-<td class='confluenceTd'> Valid VersionOne user. </td>
-<td class='confluenceTd'> admin </td>
-</tr>
-<tr>
-<td class='confluenceTd'> Password </td>
-<td class='confluenceTd'> Password for user </td>
-<td class='confluenceTd'> admin </td>
-</tr>
-</tbody></table>
-</div>
+			<p>
+				The <b>VersionOneConnection</b> element specifies how the
+				integration connects to your VersionOne server.
+			</p>
+			<table>
+				<tbody>
+					<tr>
+						<th>Element</th>
+						<th>Description</th>
+						<th>Example</th>
+					</tr>
+					<tr>
+						<td>Path</td>
+						<td>URL to VersionOne Server</td>
+						<td>http://localhost/versionone</td>
+					</tr>
+					<tr>
+						<td>UserName</td>
+						<td>Valid VersionOne user.</td>
+						<td>admin</td>
+					</tr>
+					<tr>
+						<td>Password</td>
+						<td>Password for user</td>
+						<td>admin</td>
+					</tr>
+				</tbody>
+			</table>
+			<p class='info'>If your VersionOne instance is configured for
+				Windows Integrated Authentication, you need to leave the UserName
+				and Password elements blank.</p>
+			<p>
+				The nested <b>ProxySettings</b> element specifies proxy settings for
+				your VersionOne connection.
+			</p>
+			<table>
+				<tbody>
+					<tr>
+						<th>Element</th>
+						<th>Description</th>
+						<th>Example</th>
+					</tr>
+					<tr>
+						<td>UseProxy</td>
+						<td>Indicates if the connection uses a proxy</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>Path</td>
+						<td>URL of Proxy Server</td>
+						<td>http://proxyserver:3128</td>
+					</tr>
+					<tr>
+						<td>UserName</td>
+						<td>Username for proxy</td>
+						<td>proxyUser</td>
+					</tr>
+					<tr>
+						<td>Password</td>
+						<td>Password for Proxy user</td>
+						<td>proxyUserPass</td>
+					</tr>
+				</tbody>
+			</table>
 
-<div class='panelMacro'><table class='infoMacro'><colgroup><col width='24'><col></colgroup><tr><td valign='top'><img src="images/icons/emoticons/information.gif" width="16" height="16" align="absmiddle" alt="" border="0"></td><td>If your VersionOne instance is configured for Windows Integrated Authentication, you need to leave the UserName and Password elements blank.</td></tr></table></div>
-<p>The nested <b>ProxySettings</b> element specifies proxy settings for your VersionOne connection.</p>
-<div class='table-wrap'>
-<table class='confluenceTable'><tbody>
-<tr>
-<th class='confluenceTh'>Element</th>
-<th class='confluenceTh'>Description</th>
-<th class='confluenceTh'>Example</th>
-</tr>
-<tr>
-<td class='confluenceTd'> UseProxy </td>
-<td class='confluenceTd'> Indicates if the connection uses a proxy </td>
-<td class='confluenceTd'> false </td>
-</tr>
-<tr>
-<td class='confluenceTd'> Path </td>
-<td class='confluenceTd'> URL of Proxy Server </td>
-<td class='confluenceTd'> <a href="http://proxyserver:3128">http://proxyserver:3128</a> </td>
-</tr>
-<tr>
-<td class='confluenceTd'> UserName </td>
-<td class='confluenceTd'> Username for proxy </td>
-<td class='confluenceTd'> proxyUser </td>
-</tr>
-<tr>
-<td class='confluenceTd'> Password </td>
-<td class='confluenceTd'> Password for Proxy user </td>
-<td class='confluenceTd'> proxyUserPass </td>
-</tr>
-</tbody></table>
-</div>
+			<p>
+				The <b>GitSettings</b> element specifies how the integration
+				connects to your Git server.
+			</p>
+			<table>
+				<tbody>
+					<tr>
+						<th>Element</th>
+						<th>Description</th>
+						<th>Example</th>
+					</tr>
+					<tr>
+						<td>Path</td>
+						<td>Path to Repository</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>Password</td>
+						<td>Password for repository</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>SshPassphrase</td>
+						<td>SSH pass phrase for accessing the Git</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>WatchedBranchName</td>
+						<td>Name of branch to watch</td>
+						<td>master</td>
+					</tr>
+					<tr>
+						<td>LocalDirectory</td>
+						<td>Name of a local directory to use</td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
 
-
-<p>The <b>GitSettings</b> element specifies how the integration connects to your Git server.</p>
-<div class='table-wrap'>
-<table class='confluenceTable'><tbody>
-<tr>
-<th class='confluenceTh'>Element</th>
-<th class='confluenceTh'>Description</th>
-<th class='confluenceTh'>Example</th>
-</tr>
-<tr>
-<td class='confluenceTd'> Path </td>
-<td class='confluenceTd'> Path to Repository </td>
-<td class='confluenceTd'>&nbsp;</td>
-</tr>
-<tr>
-<td class='confluenceTd'> Password </td>
-<td class='confluenceTd'> Password for repository </td>
-<td class='confluenceTd'>&nbsp;</td>
-</tr>
-<tr>
-<td class='confluenceTd'> SshPassphrase </td>
-<td class='confluenceTd'> SSH pass phrase for accessing the Git  </td>
-<td class='confluenceTd'>&nbsp;</td>
-</tr>
-<tr>
-<td class='confluenceTd'> WatchedBranchName </td>
-<td class='confluenceTd'> Name of branch to watch </td>
-<td class='confluenceTd'> master </td>
-</tr>
-<tr>
-<td class='confluenceTd'> LocalDirectory </td>
-<td class='confluenceTd'> Name of a local directory to use </td>
-<td class='confluenceTd'>&nbsp;</td>
-</tr>
-</tbody></table>
-</div>
-
-
-<p>The following elements control integration behavior</p>
-<div class='table-wrap'>
-<table class='confluenceTable'><tbody>
-<tr>
-<th class='confluenceTh'>Element</th>
-<th class='confluenceTh'>Description</th>
-<th class='confluenceTh'>Example</th>
-</tr>
-<tr>
-<td class='confluenceTd'> UseBranchName </td>
-<td class='confluenceTd'> Determines where the integration looks for VersionOne identifiers.  </td>
-<td class='confluenceTd'> false </td>
-</tr>
-<tr>
-<td class='confluenceTd'> Timeout </td>
-<td class='confluenceTd'> Determines how long the integration waits before polling Git. The value is in milliseconds. </td>
-<td class='confluenceTd'> 60000 = 1 minute </td>
-</tr>
-<tr>
-<td class='confluenceTd'> AlwaysCreate </td>
-<td class='confluenceTd'> Determines when the integration creates a VersionOne ChangeSet. </td>
-<td class='confluenceTd'> false </td>
-</tr>
-<tr>
-<td class='confluenceTd'> ChangeComment </td>
-<td class='confluenceTd'> The text used when creating or updating a VersionOne ChangeSet. </td>
-<td class='confluenceTd'> Updated by Git </td>
-</tr>
-<tr>
-<td class='confluenceTd'> ReferenceAttribute </td>
-<td class='confluenceTd'> Determines which VersionOne attribute is considered when looking for Stories or Defects. </td>
-<td class='confluenceTd'> Number </td>
-</tr>
-<tr>
-<td class='confluenceTd'> ReferenceExpression </td>
-<td class='confluenceTd'> Determines the Regular Expression used when searching Git comments for VersionOne Story or Defect Identifiers </td>
-<td class='confluenceTd'> [[A-Z]{1,2}-[0-9]+]] </td>
-</tr>
-</tbody></table>
-</div>
-
-
-<p>The <b>Link</b> element specifies how Links are created in VersionOne</p>
-<div class='table-wrap'>
-<table class='confluenceTable'><tbody>
-<tr>
-<th class='confluenceTh'> Element </th>
-<th class='confluenceTh'> Description </th>
-<th class='confluenceTh'> Example </th>
-</tr>
-<tr>
-<td class='confluenceTd'> Name </td>
-<td class='confluenceTd'> Determines the Title on the Link in VersionOne.  If you'd like to include the Git commit identifier in the title, add {0}</td>
-<td class='confluenceTd'> ChangeSet: {0} </td>
-</tr>
-<tr>
-<td class='confluenceTd'> URL </td>
-<td class='confluenceTd'> The contents of this element are used to create a URL to the actual Git commit.  The {0} is replaced with the Git commit identifier</td>
-<td class='confluenceTd'>&nbsp;</td>
-</tr>
-<tr>
-<td class='confluenceTd'> OnMenu </td>
-<td class='confluenceTd'> Determines if the Link Title appears on the Story or Defect Details page in VersionOne. </td>
-<td class='confluenceTd'> true </td>
-</tr>
-</tbody></table>
-</div>
+			<p>The following elements control integration behavior</p>
+			<table>
+				<tbody>
+					<tr>
+						<th>Element</th>
+						<th>Description</th>
+						<th>Example</th>
+					</tr>
+					<tr>
+						<td>UseBranchName</td>
+						<td>Determines where the integration looks for VersionOne
+							identifiers.</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>Timeout</td>
+						<td>Determines how long the integration waits before polling
+							Git. The value is in milliseconds.</td>
+						<td>60000 = 1 minute</td>
+					</tr>
+					<tr>
+						<td>AlwaysCreate</td>
+						<td>Determines when the integration creates a VersionOne
+							ChangeSet.</td>
+						<td>false</td>
+					</tr>
+					<tr>
+						<td>ChangeComment</td>
+						<td>The text used when creating or updating a VersionOne
+							ChangeSet.</td>
+						<td>Updated by Git</td>
+					</tr>
+					<tr>
+						<td>ReferenceAttribute</td>
+						<td>Determines which VersionOne attribute is considered when
+							looking for Stories or Defects.</td>
+						<td>Number</td>
+					</tr>
+					<tr>
+						<td>ReferenceExpression</td>
+						<td>Determines the Regular Expression used when searching Git
+							comments for VersionOne Story or Defect Identifiers</td>
+						<td>[[A-Z]{1,2}-[0-9]+]]</td>
+					</tr>
+				</tbody>
+			</table>
 
 
-<h4><a name="VersionOneGitIntegration-ExampleConfigurationFile"></a>Example Configuration File</h4>
-<div class="code panel" style="border-width: 1px;"><div class="codeHeader panelHeader" style="border-bottom-width: 1px;"><b>Example Configuration</b></div><div class="codeContent panelContent">
-<div id="root">
-		<pre class="theme: Confluence; brush: java; gutter: false">&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+			<p>
+				The <b>Link</b> element specifies how Links are created in
+				VersionOne
+			</p>
+			<table>
+				<tbody>
+					<tr>
+						<th>Element</th>
+						<th>Description</th>
+						<th>Example</th>
+					</tr>
+					<tr>
+						<td>Name</td>
+						<td>Determines the Title on the Link in VersionOne. If you'd
+							like to include the Git commit identifier in the title, add {0}</td>
+						<td>ChangeSet: {0}</td>
+					</tr>
+					<tr>
+						<td>URL</td>
+						<td>The contents of this element are used to create a URL to
+							the actual Git commit. The {0} is replaced with the Git commit
+							identifier</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>OnMenu</td>
+						<td>Determines if the Link Title appears on the Story or
+							Defect Details page in VersionOne.</td>
+						<td>true</td>
+					</tr>
+				</tbody>
+			</table>
+
+
+			<h3>
+				<a name="VersionOneGitIntegration-ExampleConfigurationFile"></a>Example
+				Configuration File
+			</h3>
+			<code>
+<pre>
+&lt;?xml version="1.0" encoding="utf-8" ?&gt;
 &lt;Configuration&gt;
     &lt;VersionOneConnection&gt;
         &lt;Path&gt;http://server/versionone/&lt;/Path&gt;
@@ -349,18 +451,9 @@ The service is installed to run under the <em>"Local Service"</em> account. Loca
         &lt;URL&gt;https://github.com/account/repo/commit/{0}&lt;/URL&gt;
         &lt;OnMenu&gt;true&lt;/OnMenu&gt;
     &lt;/Link&gt;
-&lt;/Configuration&gt;</pre>
-		</div>
-</div></div>
-
-                    			    </td>
-<td style="width:10%"/>
-		    </tr>
-	    </table>
- 	    <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#ffffff">
-		    <tr>
-			    <td align="left"><font color="grey">Document generated on Jul 11, 2011 10:46</font></td>
-		    </tr>
-	    </table> 
-    </body>
+&lt;/Configuration&gt;
+</pre>
+			</code>
+	</div>
+</body>
 </html>
