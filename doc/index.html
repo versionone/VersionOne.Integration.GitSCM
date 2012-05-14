@@ -55,13 +55,13 @@ title Git Integration Sequence
 
 Integration->Git: Any changes?
 activate Git
-Git->Integration: No
+Git-->Integration: No
 deactivate Git
 
 Developer->Git: Commit change
 Integration->Git: Any changes?
 activate Git
-Git->Integration: Yes
+Git-->Integration: Yes
 deactivate Git
 activate Integration
 Integration->VersionOne: Create ChangeSet
@@ -71,7 +71,7 @@ deactivate Integration
 
 Integration->Git: Any changes?
 activate Git
-Git->Integration: No
+Git-->Integration: No
 deactivate Git
 </pre>
 			</div>
