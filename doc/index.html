@@ -4,6 +4,7 @@
 <head>
 <title>VersionOne Git Integration</title>
 <link rel="stylesheet" href="styles/help.css" type="text/css" />
+<link rel="stylesheet" href="styles/pygments_style.css" type="text/css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
@@ -138,8 +139,8 @@ deactivate Git
 						and run the following command:<br />
 						<code>RunGitIntegration.bat</code>
 						<p>You should see output similar to the following:</p>
-						<code>
-<pre>
+						<samp>
+<pre class='cmd'>
 2011-06-09 16:35:59 GitIntegration [INFO] Git integration service is starting.
 2011-06-09 16:35:59 GitIntegration [INFO] Loading configuration...
 2011-06-09 16:35:59 GitIntegration [INFO] Configuration loaded.
@@ -154,7 +155,7 @@ deactivate Git
 2011-06-09 16:37:45 GitIntegration [INFO] Fetch Repository
 2011-06-09 16:37:47 GitIntegration [INFO] Completed.
 </pre>
-						</code>
+						</samp>
 						<p>The last 3 lines are repeated each time the integration
 							checks the repository for changes.</p>
 				</li>
@@ -163,13 +164,13 @@ deactivate Git
 						change to your Git repository that includes a VersionOne
 						identifier (i.e. &quot;S-01001 testing the git integration&quot;). The next
 						time the integration polls Git, you should see something similar
-						to the following:</p> <code>
-<pre>
+						to the following:</p> <samp>
+<pre class='cmd'>
 2011-06-09 16:45:45 GitIntegration [INFO] Fetch Repository
 2011-06-09 16:45:47 GitIntegration [INFO] Changeset ChangeSet:263587:733085 by Jerry Odenwelder on Thu Jun 09 16:45:32 EDT 2011 was saved.
 2011-06-09 16:45:48 GitIntegration [INFO] Completed.
 </pre>
-					</code>
+					</samp>
 				</li>
 				<li>Install as a Windows Service
 					<p>The download package contains a sub-directory called <em>&quot;service&quot;</em>.
@@ -277,9 +278,7 @@ deactivate Git
 				</tbody>
 			</table>
 
-			<p>The <b>GitSettings</b> element specifies how the integration
-				connects to your Git server. To connect with multiple repositories,
-				simply add more GitSettings elements.
+			<p>The <b>GitsSettings</b> element contains <b>GitSettings</b> elements that specify how the integration	connects to a Git repository. The example below only shows a single repository. To connect with multiple repositories, simply add more GitSettings elements.
 			</p>
 			<table>
 				<tbody>
@@ -401,53 +400,56 @@ deactivate Git
 				<a name="VersionOneGitIntegration-ExampleConfigurationFile"></a>Example
 				Configuration File
 			</h3>
-			<code>
-<pre>
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-&lt;Configuration&gt;
-    &lt;VersionOneConnection&gt;
-        &lt;Path&gt;http://server/versionone/&lt;/Path&gt;
-        &lt;UserName&gt;admin&lt;/UserName&gt;
-        &lt;Password&gt;admin&lt;/Password&gt;
-        &lt;ProxySettings&gt;
-            &lt;UseProxy&gt;false&lt;/UseProxy&gt;
-            &lt;Path&gt;http://proxyserver:3128/&lt;/Path&gt;
-            &lt;UserName&gt;proxyUser&lt;/UserName&gt;
-            &lt;Password&gt;proxyUserPass&lt;/Password&gt;
-        &lt;/ProxySettings&gt;
-    &lt;/VersionOneConnection&gt;
-    &lt;GitSettings&gt;
-        &lt;Path&gt;github.com/Account.git&lt;/Path&gt;
-        &lt;Password&gt;password&lt;/Password&gt;
-        &lt;SshPassphrase&gt;passphrase&lt;/SshPassphrase&gt;
-        &lt;WatchedBranchName&gt;master&lt;/WatchedBranchName&gt;
-        &lt;LocalDirectory&gt;C:/V1Integrations/Git/Code&lt;/LocalDirectory&gt;
-    &lt;/GitSettings&gt;
 
-    &lt;!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
-        If you want to search VersionOne item id in commit comments then set to false--&gt;
-    &lt;UseBranchName&gt;false&lt;/UseBranchName&gt;
+<div class="hlcode">
+<div class="syntax"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;</span>
+<span class="nt">&lt;Configuration&gt;</span>
+    <span class="nt">&lt;VersionOneConnection&gt;</span>
+        <span class="nt">&lt;Path&gt;</span>http://server/versionone/<span class="nt">&lt;/Path&gt;</span>
+        <span class="nt">&lt;UserName&gt;</span>admin<span class="nt">&lt;/UserName&gt;</span>
+        <span class="nt">&lt;Password&gt;</span>admin<span class="nt">&lt;/Password&gt;</span>
+        <span class="c">&lt;!-- true - not use UserName and Password data in authentication--&gt;</span>
+        <span class="nt">&lt;IntegratedAuth&gt;</span>false<span class="nt">&lt;/IntegratedAuth&gt;</span>
+        <span class="nt">&lt;ProxySettings&gt;</span>
+            <span class="nt">&lt;UseProxy&gt;</span>false<span class="nt">&lt;/UseProxy&gt;</span>
+            <span class="nt">&lt;Path&gt;</span>http://proxyserver:3128/<span class="nt">&lt;/Path&gt;</span>
+            <span class="nt">&lt;UserName&gt;</span>proxyUser<span class="nt">&lt;/UserName&gt;</span>
+            <span class="nt">&lt;Password&gt;</span>proxyUserPass<span class="nt">&lt;/Password&gt;</span>
+        <span class="nt">&lt;/ProxySettings&gt;</span>
+    <span class="nt">&lt;/VersionOneConnection&gt;</span>
+    <span class="nt">&lt;GitsSettings&gt;</span>
+        <span class="nt">&lt;GitSettings&gt;</span>
+            <span class="nt">&lt;Path&gt;</span>github.com/Account.git<span class="nt">&lt;/Path&gt;</span>
+            <span class="nt">&lt;Password&gt;</span>password<span class="nt">&lt;/Password&gt;</span>
+            <span class="nt">&lt;SshPassphrase&gt;</span>passphrase<span class="nt">&lt;/SshPassphrase&gt;</span>
+            <span class="nt">&lt;WatchedBranchName&gt;</span>master<span class="nt">&lt;/WatchedBranchName&gt;</span>
+            <span class="c">&lt;!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.</span>
+<span class="c">                If you want to search VersionOne item id in commit comments then set to false--&gt;</span>
+            <span class="nt">&lt;UseBranchName&gt;</span>false<span class="nt">&lt;/UseBranchName&gt;</span>
+        <span class="nt">&lt;/GitSettings&gt;</span>
+    <span class="nt">&lt;/GitsSettings&gt;</span>
 
-    &lt;Timeout&gt;10000&lt;/Timeout&gt;
-    &lt;AlwaysCreate&gt;false&lt;/AlwaysCreate&gt;
-    &lt;ChangeComment&gt;Updated by Git&lt;/ChangeComment&gt;
-    &lt;!-- 
-        === Sample Regexes ===
-        To Match S-01001 (Matches &quot;S-01001&quot;):			[A-Z]{1,2}-[0-9]+
-        To match #Reference (matches only &quot;Reference&quot;):		(?&lt;=#)[a-zA-Z]+\b
-        To match &quot;V1:Reference&quot;  (matches only &quot;Reference&quot;):	(?&lt;=V1:)[a-zA-Z]+\b
-    --&gt;
-    &lt;ReferenceAttribute&gt;Number&lt;/ReferenceAttribute&gt;
-    &lt;ReferenceExpression&gt;&lt;![CDATA[[A-Z]{1,2}-[0-9]+]]&gt;&lt;/ReferenceExpression&gt;
+    <span class="nt">&lt;LocalDirectory&gt;</span>e:/gittmp/<span class="nt">&lt;/LocalDirectory&gt;</span>
+    <span class="nt">&lt;Timeout&gt;</span>10000<span class="nt">&lt;/Timeout&gt;</span>
+    <span class="nt">&lt;AlwaysCreate&gt;</span>false<span class="nt">&lt;/AlwaysCreate&gt;</span>
+    <span class="nt">&lt;ChangeComment&gt;</span>Updated by Git<span class="nt">&lt;/ChangeComment&gt;</span>
+    <span class="c">&lt;!-- </span>
+<span class="c">        === Sample Regexes ===</span>
+<span class="c">        To Match S-01001 (Matches &quot;S-01001&quot;):                [A-Z]{1,2}-[0-9]+</span>
+<span class="c">        To match #Reference (matches only &quot;Reference&quot;):      (?&lt;=#)[a-zA-Z]+\b</span>
+<span class="c">        To match &quot;V1:Reference&quot;  (matches only &quot;Reference&quot;): (?&lt;=V1:)[a-zA-Z]+\b</span>
+<span class="c">    --&gt;</span>
+    <span class="nt">&lt;ReferenceAttribute&gt;</span>Number<span class="nt">&lt;/ReferenceAttribute&gt;</span>
+    <span class="nt">&lt;ReferenceExpression&gt;</span><span class="cp">&lt;![CDATA[[A-Z]{1,2}-[0-9]+]]&gt;</span><span class="nt">&lt;/ReferenceExpression&gt;</span>
 
-    &lt;Link&gt;
-        &lt;Name&gt;ChangeSet: {0}&lt;/Name&gt;
-        &lt;URL&gt;https://github.com/account/repo/commit/{0}&lt;/URL&gt;
-        &lt;OnMenu&gt;true&lt;/OnMenu&gt;
-    &lt;/Link&gt;
-&lt;/Configuration&gt;
-</pre>
-			</code>
+    <span class="nt">&lt;Link&gt;</span>
+        <span class="nt">&lt;Name&gt;</span>ChangeSet: {0}<span class="nt">&lt;/Name&gt;</span>
+        <span class="nt">&lt;URL&gt;</span>https://github.com/account/repo/commit/{0}<span class="nt">&lt;/URL&gt;</span>
+        <span class="nt">&lt;OnMenu&gt;</span>true<span class="nt">&lt;/OnMenu&gt;</span>
+    <span class="nt">&lt;/Link&gt;</span>
+<span class="nt">&lt;/Configuration&gt;</span>
+</pre></div>
+			
 	</div>
 </body>
 </html>
