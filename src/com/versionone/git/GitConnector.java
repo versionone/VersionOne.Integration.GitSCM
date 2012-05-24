@@ -56,10 +56,10 @@ public class GitConnector implements IGitConnector {
             cloneRepository();
             doFetch();
         } catch (IOException ex) {
-            LOG.fatal("Local repository creation failed : "+ ex.getMessage());
+            LOG.fatal("Local repository creation failed: "+ ex.getMessage());
             throw new GitException(ex);
         } catch (URISyntaxException ex) {
-            LOG.fatal("Local repository creation failed : "+ ex.getMessage());
+            LOG.fatal("Local repository creation failed: "+ ex.getMessage());
             throw new GitException(ex);
         }
     }
