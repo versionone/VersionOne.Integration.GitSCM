@@ -1,28 +1,13 @@
 <component name="libraryTable">
   <library name="lib">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.5.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/javaee.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/junit-4.4.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/log4j-1.2.16.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/derby.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/hibernate3.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/antlr-2.7.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/VersionOne.APIClient.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/hamcrest-library-1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jmock-junit4-2.5.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jsch-0.1.44.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jta-1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/hamcrest-core-1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/dom4j-1.6.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/VersionOne.ObjectModel.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jmock-2.5.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/javassist-3.4.GA.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/slf4j-log4j12-1.5.6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/org.eclipse.jgit-1.1.0.201109151100-r.jar!/" />
+      <root url="file://$PROJECT_DIR$/lib" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" type="SOURCES" />
   </library>
 </component>

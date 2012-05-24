@@ -18,7 +18,7 @@ public class ConfigurationTester {
         Assert.assertEquals("Incorrect amount of git repositories.", 3, config.getGitSettings().size());
 
         GitSettings git = config.getGitSettings().get(0);
-        Link link = config.getLink();
+        Link link = git.getLink();
         Assert.assertEquals("VersionOne path is incorrect.", "http://VersionOne.com/VersionOne/", v1.getPath());
         Assert.assertEquals("VersionOne user name is incorrect.", "admin", v1.getUserName());
         Assert.assertEquals("VersionOne password is incorrect.", "adminpass", v1.getPassword());

@@ -22,9 +22,6 @@ public class ChangeSetWriterTester {
       return Arrays.asList(data);
     }
 
-    private boolean useProxy;
-    private String workitemNumber = "B-01013";
-
     private Configuration config;
     private IAssetType changeSetType;
 
@@ -33,7 +30,9 @@ public class ChangeSetWriterTester {
     private final String linksAttrDef = "Links.URL";
     private final String nameAttrDef = "Name";
     private final String descriptionAttrDef = "Description";
-
+    
+    private final String workitemNumber;
+    private final Boolean useProxy;
 
     private IVersionOneConnector connector;
 
@@ -47,7 +46,6 @@ public class ChangeSetWriterTester {
         config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration_changesetwriter.xml").getPath());
         VersionOneSettings connectionInfo = config.getVersionOneSettings();
 
-        //overriding default settings from config file with test parameter
         connectionInfo.getProxySettings().setUseProxy(useProxy);
 
         connector = new VersionOneConnector();
@@ -68,7 +66,7 @@ public class ChangeSetWriterTester {
         ChangeSetInfo changeSet = new ChangeSetInfo("test author", "test message",  new LinkedList<String>(),
                 "test_revision", date, refs);
 
-        ChangeSetWriter writer = new ChangeSetWriter(config, connector);
+        ChangeSetWriter writer = new ChangeSetWriter(config, connector, config.getGitSettings().get(0).getLink());
         writer.publish(changeSet);
 
         Asset[] list = findExistingChangeset(changeSet.getRevision()).getAssets();
@@ -96,7 +94,6 @@ public class ChangeSetWriterTester {
     }
 
      private QueryResult findExistingChangeset(String revision) throws OidException, APIException, ConnectionException {
-
         FilterTerm term = new FilterTerm(changeSetType.getAttributeDefinition(referenceAttrDef));
         term.Equal(revision);
 
@@ -115,10 +112,5 @@ public class ChangeSetWriterTester {
         DateFormat dateFormatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
         String formattedChangeDate = dateFormatter.format(changeDate);
         return String.format("%1$s UTC%2$tz", formattedChangeDate, changeDate);
-    }
-    
-    @After
-    public void after(){
-        
     }
 }

@@ -5,14 +5,21 @@ import javax.xml.bind.annotation.XmlElement;
 public class GitSettings {
     @XmlElement(name = "Path")
     private String repositoryPath;
+
     @XmlElement(name = "WatchedBranchName")
     private String watchedBranch;
+
     @XmlElement(name = "Password")
     private String password;
+
     @XmlElement(name = "SshPassphrase")
     private String passphrase;
+
     @XmlElement(name = "UseBranchName")
     private Boolean useBranchName;
+
+    @XmlElement(name = "Link")
+    private Link link;
 
     public String getRepositoryPath() {
         return repositoryPath;
@@ -32,6 +39,10 @@ public class GitSettings {
 
     public Boolean getUseBranchName() {
         return useBranchName;
+    }
+
+    public Link getLink() {
+        return link;
     }
 
     @Override

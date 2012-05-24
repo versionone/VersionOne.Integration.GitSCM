@@ -1,20 +1,11 @@
 package com.versionone.git;
 
-
 import com.versionone.Oid;
-import com.versionone.apiclient.APIException;
-import com.versionone.apiclient.Asset;
-import com.versionone.apiclient.ConnectionException;
-import com.versionone.apiclient.IAssetType;
-import com.versionone.apiclient.IAttributeDefinition;
-import com.versionone.apiclient.IMetaModel;
-import com.versionone.apiclient.IServices;
-import com.versionone.apiclient.Query;
-import com.versionone.apiclient.QueryResult;
-import com.versionone.apiclient.V1Exception;
+import com.versionone.apiclient.*;
 import com.versionone.git.configuration.Configuration;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ChangeSetWriterUnitTester {
-    //private JUnit4Mockery context;
+    private JUnit4Mockery context;
     private Mockery mockery = new Mockery() {
         {
             setImposteriser(ClassImposteriser.INSTANCE);
@@ -49,7 +40,9 @@ public class ChangeSetWriterUnitTester {
     @Test
     public void publish() throws VersionOneException, V1Exception, ConnectionException {
         Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
-        ChangeSetWriter writer = new ChangeSetWriter(config, v1ConnectorMock);
+        ChangeSetWriter writer1 = new ChangeSetWriter(config, v1ConnectorMock, config.getGitSettings().get(0).getLink());
+        ChangeSetWriter writer2 = new ChangeSetWriter(config, v1ConnectorMock, config.getGitSettings().get(1).getLink());
+        ChangeSetWriter writer3 = new ChangeSetWriter(config, v1ConnectorMock, config.getGitSettings().get(2).getLink());
         List<String> references = Arrays.asList("D-00001");
         ChangeSetInfo changeSetInfo = new ChangeSetInfo("author", "message", new ArrayList<String>(), "123", new Date(),  references);
 
@@ -122,6 +115,6 @@ public class ChangeSetWriterUnitTester {
                 will(returnValue(Oid2));
         }});
 
-        writer.publish(changeSetInfo);
+        writer1.publish(changeSetInfo);
     }
 }

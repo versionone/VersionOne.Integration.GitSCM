@@ -13,19 +13,18 @@ import java.util.Map;
 import java.util.TimerTask;
 
 public class GitPollTask extends TimerTask {
-    private final IChangeSetWriter changeSetWriter;
     private static final Logger LOG = Logger.getLogger("GitIntegration");
     private final Configuration configuration;
     private Map<GitSettings, GitService> gitServices = new HashMap<GitSettings, GitService>();
     private final static String REPOSITORY_DIRECTORY_PATTERN = "%s/%sRepo";
+    private final IVersionOneConnector v1Connector;
 
     GitPollTask(Configuration configuration) throws VersionOneException, NoSuchAlgorithmException {
         this.configuration = configuration;
 
-        IVersionOneConnector v1Connector = new VersionOneConnector();
+        v1Connector = new VersionOneConnector();
         v1Connector.connect(configuration.getVersionOneSettings());
 
-        changeSetWriter = new ChangeSetWriter(configuration, v1Connector);
         cleanupLocalDirectory();
         serviceInitialize();
     }
@@ -39,7 +38,8 @@ public class GitPollTask extends TimerTask {
             String repositoryId = Utilities.getRepositoryId(gitSettings);
             LOG.debug(String.format("%s - %s", gitSettings.getRepositoryPath(), repositoryId));
 
-            GitService service = getGitService(gitSettings, repositoryId);
+            IChangeSetWriter changeSetWriter = new ChangeSetWriter(configuration, v1Connector, gitSettings.getLink());
+            GitService service = getGitService(gitSettings, repositoryId, changeSetWriter);
 
             if (service != null) {
                 gitServices.put(gitSettings, service);
@@ -73,7 +73,7 @@ public class GitPollTask extends TimerTask {
         }
     }
 
-    private GitService getGitService(GitSettings gitSettings, String repositoryId) {
+    private GitService getGitService(GitSettings gitSettings, String repositoryId, IChangeSetWriter changeSetWriter) {
         IDbStorage storage = new DbStorage();
 
         IGitConnector gitConnector = new GitConnector(

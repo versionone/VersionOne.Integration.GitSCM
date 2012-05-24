@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ChangeSetInfo {
-
     private final String author;
     private final String message;
     private final List<String> changedFiles;

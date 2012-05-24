@@ -18,29 +18,33 @@ import java.util.List;
 public class Configuration {
     @XmlElement(name = "VersionOneConnection")
     private VersionOneSettings versionOneSettings;
-    @XmlElement(name = "GitSettings")
-    @XmlElementWrapper(name = "GitsSettings")
+
+    @XmlElement(name = "Instance")
+    @XmlElementWrapper(name = "GitSettings")
     private List<GitSettings> gitSettings;
-    @XmlElement(name = "Link")
-    private Link link;
+
     @XmlElement(name = "LocalDirectory")
     private String localDirectory;
+
     @XmlElement(name = "ReferenceAttribute")
     private String referenceAttribute;
+
     @XmlElement(name = "ReferenceExpression")
     private String referenceExpression;
+
     @XmlElement(name = "Timeout")
     private int timeoutMillis;
+
     @XmlElement(name = "AlwaysCreate")
     private boolean alwaysCreate;
+
     @XmlElement(name = "ChangeComment")
     private String changeComment;
 
     private static Configuration configuration;
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
-    private Configuration() {
-    }
+    private Configuration() { }
 
     /***
      * Load configuration.
@@ -98,10 +102,6 @@ public class Configuration {
 
     public List<GitSettings> getGitSettings() {
         return gitSettings;
-    }
-
-    public Link getLink() {
-        return link;
     }
 
     public String getReferenceAttribute() {
