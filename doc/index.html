@@ -228,7 +228,7 @@ deactivate Git
 					<tr>
 						<td>Path</td>
 						<td>URL to VersionOne Server</td>
-						<td>http://localhost/versionone</td>
+						<td>https://www14.v1host.com/v1sdktesting/</td>
 					</tr>
 					<tr>
 						<td>UserName</td>
@@ -278,7 +278,7 @@ deactivate Git
 				</tbody>
 			</table>
 
-			<p>The <b>GitsSettings</b> element contains <b>GitSettings</b> elements that specify how the integration	connects to a Git repository. The example below only shows a single repository. To connect with multiple repositories, simply add more GitSettings elements.
+			<p>The <b>GitSettings</b> element contains <b>Instance</b> elements. Each Instance element specifies how the integration connects to a Git repository. The example below only shows a single repository. To connect with multiple repositories, simply add more Instance elements.
 			</p>
 			<table>
 				<tbody>
@@ -290,7 +290,7 @@ deactivate Git
 					<tr>
 						<td>Path</td>
 						<td>Path to Repository</td>
-						<td>&nbsp;</td>
+						<td>git@github.com:account/repo1.git</td>
 					</tr>
 					<tr>
 						<td>Password</td>
@@ -299,7 +299,7 @@ deactivate Git
 					</tr>
 					<tr>
 						<td>SshPassphrase</td>
-						<td>SSH pass phrase for accessing the Git</td>
+						<td>SSH passphrase for accessing the Git</td>
 						<td>&nbsp;</td>
 					</tr>
 					<tr>
@@ -308,14 +308,16 @@ deactivate Git
 						<td>master</td>
 					</tr>
 					<tr>
-						<td>LocalDirectory</td>
-						<td>Name of a local directory to use</td>
-						<td>&nbsp;</td>
+						<td>UseBranchName</td>
+						<td>Determines how the integration will parse VersionOne identifiers. The default setting (false) configures the integration to parse the commit comment to find a VersionOne ID. Another pattern for agile version control is "branch on story". For this pattern, set UseBranchName to true to enable the integration to parse the branch name for a VersionOne ID.</td>
+						<td>false</td>
 					</tr>
 				</tbody>
 			</table>
 
-			<p>The following elements control integration behavior</p>
+			<p>Each <b>Instance</b> element has one <b>Link</b> element that specifies how Links are created in
+				VersionOne.
+			</p>
 			<table>
 				<tbody>
 					<tr>
@@ -324,10 +326,39 @@ deactivate Git
 						<th>Example</th>
 					</tr>
 					<tr>
-						<td>UseBranchName</td>
-						<td>Determines where the integration looks for VersionOne
-							identifiers.</td>
-						<td>false</td>
+						<td>Name</td>
+						<td>Determines the Title on the Link in VersionOne. If you'd
+							like to include the Git commit identifier in the title, add {0}</td>
+						<td>ChangeSet: {0}</td>
+					</tr>
+					<tr>
+						<td>URL</td>
+						<td>The contents of this element are used to create a URL to
+							the actual Git commit. The {0} is replaced with the Git commit
+							identifier</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<td>OnMenu</td>
+						<td>Determines if the Link Title appears on the Story or
+							Defect Details page in VersionOne.</td>
+						<td>true</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>The following elements control integration behavior.</p>
+			<table>
+				<tbody>
+					<tr>
+						<th>Element</th>
+						<th>Description</th>
+						<th>Example</th>
+					</tr>
+					<tr>
+						<td>LocalDirectory</td>
+						<td>Name of a local directory to use. The integration uses <a href='http://docs.oracle.com/javase/1.4.2/docs/api/java/io/File.html'>Java conventions for the path separator</a>.</td>
+						<td>c:\\temp\\git\\data\\</td>
 					</tr>
 					<tr>
 						<td>Timeout</td>
@@ -363,38 +394,6 @@ deactivate Git
 			</table>
 
 
-			<p>The <b>Link</b> element specifies how Links are created in
-				VersionOne
-			</p>
-			<table>
-				<tbody>
-					<tr>
-						<th>Element</th>
-						<th>Description</th>
-						<th>Example</th>
-					</tr>
-					<tr>
-						<td>Name</td>
-						<td>Determines the Title on the Link in VersionOne. If you'd
-							like to include the Git commit identifier in the title, add {0}</td>
-						<td>ChangeSet: {0}</td>
-					</tr>
-					<tr>
-						<td>URL</td>
-						<td>The contents of this element are used to create a URL to
-							the actual Git commit. The {0} is replaced with the Git commit
-							identifier</td>
-						<td>&nbsp;</td>
-					</tr>
-					<tr>
-						<td>OnMenu</td>
-						<td>Determines if the Link Title appears on the Story or
-							Defect Details page in VersionOne.</td>
-						<td>true</td>
-					</tr>
-				</tbody>
-			</table>
-
 
 			<h3>
 				<a name="VersionOneGitIntegration-ExampleConfigurationFile"></a>Example
@@ -405,7 +404,7 @@ deactivate Git
 <div class="syntax"><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;</span>
 <span class="nt">&lt;Configuration&gt;</span>
     <span class="nt">&lt;VersionOneConnection&gt;</span>
-        <span class="nt">&lt;Path&gt;</span>http://server/versionone/<span class="nt">&lt;/Path&gt;</span>
+        <span class="nt">&lt;Path&gt;</span>https://www14.v1host.com/v1sdktesting/<span class="nt">&lt;/Path&gt;</span>
         <span class="nt">&lt;UserName&gt;</span>admin<span class="nt">&lt;/UserName&gt;</span>
         <span class="nt">&lt;Password&gt;</span>admin<span class="nt">&lt;/Password&gt;</span>
         <span class="c">&lt;!-- true - not use UserName and Password data in authentication--&gt;</span>
@@ -417,36 +416,35 @@ deactivate Git
             <span class="nt">&lt;Password&gt;</span>proxyUserPass<span class="nt">&lt;/Password&gt;</span>
         <span class="nt">&lt;/ProxySettings&gt;</span>
     <span class="nt">&lt;/VersionOneConnection&gt;</span>
-    <span class="nt">&lt;GitsSettings&gt;</span>
-        <span class="nt">&lt;GitSettings&gt;</span>
-            <span class="nt">&lt;Path&gt;</span>github.com/Account.git<span class="nt">&lt;/Path&gt;</span>
-            <span class="nt">&lt;Password&gt;</span>password<span class="nt">&lt;/Password&gt;</span>
-            <span class="nt">&lt;SshPassphrase&gt;</span>passphrase<span class="nt">&lt;/SshPassphrase&gt;</span>
+    <span class="nt">&lt;GitSettings&gt;</span>
+        <span class="nt">&lt;Instance&gt;</span>
+            <span class="nt">&lt;Path&gt;</span>git@github.com:account/repo1.git<span class="nt">&lt;/Path&gt;</span>
+            <span class="nt">&lt;Password&gt;&lt;/Password&gt;</span>
+            <span class="nt">&lt;SshPassphrase&gt;&lt;/SshPassphrase&gt;</span>
             <span class="nt">&lt;WatchedBranchName&gt;</span>master<span class="nt">&lt;/WatchedBranchName&gt;</span>
             <span class="c">&lt;!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.</span>
 <span class="c">                If you want to search VersionOne item id in commit comments then set to false--&gt;</span>
             <span class="nt">&lt;UseBranchName&gt;</span>false<span class="nt">&lt;/UseBranchName&gt;</span>
-        <span class="nt">&lt;/GitSettings&gt;</span>
-    <span class="nt">&lt;/GitsSettings&gt;</span>
+            <span class="nt">&lt;Link&gt;</span>
+                <span class="nt">&lt;Name&gt;</span>ChangeSet: {0}<span class="nt">&lt;/Name&gt;</span>
+                <span class="nt">&lt;URL&gt;</span>https://github.com/account/repo1/commit/{0}<span class="nt">&lt;/URL&gt;</span>
+                <span class="nt">&lt;OnMenu&gt;</span>true<span class="nt">&lt;/OnMenu&gt;</span>
+            <span class="nt">&lt;/Link&gt;</span>
+        <span class="nt">&lt;/Instance&gt;</span>
+    <span class="nt">&lt;/GitSettings&gt;</span>
 
-    <span class="nt">&lt;LocalDirectory&gt;</span>e:/gittmp/<span class="nt">&lt;/LocalDirectory&gt;</span>
+    <span class="nt">&lt;LocalDirectory&gt;</span>c:\\temp\\git\\data\\<span class="nt">&lt;/LocalDirectory&gt;</span>
     <span class="nt">&lt;Timeout&gt;</span>10000<span class="nt">&lt;/Timeout&gt;</span>
     <span class="nt">&lt;AlwaysCreate&gt;</span>false<span class="nt">&lt;/AlwaysCreate&gt;</span>
     <span class="nt">&lt;ChangeComment&gt;</span>Updated by Git<span class="nt">&lt;/ChangeComment&gt;</span>
     <span class="c">&lt;!-- </span>
 <span class="c">        === Sample Regexes ===</span>
-<span class="c">        To Match S-01001 (Matches &quot;S-01001&quot;):                [A-Z]{1,2}-[0-9]+</span>
-<span class="c">        To match #Reference (matches only &quot;Reference&quot;):      (?&lt;=#)[a-zA-Z]+\b</span>
-<span class="c">        To match &quot;V1:Reference&quot;  (matches only &quot;Reference&quot;): (?&lt;=V1:)[a-zA-Z]+\b</span>
+<span class="c">        To Match S-01001 (Matches &quot;S-01001&quot;): [A-Z]{1,2}-[0-9]+</span>
+<span class="c">        To match #Reference (matches only &quot;Reference&quot;): (?&lt;=#)[a-zA-Z]+\b</span>
+<span class="c">        To match &quot;V1:Reference&quot; (matches only &quot;Reference&quot;): (?&lt;=V1:)[a-zA-Z]+\b</span>
 <span class="c">    --&gt;</span>
     <span class="nt">&lt;ReferenceAttribute&gt;</span>Number<span class="nt">&lt;/ReferenceAttribute&gt;</span>
     <span class="nt">&lt;ReferenceExpression&gt;</span><span class="cp">&lt;![CDATA[[A-Z]{1,2}-[0-9]+]]&gt;</span><span class="nt">&lt;/ReferenceExpression&gt;</span>
-
-    <span class="nt">&lt;Link&gt;</span>
-        <span class="nt">&lt;Name&gt;</span>ChangeSet: {0}<span class="nt">&lt;/Name&gt;</span>
-        <span class="nt">&lt;URL&gt;</span>https://github.com/account/repo/commit/{0}<span class="nt">&lt;/URL&gt;</span>
-        <span class="nt">&lt;OnMenu&gt;</span>true<span class="nt">&lt;/OnMenu&gt;</span>
-    <span class="nt">&lt;/Link&gt;</span>
 <span class="nt">&lt;/Configuration&gt;</span>
 </pre></div></div>
 			

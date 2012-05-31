@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
     <VersionOneConnection>
-        <Path>http://integsrv01/versionone12/</Path>
+        <Path>https://www14.v1host.com/v1sdktesting/</Path>
         <UserName>admin</UserName>
         <Password>admin</Password>
         <!-- true - not use UserName and Password data in authentication-->
