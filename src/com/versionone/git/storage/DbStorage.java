@@ -5,6 +5,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DbStorage implements IDbStorage {
@@ -21,8 +22,11 @@ public class DbStorage implements IDbStorage {
     }
 
     public List<PersistentChange> getPersistedChanges() {
-        List changes = getSession().createCriteria(PersistentChange.class).list();
-        return (List<PersistentChange>)changes;
+        List<PersistentChange> changes = getSession().createCriteria(PersistentChange.class).list();
+        if (changes != null) {
+        	return (List<PersistentChange>)changes;
+        }
+        return new ArrayList<PersistentChange>();
     }
 
     public void persistChange(PersistentChange change) {

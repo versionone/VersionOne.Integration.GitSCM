@@ -5,6 +5,7 @@ import com.versionone.git.storage.IDbStorage;
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.errors.*;
 import org.eclipse.jgit.lib.*;
@@ -162,6 +163,9 @@ public class GitConnector implements IGitConnector {
         } catch (NoHeadException ex) {
             LOG.fatal("Can't find starting revision.", ex);
             throw new GitException(ex);
+        } catch (GitAPIException ex) {
+        	LOG.fatal("Encountered problem using GitAPI.", ex);
+        	throw new GitException(ex);
         }
         return commits;
     }
