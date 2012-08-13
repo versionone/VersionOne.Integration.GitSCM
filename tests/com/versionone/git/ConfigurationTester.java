@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public class ConfigurationTester {
     @Test
-    public void configTest() throws IOException {
+    public void config() throws IOException {
         Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
         VersionOneSettings v1 = config.getVersionOneSettings();
         ProxySettings proxy = v1.getProxySettings();

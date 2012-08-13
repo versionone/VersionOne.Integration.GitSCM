@@ -26,11 +26,15 @@ public class GitServiceTester {
     }
 
     @Test
-    public void emptyChangesetTest() throws GitException, VersionOneException {
+    public void emptyChangeset() throws GitException, VersionOneException {
         GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock, "repo id");
 
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).initRepository();
+            oneOf(gitConnectorMock).watchedBranchExists();
+                will(returnValue(true));
+            oneOf(gitConnectorMock).getWatchedBranchName();
+                will(returnValue("refs/remotes/origin/master"));
             oneOf(gitConnectorMock).getCommits(); will(returnValue(new LinkedList()));
         }});
 
@@ -39,7 +43,7 @@ public class GitServiceTester {
     }
 
     @Test
-    public void branchCommitsTest() throws GitException, VersionOneException {
+    public void branchCommits() throws GitException, VersionOneException {
         final String repositoryId = "repo id";
         GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock, repositoryId);
 
@@ -51,6 +55,10 @@ public class GitServiceTester {
 
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).initRepository();
+            oneOf(gitConnectorMock).watchedBranchExists();
+                will(returnValue(true));
+            oneOf(gitConnectorMock).getWatchedBranchName();
+                will(returnValue("refs/remotes/origin/master"));
             oneOf(gitConnectorMock).getCommits();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision(), repositoryId);
@@ -70,7 +78,7 @@ public class GitServiceTester {
     }
 
     @Test
-    public void branchNamesTest() throws GitException, VersionOneException {
+    public void branchNames() throws GitException, VersionOneException {
         final String repositoryId = "repo id";
         GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock, repositoryId);
 
@@ -82,6 +90,10 @@ public class GitServiceTester {
 
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).initRepository();
+            oneOf(gitConnectorMock).watchedBranchExists();
+                will(returnValue(true));
+            oneOf(gitConnectorMock).getWatchedBranchName();
+                will(returnValue("refs/remotes/origin/master"));
             oneOf(gitConnectorMock).getCommits();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision(), repositoryId);

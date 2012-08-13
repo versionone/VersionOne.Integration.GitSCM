@@ -55,7 +55,7 @@ public class ChangeSetWriterTester {
 
     @Test
     @Ignore("Integration test. Set real workitem in generateData() method.")
-    public void publishTest() throws VersionOneException, APIException, OidException, ConnectionException {
+    public void publish() throws VersionOneException, APIException, OidException, ConnectionException {
         List<String> refs = new LinkedList<String>();
         refs.add(workitemNumber);
 
