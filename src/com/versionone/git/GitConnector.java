@@ -95,6 +95,25 @@ public class GitConnector implements IGitConnector {
         }
     }
 
+    @Override
+    public boolean watchedBranchExists() {
+        Map<String, Ref> refs = local.getAllRefs();
+        String completeBranchName = getWatchedBranchName();
+
+        for(String key : refs.keySet()) {
+            if(key.equals(completeBranchName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public String getWatchedBranchName() {
+        return Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME +  "/" + gitSettings.getWatchedBranch();
+    }
+
     private void traverseChanges(ChangeSetListBuilder builder) throws GitException {
         Git git = new Git(local);
         LogCommand logCommand = git.log();
@@ -106,7 +125,7 @@ public class GitConnector implements IGitConnector {
 	        for (String key : refs.keySet()) {
 	            LOG.debug("    " + key + " - " + refs.get(key).getName());
 	        }
-	        LOG.debug("We are going to process branch " + Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + gitSettings.getWatchedBranch());
+	        LOG.debug("We are going to process branch " + getWatchedBranchName());
     	}
 
         Iterable<RevCommit> commits = getCommits(logCommand);

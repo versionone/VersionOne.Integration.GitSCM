@@ -23,6 +23,13 @@ public class GitService {
 
     public void initialize() throws GitException {
         gitConnector.initRepository();
+
+        if(!gitConnector.watchedBranchExists()) {
+            LOG.warn("Watched branch '" + gitConnector.getWatchedBranchName() + "' does not exist.");
+        } else {
+            LOG.debug("Watched branch '" + gitConnector.getWatchedBranchName() + "' exists.");
+        }
+
         LOG.info("Connection to Git server established.");
     }
 
