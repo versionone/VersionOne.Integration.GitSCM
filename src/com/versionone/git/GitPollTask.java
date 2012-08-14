@@ -65,11 +65,11 @@ public class GitPollTask extends TimerTask {
         try {
             service.onInterval();
         } catch(GitException ex) {
-            System.out.println("Fail: " + ex.getInnerException().getMessage());
             LOG.fatal("Git service failed: " + ex.getInnerException().getMessage());
         } catch (VersionOneException ex) {
-            System.out.println("Fail: " + ex.getInnerException().getMessage());
             LOG.fatal("VersionOne service failed: " + ex.getInnerException().getMessage());
+        } catch (Exception ex) {
+            LOG.fatal("Failed to process repository. It is possible that the integration is not configured properly.", ex);
         }
     }
 
