@@ -9,7 +9,7 @@
     <property name="ver.major" value="9"/>
     <property name="ver.minor" value="0"/>
     <property name="ver.build" value="0"/>
-    <property name="publish.dir" value="./_publish"/>
+    <property name="publish.dir" value="./publish"/>
     <property name="build.version" value="${ver.major}.${ver.minor}.${ver.build}"/>
     <property name="jar.filename" value="V1GitIntegration.jar"/>
     <property name="zip.filename" value="V1GitIntegration.${build.version}.zip"/>
@@ -29,7 +29,7 @@
 
 
     <!-- Build Directories -->
-    <property name="build.dir" value="${basedir}/Common"/>
+    <property name="build.dir" value="${basedir}/build"/>
     <property name="bin.product.dir" value="${build.dir}/bin_production"/>
     <property name="junit.output.dir" value="junit"/>
     <property name="publish.git.dir" value="${publish.dir}/tmpl/GitIntegration"/>

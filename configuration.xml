@@ -30,7 +30,7 @@
         </Instance>
     </GitSettings>
 
-    <LocalDirectory>c:/temp/git/data/</LocalDirectory>
+    <LocalDirectory>./repos/</LocalDirectory>
     <Timeout>10000</Timeout>
     <AlwaysCreate>false</AlwaysCreate>
     <ChangeComment>Updated by Git</ChangeComment>
