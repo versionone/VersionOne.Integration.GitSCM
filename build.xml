@@ -181,6 +181,8 @@
 				<include name="lib/**/*"/>
                 <include name="configuration.xml"/>
                 <include name="log4j.properties"/>
+                <include name="License.rtf"/>
+                <include name="RunGitIntegration.bat"/>
 				<include name="doc/**/*"/>
 			</fileset>
 		</zip>
