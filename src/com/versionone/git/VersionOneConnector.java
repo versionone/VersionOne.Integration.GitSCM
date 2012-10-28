@@ -35,9 +35,9 @@ public class VersionOneConnector implements IVersionOneConnector {
             dataConnector = getDataConnector(connectionInfo);
             services = new Services(metaModel, dataConnector);
             services.getLoggedIn();
-            LOG.info("Connection to VersionOne server established.");
+            LOG.info("Connection to VersionOne server established successfully");
         } catch (Exception ex) {
-            String message = "Connection to VersionOne server failed. Please, check address, credentials and proxy settings.";
+            String message = "Connection to VersionOne server failed. Please check the address, credentials and proxy settings";
             LOG.fatal(message);
             throw new VersionOneException(message, ex);
         }
@@ -48,8 +48,10 @@ public class VersionOneConnector implements IVersionOneConnector {
         ProxyProvider proxy = getProxy(connectionInfo.getProxySettings());
         V1APIConnector dataConnector;
         if (connectionInfo.getIntegratedAuth() != null && connectionInfo.getIntegratedAuth()) {
+            LOG.info("Connecting to VersionOne using AD integrated authentication...");
             dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, proxy);
         } else {
+            LOG.info(String.format("Connecting to VersionOne as '%s'...", connectionInfo.getUserName()));
             dataConnector = new V1APIConnector(path + DATA_URL_SUFFIX, connectionInfo.getUserName(),
                 connectionInfo.getPassword(), proxy);
         }
@@ -62,6 +64,7 @@ public class VersionOneConnector implements IVersionOneConnector {
         }
 
         try {
+            LOG.info("Connecting to VersionOne via proxy server " + settings.getPath());
             URI uri = new URI(settings.getPath());
             return new ProxyProvider(uri, settings.getUserName(), settings.getPassword());
         } catch (URISyntaxException ex) {

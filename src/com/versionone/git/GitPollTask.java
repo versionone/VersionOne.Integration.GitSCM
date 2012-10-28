@@ -31,12 +31,11 @@ public class GitPollTask extends TimerTask {
 
     public void serviceInitialize() throws NoSuchAlgorithmException {
         int amountOfServices = configuration.getGitSettings().size();
-        LOG.info(String.format("Creating %s service(s) ...", amountOfServices));
+        LOG.info(String.format("Creating %s Git service(s)...", amountOfServices));
 
         for (int gitRepositoryIndex = 0; gitRepositoryIndex < amountOfServices; gitRepositoryIndex ++) {
             GitSettings gitSettings = configuration.getGitSettings().get(gitRepositoryIndex);
             String repositoryId = Utilities.getRepositoryId(gitSettings);
-            LOG.debug(String.format("%s - %s", gitSettings.getRepositoryPath(), repositoryId));
 
             IChangeSetWriter changeSetWriter = new ChangeSetWriter(configuration, v1Connector, gitSettings.getLink());
             GitService service = getGitService(gitSettings, repositoryId, changeSetWriter);
@@ -46,19 +45,18 @@ public class GitPollTask extends TimerTask {
             }
         }
 
-        LOG.info("Services created.");
+        LOG.info("Git services created successfully");
     }
 
     @Override
     public void run() {
-        LOG.info("Processing new changes...");
+        LOG.info("Checking for new changes...");
 
         for (GitSettings settings : gitServices.keySet()) {
-            LOG.info("Processing " + settings.getRepositoryPath());
+            LOG.info("Checking " + settings.getRepositoryPath());
             processRepository(gitServices.get(settings));
         }
-
-        LOG.info("Completed.");
+        LOG.info("Check for new changes complete");
     }
 
     private void processRepository(GitService service) {
@@ -84,7 +82,7 @@ public class GitPollTask extends TimerTask {
                 storage, repositoryId);
         GitService service = new GitService(storage, gitConnector, changeSetWriter, repositoryId);
 
-        LOG.info(String.format("Initialize Git Service (%s)", gitSettings.getRepositoryPath()));
+        LOG.info(String.format("Initializing Git Service for %s...", gitSettings.getRepositoryPath()));
         return initializeGitService(service) ? service : null;
     }
 
@@ -101,16 +99,17 @@ public class GitPollTask extends TimerTask {
     }
 
     private void cleanupLocalDirectory() {
-        LOG.debug("cleanupLocalDirectory");
+        LOG.debug(String.format("Resetting local directory %s...", configuration.getLocalDirectory()));
 
         if (!Utilities.deleteDirectory(new File(configuration.getLocalDirectory()))) {
-            LOG.error(configuration.getLocalDirectory() + " can't be cleaned up");
+            LOG.warn(configuration.getLocalDirectory() + " couldn't be reset, possibly due to this being the first time the service has been run");
         }
 
         boolean result = new File(configuration.getLocalDirectory()).mkdir();
 
         if (!result) {
-            LOG.error(configuration.getLocalDirectory() + " can't be created");
+            LOG.fatal(configuration.getLocalDirectory() + " couldn't be created");
+            System.exit(-1);
         }
     }
 }

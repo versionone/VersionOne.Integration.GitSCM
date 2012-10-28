@@ -1,5 +1,6 @@
 package com.versionone.git.storage;
 
+import org.apache.log4j.Logger;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Projections;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DbStorage implements IDbStorage {
+
+    private static final Logger LOG = Logger.getLogger("GitIntegration");
     private final String LAST_COMMIT_HASH = "LastCommitHash";
     private final Session session;
 
@@ -46,6 +49,8 @@ public class DbStorage implements IDbStorage {
     }
 
     public void persistLastCommit(String commitHash, String repositoryId) {
+        LOG.debug(String.format("Persisting to local store commit %1$s in repository %2$s", commitHash, repositoryId));
+
         LastProcessedItem lastHash = new LastProcessedItem();
         //lastHash.setId(LAST_COMMIT_HASH + "||" + repositoryId);
         lastHash.setValue(commitHash);
@@ -58,6 +63,8 @@ public class DbStorage implements IDbStorage {
     }
 
     public String getLastCommit(String repositoryId){
+        LOG.debug(String.format("Querying local store for last commit in repository %1$s", repositoryId));
+
         Criteria criteria = getSession().
                                     createCriteria(LastProcessedItem.class).
                                     //add(Restrictions.eq("id", LAST_COMMIT_HASH + "||" + repositoryId)).

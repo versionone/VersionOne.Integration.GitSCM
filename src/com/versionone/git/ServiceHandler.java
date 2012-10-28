@@ -11,14 +11,15 @@ public class ServiceHandler {
     private static final Logger LOG = Logger.getLogger("GitIntegration");
 
     public static void start(String[] arg) {
-        LOG.info("Git integration service is starting.");
-        LOG.info("Loading configuration...");
+        LOG.info("Git integration service is starting...");
+
         Configuration configuration = Configuration.getInstance();
-        LOG.info("Configuration loaded.");
 
         try {
             timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
         } catch (VersionOneException ex) {
+            if (ex.getInnerException() != null)
+                LOG.fatal(ex.getInnerException().getMessage() + ex.getInnerException().getStackTrace());
             fail(ex);
         } catch (NoSuchAlgorithmException ex) {
             fail(ex);
@@ -27,7 +28,7 @@ public class ServiceHandler {
 
     public static void fail(Exception ex){
         LOG.fatal("Closing application due to internal error:");
-        LOG.fatal(ex.getMessage());
+        LOG.fatal(ex.getMessage() + ex.getStackTrace());
         System.exit(-1);
     }
 

@@ -71,8 +71,10 @@ public class Configuration {
     }
 
     private static Configuration loadConfiguration(String fileName) {
+        LOG.info("Loading configuration...");
         Configuration config = null;
         InputStream stream = null;
+
         try {
             final Class<Configuration> thisClass = Configuration.class;
             JAXBContext jc = JAXBContext.newInstance(thisClass);
@@ -80,10 +82,13 @@ public class Configuration {
             Unmarshaller um = jc.createUnmarshaller();
             stream = new FileInputStream(fileName);
             config = (Configuration) um.unmarshal(stream);
+            LOG.info("Configuration loaded successfully");
         } catch (JAXBException ex) {
-            LOG.warn("Can't use configuration", ex);
+            LOG.fatal("Couldn't read configuration file, please check for invalid XML", ex);
+            System.exit(-1);
         } catch (FileNotFoundException ex) {
-            LOG.warn("Can't load configuration.xml", ex);
+            LOG.fatal(String.format("Couldn't find configuration file at the specified location (%s)", fileName), ex);
+            System.exit(-1);
         } finally {
             if (stream != null) {
                 try {

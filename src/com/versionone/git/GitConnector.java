@@ -51,7 +51,7 @@ public class GitConnector implements IGitConnector {
     }
 
     public void initRepository() throws GitException {
-    	LOG.debug("initRepository");
+    	LOG.debug("Initalizing repository...");
 
         try {
             cloneRepository();
@@ -173,7 +173,7 @@ public class GitConnector implements IGitConnector {
                 commits = logCommand.call();
                 storage.persistLastCommit(headHash, repositoryId);
             } else {
-                LOG.debug("There is no new commits since last run.");
+                LOG.debug("There are no new commits since last run.");
                 return new ArrayList<RevCommit>();
             }
         } catch (IOException ex) {
@@ -183,7 +183,7 @@ public class GitConnector implements IGitConnector {
             LOG.fatal("Can't find starting revision.", ex);
             throw new GitException(ex);
         } catch (GitAPIException ex) {
-        	LOG.fatal("Encountered problem using GitAPI.", ex);
+            LOG.fatal("An exception occurred in the Git connector while fetching commits:", ex);
         	throw new GitException(ex);
         }
         return commits;
@@ -226,7 +226,7 @@ public class GitConnector implements IGitConnector {
     }
 
     private void cloneRepository() throws IOException, URISyntaxException {
-    	LOG.info("Clone Repository");
+    	LOG.debug("Cloning repository...");
         local = new FileRepository(localDirectory);
         local.create();
 
@@ -257,15 +257,15 @@ public class GitConnector implements IGitConnector {
     }
 
 	private void doFetch() throws NotSupportedException, TransportException {
-		LOG.info("Fetch Repository");
+		LOG.debug("Fetching repository...");
 		final Transport tn = Transport.open(local, remoteConfig);
 		tn.setTimeout(this.timeout);
 
         try {
-        	tn.fetch(new ProgressMonitor(){
-				@Override public void beginTask(String taskName, int totalSubTask) {LOG.debug("Begin Task " + taskName + ". Total Subtask " + totalSubTask);}
-				@Override public void start(int totalTask) {LOG.debug("Start.  Total Task " + totalTask);}
-				@Override public void update(int arg0) {}
+        	tn.fetch(new ProgressMonitor() {
+				@Override public void beginTask(String taskName, int totalWork) {LOG.debug(taskName + ", total subtasks: " + totalWork);}
+				@Override public void start(int totalTasks) { LOG.debug("Starting task, total tasks: " + totalTasks); }
+				@Override public void update(int completed) {}
 				@Override public void endTask() {}
 				@Override public boolean isCancelled() {return false;}}
         	, null);

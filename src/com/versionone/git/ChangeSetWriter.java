@@ -5,6 +5,7 @@ import com.versionone.apiclient.*;
 import com.versionone.git.configuration.Configuration;
 import com.versionone.git.configuration.Link;
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.util.StringUtils;
 
 import java.text.DateFormat;
 import java.util.*;
@@ -61,13 +62,13 @@ public class ChangeSetWriter implements IChangeSetWriter {
         this.linkSettings = linkSettings;
 		
 		if(isAlwaysCreate) {
-			LOG.info("Always Create a VersionOne ChangeSet");
+			LOG.info("Always creating new VersionOne changesets instead of updating existing ones");
         }
     }
 
     public void publish(ChangeSetInfo changeSetInfo) throws VersionOneException {
-        final String errorMessagePrefix = "Error during saving changeset: ";
-        
+        final String errorMessagePrefix = String.format("An error occurred while saving changeset for commit %1$s", changeSetInfo.getRevision());
+
         try {
             List<Oid> affectedWorkitems = getAffectedWorkitems(changeSetInfo.getReferences());
             Asset changeSet = getChangeSet(changeSetInfo, affectedWorkitems);
@@ -82,9 +83,13 @@ public class ChangeSetWriter implements IChangeSetWriter {
                 saveLinkInfo(changeSet, changeSetInfo, linkSettings);
             }
 
-            LOG.info(String.format("Changeset %1$s (%2$s) by %3$s on %4$s was saved.", changeSetInfo.getRevision(),
-                     savedAsset.getOid(), changeSetInfo.getAuthor(), changeSetInfo.getChangeDate()));
-        } catch(Exception ex) {
+            LOG.info(String.format("Saved %1$s to %2$s for commit %3$s by %4$s on %5$s successfully",
+                    savedAsset.getOid(),
+                    StringUtils.join(changeSetInfo.getReferences(), ", "),
+                    changeSetInfo.getRevision(),
+                    changeSetInfo.getAuthor(),
+                    changeSetInfo.getChangeDate()));
+        } catch (Exception ex) {
             logAndThrow(errorMessagePrefix + ex.getMessage(), ex);
         }
     }
@@ -157,15 +162,16 @@ public class ChangeSetWriter implements IChangeSetWriter {
         if (list.length > 0) {
             changeSet = list[0];
 
-            LOG.info(String.format("Using existing Change Set: %1$s (%2$s)", changeSetInfo.getRevision(),
-                    changeSet.getOid()));
+            LOG.info(String.format("Using existing %1$s for commit %2$s",
+                    changeSet.getOid(),
+                    changeSetInfo.getRevision()));
         } else {
             if (shouldCreate(affectedWorkitems)) {
                 changeSet = connector.getServices().createNew(getChangeSetType(), Oid.Null);
                 changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(REFERENCE_ATTRIBUTE),
                         changeSetInfo.getRevision());
             } else {
-                LOG.info("No Change Set References. Ignoring Change Set: " + changeSetInfo.getRevision());
+                LOG.warn("Ignoring changeset for commit " + changeSetInfo.getRevision() + " as no affected workitems were found");
             }
         }
 
@@ -196,7 +202,8 @@ public class ChangeSetWriter implements IChangeSetWriter {
             List<Oid> workitemOids = findWorkitemOid(ref);
 
             if (workitemOids.isEmpty()) {
-                LOG.info(String.format("No %1$s or %2$s related to reference: %3$s", getLocalizedString(STORY_NAME),
+                LOG.warn(String.format("No %1$s or %2$s found with ID %3$s",
+                        getLocalizedString(STORY_NAME),
                         getLocalizedString(DEFECT_NAME), ref));
                 continue;
             }
