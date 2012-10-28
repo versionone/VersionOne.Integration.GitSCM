@@ -35,8 +35,8 @@ public class GitService {
     }
 
     public void onInterval() throws GitException, VersionOneException {
-        Collection<ChangeSetInfo> changes = gitConnector.getCommits();
-        LOG.debug("Found " + changes.size() + " changes to process.");
+        Collection<ChangeSetInfo> changes = gitConnector.getChangeSets();
+        LOG.debug("Found " + changes.size() + " changes to process");
 
         for(ChangeSetInfo change : changes) {
             PersistentChange persistentChange = PersistentChange.createNew(change.getRevision(), repositoryId);

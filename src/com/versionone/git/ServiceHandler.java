@@ -16,7 +16,7 @@ public class ServiceHandler {
         Configuration configuration = Configuration.getInstance();
 
         try {
-            timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getTimeoutMillis());
+            timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getPollIntervalInSeconds() * 1000);
         } catch (VersionOneException ex) {
             if (ex.getInnerException() != null)
                 LOG.fatal(ex.getInnerException().getMessage() + ex.getInnerException().getStackTrace());

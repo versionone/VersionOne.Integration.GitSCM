@@ -1,7 +1,7 @@
 package com.versionone.git;
 
 import com.versionone.git.configuration.Configuration;
-import com.versionone.git.configuration.GitSettings;
+import com.versionone.git.configuration.GitConnection;
 import com.versionone.git.storage.DbStorage;
 import com.versionone.git.storage.IDbStorage;
 import org.apache.log4j.Logger;
@@ -13,35 +13,34 @@ import java.util.Map;
 import java.util.TimerTask;
 
 public class GitPollTask extends TimerTask {
+    private final IChangeSetWriter changeSetWriter;
     private static final Logger LOG = Logger.getLogger("GitIntegration");
     private final Configuration configuration;
-    private Map<GitSettings, GitService> gitServices = new HashMap<GitSettings, GitService>();
+    private Map<GitConnection, GitService> gitServices = new HashMap<GitConnection, GitService>();
     private final static String REPOSITORY_DIRECTORY_PATTERN = "%s/%sRepo";
-    private final IVersionOneConnector v1Connector;
 
     GitPollTask(Configuration configuration) throws VersionOneException, NoSuchAlgorithmException {
         this.configuration = configuration;
 
-        v1Connector = new VersionOneConnector();
-        v1Connector.connect(configuration.getVersionOneSettings());
+        IVersionOneConnector v1Connector = new VersionOneConnector();
+        v1Connector.connect(configuration.getVersionOneConnection());
 
+        changeSetWriter = new ChangeSetWriter(configuration.getChangeSet(), v1Connector);
         cleanupLocalDirectory();
         serviceInitialize();
     }
 
     public void serviceInitialize() throws NoSuchAlgorithmException {
-        int amountOfServices = configuration.getGitSettings().size();
+        int amountOfServices = configuration.getGitConnections().size();
         LOG.info(String.format("Creating %s Git service(s)...", amountOfServices));
 
         for (int gitRepositoryIndex = 0; gitRepositoryIndex < amountOfServices; gitRepositoryIndex ++) {
-            GitSettings gitSettings = configuration.getGitSettings().get(gitRepositoryIndex);
-            String repositoryId = Utilities.getRepositoryId(gitSettings);
-
-            IChangeSetWriter changeSetWriter = new ChangeSetWriter(configuration, v1Connector, gitSettings.getLink());
-            GitService service = getGitService(gitSettings, repositoryId, changeSetWriter);
+            GitConnection gitConnection = configuration.getGitConnections().get(gitRepositoryIndex);
+            String repositoryId = Utilities.getRepositoryId(gitConnection);
+            GitService service = getGitService(gitConnection, repositoryId);
 
             if (service != null) {
-                gitServices.put(gitSettings, service);
+                gitServices.put(gitConnection, service);
             }
         }
 
@@ -52,9 +51,9 @@ public class GitPollTask extends TimerTask {
     public void run() {
         LOG.info("Checking for new changes...");
 
-        for (GitSettings settings : gitServices.keySet()) {
-            LOG.info("Checking " + settings.getRepositoryPath());
-            processRepository(gitServices.get(settings));
+        for (GitConnection gitConnection : gitServices.keySet()) {
+            LOG.info("Checking " + gitConnection.getRepositoryPath());
+            processRepository(gitServices.get(gitConnection));
         }
         LOG.info("Check for new changes complete");
     }
@@ -66,23 +65,23 @@ public class GitPollTask extends TimerTask {
             LOG.fatal("Git service failed: " + ex.getInnerException().getMessage());
         } catch (VersionOneException ex) {
             LOG.fatal("VersionOne service failed: " + ex.getInnerException().getMessage());
-        } catch (Exception ex) {
-            LOG.fatal("Failed to process repository. It is possible that the integration is not configured properly.", ex);
         }
     }
 
-    private GitService getGitService(GitSettings gitSettings, String repositoryId, IChangeSetWriter changeSetWriter) {
+    private GitService getGitService(GitConnection gitConnection, String repositoryId) {
         IDbStorage storage = new DbStorage();
 
         IGitConnector gitConnector = new GitConnector(
-                gitSettings,
+                gitConnection,
+                repositoryId,
                 String.format(REPOSITORY_DIRECTORY_PATTERN, configuration.getLocalDirectory(), repositoryId),
-                configuration.getReferenceExpression(),
-                configuration.isAlwaysCreate(),
-                storage, repositoryId);
+                storage,
+                configuration.getChangeSet()
+        );
+
         GitService service = new GitService(storage, gitConnector, changeSetWriter, repositoryId);
 
-        LOG.info(String.format("Initializing Git Service for %s...", gitSettings.getRepositoryPath()));
+        LOG.info(String.format("Initializing Git Service for %s...", gitConnection.getRepositoryPath()));
         return initializeGitService(service) ? service : null;
     }
 

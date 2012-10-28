@@ -16,30 +16,17 @@ import java.util.List;
 
 @XmlRootElement(name="Configuration")
 public class Configuration {
-    @XmlElement(name = "VersionOneConnection")
-    private VersionOneSettings versionOneSettings;
-
-    @XmlElement(name = "Instance")
-    @XmlElementWrapper(name = "GitSettings")
-    private List<GitSettings> gitSettings;
-
     @XmlElement(name = "LocalDirectory")
     private String localDirectory;
-
-    @XmlElement(name = "ReferenceAttribute")
-    private String referenceAttribute;
-
-    @XmlElement(name = "ReferenceExpression")
-    private String referenceExpression;
-
-    @XmlElement(name = "Timeout")
-    private int timeoutMillis;
-
-    @XmlElement(name = "AlwaysCreate")
-    private boolean alwaysCreate;
-
-    @XmlElement(name = "ChangeComment")
-    private String changeComment;
+    @XmlElement(name = "PollIntervalInSeconds")
+    private int pollIntervalInSeconds;
+    @XmlElement(name = "VersionOneConnection")
+    private VersionOneConnection versionOneConnection;
+    @XmlElement(name = "GitConnection")
+    @XmlElementWrapper(name = "GitConnections")
+    private List<GitConnection> gitConnections;
+    @XmlElement(name = "ChangeSet")
+    private ChangeSet changeSet;
 
     private static Configuration configuration;
     private static final Logger LOG = Logger.getLogger("GitIntegration");
@@ -101,35 +88,23 @@ public class Configuration {
         return config;
     }
 
-    public VersionOneSettings getVersionOneSettings() {
-        return versionOneSettings;
-    }
-
-    public List<GitSettings> getGitSettings() {
-        return gitSettings;
-    }
-
-    public String getReferenceAttribute() {
-        return referenceAttribute;
-    }
-
-    public String getReferenceExpression() {
-        return referenceExpression;
-    }
-
-    public int getTimeoutMillis() {
-        return timeoutMillis;
-    }
-
-    public boolean isAlwaysCreate() {
-        return alwaysCreate;
-    }
-
-    public String getChangeComment() {
-        return changeComment;
-    }
-
     public String getLocalDirectory() {
         return localDirectory;
+    }
+
+    public int getPollIntervalInSeconds() {
+        return pollIntervalInSeconds;
+    }
+
+    public VersionOneConnection getVersionOneConnection() {
+        return versionOneConnection;
+    }
+
+    public List<GitConnection> getGitConnections() {
+        return gitConnections;
+    }
+
+    public ChangeSet getChangeSet() {
+        return changeSet;
     }
 }
