@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+
+    <LocalDirectory>./repos</LocalDirectory>
+    <PollIntervalInSeconds>300</PollIntervalInSeconds>
+
+    <VersionOneConnection>
+        <Path>http://server/VersionOne/</Path>
+        <UserName>admin</UserName>
+        <Password>admin</Password>
+        <IntegratedAuth>false</IntegratedAuth>
+        <ProxySettings>
+            <UseProxy>false</UseProxy>
+            <Path>http://proxy:3128/</Path>
+            <UserName>user</UserName>
+            <Password>password</Password>
+        </ProxySettings>
+    </VersionOneConnection>
+
+    <GitConnections>
+        <GitConnection>
+            <Path>github.com/Account.git</Path>
+            <Password>password</Password>
+            <SshPassphrase>passphrase</SshPassphrase>
+            <WatchedBranchName>master</WatchedBranchName>
+            <UseBranchName>false</UseBranchName>
+            <Link>
+                <NameTemplate>ChangeSet: {0}</NameTemplate>
+                <UrlTemplate>http://github.com/account/{0}</UrlTemplate>
+                <OnMenu>true</OnMenu>
+            </Link>
+        </GitConnection>
+    </GitConnections>
+
+    <ChangeSet>
+        <AlwaysCreate>false</AlwaysCreate>
+        <NameTemplate>{0} by {1} in {2}</NameTemplate>
+        <NameTemplateDateFormat>yyyy-MM-dd HH:mm:ss</NameTemplateDateFormat>
+        <NameTemplateRepositoryFormat>FoldersOnly</NameTemplateRepositoryFormat>
+        <ChangeComment>Updated by Git</ChangeComment>
+        <ReferenceAttribute>Number</ReferenceAttribute>
+        <ReferenceExpression><![CDATA[[A-Z]{1,2}-[0-9]+]]></ReferenceExpression>
+    </ChangeSet>
+
+</Configuration>

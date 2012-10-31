@@ -17,6 +17,7 @@
             <Password>proxyUserPass</Password>
         </ProxySettings>
     </VersionOneConnection>
+
     <GitConnections>
         <GitConnection>
             <Path>git://github.com/edkennard/Integration.Git.Test1.git</Path>
@@ -65,6 +66,9 @@
 
     <ChangeSet>
         <AlwaysCreate>false</AlwaysCreate>
+        <NameTemplate>{0} by {1} in {2}</NameTemplate>
+        <NameTemplateDateFormat>yyyy-MM-dd HH:mm:ss</NameTemplateDateFormat>
+        <NameTemplateRepositoryFormat>NameOnly</NameTemplateRepositoryFormat>
         <ChangeComment>Updated by Git</ChangeComment>
         <ReferenceAttribute>Number</ReferenceAttribute>
         <!--
