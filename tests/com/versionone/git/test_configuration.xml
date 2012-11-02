@@ -46,7 +46,7 @@
             </Link>
         </GitConnection>
 
-        <!-- Internal Git server using SSH and linking to Gitosis for commit diffs -->
+        <!-- Internal Git server using SSH scanning all branches and linking to Gitosis for commit diffs -->
         <GitConnection>
             <Path>git@git.yourcompany.com:account/repo.git</Path>
             <Link>

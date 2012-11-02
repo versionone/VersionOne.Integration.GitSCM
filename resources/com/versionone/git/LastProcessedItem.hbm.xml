@@ -5,7 +5,10 @@
 
 <hibernate-mapping package="com.versionone.git.storage">
 <class name="LastProcessedItem" table="LastProcessedItems">
-    <id name="repositoryId" column="RepositoryId" length="50"/>
+    <composite-id>
+        <key-property name="repositoryId" column="RepositoryId" length="50"/>
+        <key-property name="branchRef" column="BranchRef" length="255" />
+    </composite-id>
     <property name="value" column="Value" length="50" />
 </class>
 </hibernate-mapping>

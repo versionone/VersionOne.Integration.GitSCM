@@ -23,13 +23,22 @@
             <Path>git://github.com/edkennard/Integration.Git.Test1.git</Path>
             <Password></Password>
             <SshPassphrase></SshPassphrase>
-            <WatchedBranchName>master</WatchedBranchName>
-            <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
-                If you want to search VersionOne item id in commit comments then set to false-->
+
+            <!-- Specify a single branch to watch, or leave blank to watch all branches -->
+            <WatchedBranchName></WatchedBranchName>
+            
+            <!--
+                Set UseBranchName to true to enable parsing the branch name as a VersionOne item ID.
+                Should only be enabled when a specific branch has been set in WatchedBranchName above,
+                otherwise when watching all branches commits will be incorrectly associated with
+                workitems they don't belong to
+            -->
             <UseBranchName>false</UseBranchName>
+
             <Link>
+                <!-- Add {0} where you want the commit ID to be inserted -->
                 <NameTemplate>ChangeSet: {0}</NameTemplate>
-                <URLTemplate>https://github.com/edkennard/Integration.Git.Test1/commit/{0}</URLTemplate>
+                <UrlTemplate>https://github.com/edkennard/Integration.Git.Test1/commit/{0}</UrlTemplate>
                 <OnMenu>true</OnMenu>
             </Link>
         </GitConnection>
@@ -37,13 +46,11 @@
             <Path>git://github.com/edkennard/Integration.Git.Test2.git</Path>
             <Password></Password>
             <SshPassphrase></SshPassphrase>
-            <WatchedBranchName>master</WatchedBranchName>
-            <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
-                If you want to search VersionOne item id in commit comments then set to false-->
+            <WatchedBranchName></WatchedBranchName>
             <UseBranchName>false</UseBranchName>
             <Link>
                 <NameTemplate>ChangeSet: {0}</NameTemplate>
-                <URLTemplate>https://github.com/edkennard/Integration.Git.Test2/commit/{0}</URLTemplate>
+                <UrlTemplate>https://github.com/edkennard/Integration.Git.Test2/commit/{0}</UrlTemplate>
                 <OnMenu>true</OnMenu>
             </Link>
         </GitConnection>
@@ -51,12 +58,9 @@
             <Path>git://github.com/edkennard/Integration.Git.Test3.git</Path>
             <Password></Password>
             <SshPassphrase></SshPassphrase>
-            <WatchedBranchName>master</WatchedBranchName>
-            <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
-                If you want to search VersionOne item id in commit comments then set to false-->
+            <WatchedBranchName></WatchedBranchName>
             <UseBranchName>false</UseBranchName>
             <Link>
-                <!-- Add {0} where you want the commit ID to be inserted -->
                 <NameTemplate>ChangeSet: {0}</NameTemplate>
                 <UrlTemplate>https://github.com/account/repo/commit/{0}</UrlTemplate>
                 <OnMenu>true</OnMenu>
