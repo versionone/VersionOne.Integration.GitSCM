@@ -72,10 +72,10 @@ public class Configuration {
             LOG.info("Configuration loaded successfully");
         } catch (JAXBException ex) {
             LOG.fatal("Couldn't read configuration file, please check for invalid XML", ex);
-            System.exit(-1);
+            //System.exit(-1);
         } catch (FileNotFoundException ex) {
             LOG.fatal(String.format("Couldn't find configuration file at the specified location (%s)", fileName), ex);
-            System.exit(-1);
+            //System.exit(-1);
         } finally {
             if (stream != null) {
                 try {

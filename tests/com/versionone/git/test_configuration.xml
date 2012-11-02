@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
 
-    <LocalDirectory>e:/gittmp/</LocalDirectory>
+    <LocalDirectory>./repos</LocalDirectory>
     <PollIntervalInSeconds>300</PollIntervalInSeconds>
 
     <VersionOneConnection>
-        <Path>http://integsrv01/VersionOne12/</Path>
+        <Path>http://server/VersionOne/</Path>
         <UserName>admin</UserName>
         <Password>admin</Password>
         <IntegratedAuth>true</IntegratedAuth>
@@ -16,11 +16,11 @@
             <Password>proxyUserPass</Password>
         </ProxySettings>
     </VersionOneConnection>
-    <GitConnections>
 
-        <!-- External GitHub server -->
+    <GitConnections>
+        <!-- GitHub using https://... -->
         <GitConnection>
-            <Path>github.com/account/repo.git</Path>
+            <Path>https://github.com/account/repo.git</Path>
             <Password>password</Password>
             <SshPassphrase>passphrase</SshPassphrase>
             <WatchedBranchName>master</WatchedBranchName>
@@ -32,9 +32,23 @@
             </Link>
         </GitConnection>
 
-        <!-- Internal Git server scanning all branches and linking to Gitosis for commit diffs -->
+        <!-- Copy of the above for testing gitConnection.equals -->
         <GitConnection>
-            <Path>git@git.yourcompany.com:repo.git</Path>
+            <Path>https://github.com/account/repo.git</Path>
+            <Password>password</Password>
+            <SshPassphrase>passphrase</SshPassphrase>
+            <WatchedBranchName>master</WatchedBranchName>
+            <UseBranchName>false</UseBranchName>
+            <Link>
+                <NameTemplate>ChangeSet: {0}</NameTemplate>
+                <UrlTemplate>https://github.com/account/repo/{0}</UrlTemplate>
+                <OnMenu>true</OnMenu>
+            </Link>
+        </GitConnection>
+
+        <!-- Internal Git server using SSH and linking to Gitosis for commit diffs -->
+        <GitConnection>
+            <Path>git@git.yourcompany.com:account/repo.git</Path>
             <Link>
                 <NameTemplate>ChangeSet: {0}</NameTemplate>
                 <UrlTemplate>http://git.yourcompany.com/?p=repo.git;a=commitdiff;h={0}</UrlTemplate>
@@ -42,9 +56,9 @@
             </Link>
         </GitConnection>
 
-        <!-- External GitHub server -->
+        <!-- GitHub using git://... -->
         <GitConnection>
-            <Path>github.com/account/repo.git</Path>
+            <Path>git://github.com/account/repo.git</Path>
             <Password>password</Password>
             <SshPassphrase>passphrase</SshPassphrase>
             <WatchedBranchName>master</WatchedBranchName>
@@ -55,12 +69,14 @@
                 <OnMenu>true</OnMenu>
             </Link>
         </GitConnection>
-
     </GitConnections>
 
     <ChangeSet>
         <AlwaysCreate>false</AlwaysCreate>
-        <ChangeComment>Updated by VersionOne.ServiceHost</ChangeComment>
+        <NameTemplate>{0} by {1} in {2}</NameTemplate>
+        <NameTemplateDateFormat>yyyy-MM-dd HH:mm:ss</NameTemplateDateFormat>
+        <NameTemplateRepositoryFormat>FoldersOnly</NameTemplateRepositoryFormat>
+        <ChangeComment>Updated by Git</ChangeComment>
         <ReferenceAttribute>Number</ReferenceAttribute>
         <ReferenceExpression><![CDATA[[A-Z]{1,2}-[0-9]+]]></ReferenceExpression>
     </ChangeSet>
