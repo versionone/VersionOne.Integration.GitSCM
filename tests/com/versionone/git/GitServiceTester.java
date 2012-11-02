@@ -1,5 +1,6 @@
 package com.versionone.git;
 
+import com.versionone.git.configuration.Configuration;
 import com.versionone.git.storage.IDbStorage;
 import com.versionone.git.storage.PersistentChange;
 import org.jmock.Expectations;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class GitServiceTester {
     private JUnit4Mockery context;
+    private Configuration configuration;
     private IGitConnector gitConnectorMock;
     private IDbStorage storageMock;
     private IChangeSetWriter v1ConnectorMock;
@@ -20,6 +22,7 @@ public class GitServiceTester {
     @Before
     public void before() {
         context = new JUnit4Mockery();
+        configuration = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
         gitConnectorMock = context.mock(IGitConnector.class);
         storageMock = context.mock(IDbStorage.class);
         v1ConnectorMock = context.mock(IChangeSetWriter.class);
@@ -35,7 +38,7 @@ public class GitServiceTester {
                 will(returnValue(true));
             oneOf(gitConnectorMock).getWatchedBranchName();
                 will(returnValue("refs/remotes/origin/master"));
-            oneOf(gitConnectorMock).getCommits(); will(returnValue(new LinkedList()));
+            oneOf(gitConnectorMock).getChangeSets(); will(returnValue(new LinkedList()));
         }});
 
         service.initialize();
@@ -47,8 +50,8 @@ public class GitServiceTester {
         final String repositoryId = "repo id";
         GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock, repositoryId);
 
-        final ChangeSetInfo firstChange = new ChangeSetInfo("user", "first commit", "1", new Date());
-        final ChangeSetInfo secondChange = new ChangeSetInfo("user", "second commit", "2", new Date());
+        final ChangeSetInfo firstChange = new ChangeSetInfo(configuration.getGitConnections().get(0), "user", "first commit", "1", new Date());
+        final ChangeSetInfo secondChange = new ChangeSetInfo(configuration.getGitConnections().get(0), "user", "second commit", "2", new Date());
         final List<ChangeSetInfo> changes = new LinkedList<ChangeSetInfo>();
         changes.add(firstChange);
         changes.add(secondChange);
@@ -59,7 +62,7 @@ public class GitServiceTester {
                 will(returnValue(true));
             oneOf(gitConnectorMock).getWatchedBranchName();
                 will(returnValue("refs/remotes/origin/master"));
-            oneOf(gitConnectorMock).getCommits();
+            oneOf(gitConnectorMock).getChangeSets();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision(), repositoryId);
             PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision(), repositoryId);
@@ -82,8 +85,8 @@ public class GitServiceTester {
         final String repositoryId = "repo id";
         GitService service = new GitService(storageMock, gitConnectorMock, v1ConnectorMock, repositoryId);
 
-        final ChangeSetInfo firstChange = new ChangeSetInfo("user", "first commit", "1", new Date());
-        final ChangeSetInfo secondChange = new ChangeSetInfo("user", "second commit", "2", new Date());
+        final ChangeSetInfo firstChange = new ChangeSetInfo(configuration.getGitConnections().get(0), "user", "first commit", "1", new Date());
+        final ChangeSetInfo secondChange = new ChangeSetInfo(configuration.getGitConnections().get(0), "user", "second commit", "2", new Date());
         final List<ChangeSetInfo> changes = new LinkedList<ChangeSetInfo>();
         changes.add(firstChange);
         changes.add(secondChange);
@@ -94,7 +97,7 @@ public class GitServiceTester {
                 will(returnValue(true));
             oneOf(gitConnectorMock).getWatchedBranchName();
                 will(returnValue("refs/remotes/origin/master"));
-            oneOf(gitConnectorMock).getCommits();
+            oneOf(gitConnectorMock).getChangeSets();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision(), repositoryId);
             PersistentChange secondPersistentChange = PersistentChange.createNew(secondChange.getRevision(), repositoryId);

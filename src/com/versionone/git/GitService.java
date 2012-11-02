@@ -3,6 +3,7 @@ package com.versionone.git;
 import com.versionone.git.storage.IDbStorage;
 import com.versionone.git.storage.PersistentChange;
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.util.StringUtils;
 
 import java.util.Collection;
 
@@ -30,12 +31,12 @@ public class GitService {
             LOG.debug("Watched branch '" + gitConnector.getWatchedBranchName() + "' exists.");
         }
 
-        LOG.info("Connection to Git server established.");
+        LOG.info("Connection to Git repository established successfully");
     }
 
     public void onInterval() throws GitException, VersionOneException {
-        Collection<ChangeSetInfo> changes = gitConnector.getCommits();
-        LOG.debug("Found " + changes.size() + " changes to process.");
+        Collection<ChangeSetInfo> changes = gitConnector.getChangeSets();
+        LOG.debug("Found " + changes.size() + " changes to process");
 
         for(ChangeSetInfo change : changes) {
             PersistentChange persistentChange = PersistentChange.createNew(change.getRevision(), repositoryId);
@@ -43,9 +44,12 @@ public class GitService {
             if(!storage.isChangePersisted(persistentChange)) {
                 v1ChangeSetWriter.publish(change);
                 storage.persistChange(persistentChange);
-                LOG.debug("Change published to VersionOne server: " + change.getRevision());
             } else {
-                LOG.debug("Change already processed: " + change.getRevision());
+                LOG.warn(String.format("Ignoring changeset %1$s by %2$s on %3$s to %4$s because it has already been processed before",
+                        change.getRevision(),
+                        change.getAuthor(),
+                        change.getChangeDate(),
+                        StringUtils.join(change.getReferences(), ", ")));
             }
         }
     }

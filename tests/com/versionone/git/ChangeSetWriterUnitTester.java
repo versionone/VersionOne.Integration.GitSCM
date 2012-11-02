@@ -40,11 +40,11 @@ public class ChangeSetWriterUnitTester {
     @Test
     public void publish() throws VersionOneException, V1Exception, ConnectionException {
         Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
-        ChangeSetWriter writer1 = new ChangeSetWriter(config, v1ConnectorMock, config.getGitSettings().get(0).getLink());
-        ChangeSetWriter writer2 = new ChangeSetWriter(config, v1ConnectorMock, config.getGitSettings().get(1).getLink());
-        ChangeSetWriter writer3 = new ChangeSetWriter(config, v1ConnectorMock, config.getGitSettings().get(2).getLink());
+        ChangeSetWriter writer1 = new ChangeSetWriter(config.getChangeSet(), v1ConnectorMock);
+        ChangeSetWriter writer2 = new ChangeSetWriter(config.getChangeSet(), v1ConnectorMock);
+        ChangeSetWriter writer3 = new ChangeSetWriter(config.getChangeSet(), v1ConnectorMock);
         List<String> references = Arrays.asList("D-00001");
-        ChangeSetInfo changeSetInfo = new ChangeSetInfo("author", "message", new ArrayList<String>(), "123", new Date(),  references);
+        ChangeSetInfo changeSetInfo = new ChangeSetInfo(config.getGitConnections().get(0), "author", "message", new ArrayList<String>(), "123", new Date(), references);
 
         final Asset affectedWorkitem = mockery.mock(Asset.class, "Asset 1");
         final Oid Oid1 = mockery.mock(Oid.class, "Oid for Asset 1");

@@ -2,7 +2,7 @@ package com.versionone.git;
 
 import com.versionone.apiclient.*;
 import com.versionone.git.configuration.Configuration;
-import com.versionone.git.configuration.VersionOneSettings;
+import com.versionone.git.configuration.VersionOneConnection;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -44,7 +44,7 @@ public class ChangeSetWriterTester {
     @Before
     public void before() throws VersionOneException {
         config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration_changesetwriter.xml").getPath());
-        VersionOneSettings connectionInfo = config.getVersionOneSettings();
+        VersionOneConnection connectionInfo = config.getVersionOneConnection();
 
         connectionInfo.getProxySettings().setUseProxy(useProxy);
 
@@ -63,10 +63,10 @@ public class ChangeSetWriterTester {
         cal.set(2010, 11, 1, 14, 43, 56);
         Date date = cal.getTime();
 
-        ChangeSetInfo changeSet = new ChangeSetInfo("test author", "test message",  new LinkedList<String>(),
+        ChangeSetInfo changeSet = new ChangeSetInfo(config.getGitConnections().get(0), "test author", "test message",  new LinkedList<String>(),
                 "test_revision", date, refs);
 
-        ChangeSetWriter writer = new ChangeSetWriter(config, connector, config.getGitSettings().get(0).getLink());
+        ChangeSetWriter writer = new ChangeSetWriter(config.getChangeSet(), connector);
         writer.publish(changeSet);
 
         Asset[] list = findExistingChangeset(changeSet.getRevision()).getAssets();

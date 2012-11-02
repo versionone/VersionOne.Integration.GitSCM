@@ -1,6 +1,6 @@
 package com.versionone.git;
 
-import com.versionone.git.configuration.GitSettings;
+import com.versionone.git.configuration.GitConnection;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -23,13 +23,13 @@ public class Utilities {
         return dir.delete();
     }
 
-    public static String getRepositoryId(GitSettings gitSettings) throws NoSuchAlgorithmException {
+    public static String getRepositoryId(GitConnection gitConnection) throws NoSuchAlgorithmException {
         StringBuffer sb = new StringBuffer();
-        sb.append(gitSettings.getRepositoryPath()).
-                append(gitSettings.getPassphrase()).
-                append(gitSettings.getPassword()).
-                append(gitSettings.getWatchedBranch()).
-                append(gitSettings.getUseBranchName());
+        sb.append(gitConnection.getRepositoryPath()).
+                append(gitConnection.getPassphrase()).
+                append(gitConnection.getPassword()).
+                append(gitConnection.getWatchedBranch()).
+                append(gitConnection.getUseBranchName());
 
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(sb.toString().getBytes());

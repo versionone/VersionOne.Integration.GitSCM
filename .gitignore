@@ -1,0 +1,9 @@
+build/
+db/
+distr/
+junit/
+logs/
+publish/
+repos/
+derby.log
+*~

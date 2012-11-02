@@ -1,7 +1,9 @@
 package com.versionone.git;
 
-import com.versionone.git.configuration.GitSettings;
+import com.versionone.git.configuration.GitConnection;
+import com.versionone.git.configuration.ChangeSet;
 import com.versionone.git.storage.IDbStorage;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
@@ -29,29 +31,27 @@ public class GitConnector implements IGitConnector {
     private final String remoteName = "origin";
 
     private final int timeout = 100;
-    private GitSettings gitSettings;
+    private GitConnection gitConnection;
+    private ChangeSet changeSetConfig;
 
-    private final Pattern regexPattern;
-    private final boolean alwaysCreate;
     private final String localDirectory;
     private final IDbStorage storage;
     private final String repositoryId;
 
     private static final Logger LOG = Logger.getLogger("GitIntegration");
-    public GitConnector(GitSettings gitSettings, String localDirectory, String regexPattern,
-                        boolean alwaysCreate, IDbStorage storage, String repositoryId) {
-        this.gitSettings = gitSettings;
-        this.localDirectory = localDirectory;
-        this.alwaysCreate = alwaysCreate;
-        this.storage = storage;
-        this.regexPattern = Pattern.compile(regexPattern);
-        this.repositoryId = repositoryId;
 
-        SshSessionFactory.installWithCredentials(gitSettings.getPassword(), gitSettings.getPassphrase());
+    public GitConnector(GitConnection gitConnection, String repositoryId, String localDirectory, IDbStorage storage, ChangeSet changeSetConfig) {
+        this.gitConnection = gitConnection;
+        this.repositoryId = repositoryId;
+        this.localDirectory = localDirectory;
+        this.storage = storage;
+        this.changeSetConfig = changeSetConfig;
+
+        SshSessionFactory.installWithCredentials(gitConnection.getPassword(), gitConnection.getPassphrase());
     }
 
     public void initRepository() throws GitException {
-    	LOG.debug("initRepository");
+    	LOG.debug("Initalizing repository...");
 
         try {
             cloneRepository();
@@ -65,17 +65,17 @@ public class GitConnector implements IGitConnector {
         }
     }
 
-    public List<ChangeSetInfo> getCommits() throws GitException {
+    public List<ChangeSetInfo> getChangeSets() throws GitException {
         try {
             doFetch();
 
-            ChangeSetListBuilder builder = new ChangeSetListBuilder(regexPattern) {
+            ChangeSetListBuilder builder = new ChangeSetListBuilder(Pattern.compile(changeSetConfig.getReferenceExpression())) {
                 public boolean shouldAdd(ChangeSetInfo changeSet) {
-                    if(alwaysCreate){
+                    if(changeSetConfig.isAlwaysCreate()){
                         return true;
                     }
 
-                    if(gitSettings.getUseBranchName()) {
+                    if(gitConnection.getUseBranchName()) {
                         return changeSet.getReferences().size() > 0;
                     } else {
                         return matchByPattern(changeSet.getMessage());
@@ -111,7 +111,7 @@ public class GitConnector implements IGitConnector {
 
     @Override
     public String getWatchedBranchName() {
-        return Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME +  "/" + gitSettings.getWatchedBranch();
+        return Constants.R_REMOTES + Constants.DEFAULT_REMOTE_NAME +  "/" + gitConnection.getWatchedBranch();
     }
 
     private void traverseChanges(ChangeSetListBuilder builder) throws GitException {
@@ -131,15 +131,16 @@ public class GitConnector implements IGitConnector {
         Iterable<RevCommit> commits = getCommits(logCommand);
 
         for (RevCommit commit : commits) {
-            // jGit returns data in second.
+            // jGit returns data in seconds
             long millisecond = commit.getCommitTime() *  1000l;
             ChangeSetInfo info = new ChangeSetInfo(
+                    gitConnection,
                     commit.getAuthorIdent().getName(),
                     commit.getFullMessage().trim(),
                     commit.getId().getName(),
                     new Date(millisecond));
 
-            if(gitSettings.getUseBranchName()) {
+            if(gitConnection.getUseBranchName()) {
                 List<String> branches = getBranchNames(commit);
                 for(String branch : branches) {
                     fillReferences(branch, info.getReferences());
@@ -155,7 +156,7 @@ public class GitConnector implements IGitConnector {
     private Iterable<RevCommit> getCommits(LogCommand logCommand) throws GitException {
         Iterable<RevCommit> commits;
         try {
-            AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + gitSettings.getWatchedBranch());
+            AnyObjectId headId = local.resolve(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + gitConnection.getWatchedBranch());
             String headHash = headId.getName();
             String persistedHash = storage.getLastCommit(repositoryId);
 
@@ -173,24 +174,24 @@ public class GitConnector implements IGitConnector {
                 commits = logCommand.call();
                 storage.persistLastCommit(headHash, repositoryId);
             } else {
-                LOG.debug("There is no new commits since last run.");
+                LOG.debug("There are no new commits since last run.");
                 return new ArrayList<RevCommit>();
             }
         } catch (IOException ex) {
-            LOG.fatal(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + gitSettings.getWatchedBranch() + " can't be processed.", ex);
+            LOG.fatal(Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + gitConnection.getWatchedBranch() + " can't be processed.", ex);
             throw new GitException(ex);
         } catch (NoHeadException ex) {
             LOG.fatal("Can't find starting revision.", ex);
             throw new GitException(ex);
         } catch (GitAPIException ex) {
-        	LOG.fatal("Encountered problem using GitAPI.", ex);
+            LOG.fatal("An exception occurred in the Git connector while fetching commits:", ex);
         	throw new GitException(ex);
         }
         return commits;
     }
 
     private void fillReferences(String message, List<String> references) {
-        Matcher matcher = regexPattern.matcher(message);
+        Matcher matcher = Pattern.compile(changeSetConfig.getReferenceExpression()).matcher(message);
 
         while(matcher.find()) {
             references.add(matcher.group());
@@ -226,11 +227,11 @@ public class GitConnector implements IGitConnector {
     }
 
     private void cloneRepository() throws IOException, URISyntaxException {
-    	LOG.info("Clone Repository");
+    	LOG.debug("Cloning repository...");
         local = new FileRepository(localDirectory);
         local.create();
 
-        URIish uri = new URIish(gitSettings.getRepositoryPath());
+        URIish uri = new URIish(gitConnection.getRepositoryPath());
 
 		remoteConfig = new RemoteConfig(local.getConfig(), remoteName);
 		remoteConfig.addURI(uri);
@@ -257,15 +258,15 @@ public class GitConnector implements IGitConnector {
     }
 
 	private void doFetch() throws NotSupportedException, TransportException {
-		LOG.info("Fetch Repository");
+		LOG.debug("Fetching repository...");
 		final Transport tn = Transport.open(local, remoteConfig);
 		tn.setTimeout(this.timeout);
 
         try {
-        	tn.fetch(new ProgressMonitor(){
-				@Override public void beginTask(String taskName, int totalSubTask) {LOG.debug("Begin Task " + taskName + ". Total Subtask " + totalSubTask);}
-				@Override public void start(int totalTask) {LOG.debug("Start.  Total Task " + totalTask);}
-				@Override public void update(int arg0) {}
+        	tn.fetch(new ProgressMonitor() {
+				@Override public void beginTask(String taskName, int totalWork) {LOG.debug(taskName + ", total subtasks: " + totalWork);}
+				@Override public void start(int totalTasks) { LOG.debug("Starting task, total tasks: " + totalTasks); }
+				@Override public void update(int completed) {}
 				@Override public void endTask() {}
 				@Override public boolean isCancelled() {return false;}}
         	, null);

@@ -2,7 +2,7 @@ package com.versionone.git.configuration;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class VersionOneSettings {
+public class VersionOneConnection {
     @XmlElement(name = "Path")
     private String versionOnePath;
 

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
+
+    <LocalDirectory>./repos</LocalDirectory>
+    <PollIntervalInSeconds>10</PollIntervalInSeconds>
+
     <VersionOneConnection>
         <Path>https://www14.v1host.com/v1sdktesting/</Path>
         <UserName>admin</UserName>
@@ -13,9 +17,9 @@
             <Password>proxyUserPass</Password>
         </ProxySettings>
     </VersionOneConnection>
-    <GitSettings>
-        <Instance>
-            <Path>git@github.com:account/repo1.git</Path>
+    <GitConnections>
+        <GitConnection>
+            <Path>git://github.com/edkennard/Integration.Git.Test1.git</Path>
             <Password></Password>
             <SshPassphrase></SshPassphrase>
             <WatchedBranchName>master</WatchedBranchName>
@@ -23,23 +27,53 @@
                 If you want to search VersionOne item id in commit comments then set to false-->
             <UseBranchName>false</UseBranchName>
             <Link>
-                <Name>ChangeSet: {0}</Name>
-                <URL>https://github.com/account/repo1/commit/{0}</URL>
+                <NameTemplate>ChangeSet: {0}</NameTemplate>
+                <URLTemplate>https://github.com/edkennard/Integration.Git.Test1/commit/{0}</URLTemplate>
                 <OnMenu>true</OnMenu>
             </Link>
-        </Instance>
-    </GitSettings>
+        </GitConnection>
+        <GitConnection>
+            <Path>git://github.com/edkennard/Integration.Git.Test2.git</Path>
+            <Password></Password>
+            <SshPassphrase></SshPassphrase>
+            <WatchedBranchName>master</WatchedBranchName>
+            <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
+                If you want to search VersionOne item id in commit comments then set to false-->
+            <UseBranchName>false</UseBranchName>
+            <Link>
+                <NameTemplate>ChangeSet: {0}</NameTemplate>
+                <URLTemplate>https://github.com/edkennard/Integration.Git.Test2/commit/{0}</URLTemplate>
+                <OnMenu>true</OnMenu>
+            </Link>
+        </GitConnection>
+        <GitConnection>
+            <Path>git://github.com/edkennard/Integration.Git.Test3.git</Path>
+            <Password></Password>
+            <SshPassphrase></SshPassphrase>
+            <WatchedBranchName>master</WatchedBranchName>
+            <!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.
+                If you want to search VersionOne item id in commit comments then set to false-->
+            <UseBranchName>false</UseBranchName>
+            <Link>
+                <!-- Add {0} where you want the commit ID to be inserted -->
+                <NameTemplate>ChangeSet: {0}</NameTemplate>
+                <UrlTemplate>https://github.com/account/repo/commit/{0}</UrlTemplate>
+                <OnMenu>true</OnMenu>
+            </Link>
+        </GitConnection>
+    </GitConnections>
 
-    <LocalDirectory>c:/temp/git/data/</LocalDirectory>
-    <Timeout>10000</Timeout>
-    <AlwaysCreate>false</AlwaysCreate>
-    <ChangeComment>Updated by Git</ChangeComment>
-    <!-- 
-        === Sample Regexes ===
-        To Match S-01001 (Matches "S-01001"):					[A-Z]{1,2}-[0-9]+
-        To match #Reference (matches only "Reference"):			(?<=#)[a-zA-Z]+\b
-        To match "V1:Reference"  (matches only "Reference"):	(?<=V1:)[a-zA-Z]+\b
-    -->
-    <ReferenceAttribute>Number</ReferenceAttribute>
-    <ReferenceExpression><![CDATA[[A-Z]{1,2}-[0-9]+]]></ReferenceExpression>
+    <ChangeSet>
+        <AlwaysCreate>false</AlwaysCreate>
+        <ChangeComment>Updated by Git</ChangeComment>
+        <ReferenceAttribute>Number</ReferenceAttribute>
+        <!--
+            === Sample Regexes ===
+            To Match S-01001 (Matches "S-01001"):					[A-Z]{1,2}-[0-9]+
+            To match #Reference (matches only "Reference"):			(?<=#)[a-zA-Z]+\b
+            To match "V1:Reference"  (matches only "Reference"):	(?<=V1:)[a-zA-Z]+\b
+        -->
+        <ReferenceExpression><![CDATA[[A-Z]{1,2}-[0-9]+]]></ReferenceExpression>
+    </ChangeSet>
+
 </Configuration>
