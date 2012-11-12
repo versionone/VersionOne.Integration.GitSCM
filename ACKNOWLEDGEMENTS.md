@@ -9,7 +9,7 @@ The original software is available from:
 This software is available under an Apache License v2.0:
    http://maven.apache.org/license.html
 
-Unit test support is provided by the NUnit library, which is open 
+Unit test support is provided by the JUnit library, which is open 
 source software.
 
 The original software is available from:
