@@ -3,6 +3,11 @@
     <property file="build.properties" />
 
     <target name="init" >
+        <!-- Versioning -->
+        <!-- CI should set ver.build otherwise use 0 as "developing" build -->
+        <property name="ver.build" value="0" />
+        <property name="build.version" value="${ver.major}.${ver.minor}.${ver.build}" />
+
         <!-- Compiler settings -->
         <property name="compiler.debug" value="on"/>
         <property name="compiler.generate.no.warnings" value="off"/>
@@ -10,7 +15,6 @@
         <property name="compiler.args" value=""/>
 
         <property name="publish.dir" value="./publish"/>
-        <property name="build.version" value="${ver.major}.${ver.minor}.${ver.build}"/>
         <property name="jar.filename" value="V1GitIntegration.jar"/>
         <property name="zip.filename" value="V1GitIntegration.${build.version}.zip"/>
         <property name="zip.source.filename" value="V1GitIntegration.Source.${build.version}.zip"/>
