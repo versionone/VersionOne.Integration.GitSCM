@@ -1,68 +1,88 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="V1GIT">
-    <!-- Compiler settings -->
-    <property name="compiler.debug" value="on"/>
-    <property name="compiler.generate.no.warnings" value="off"/>
-    <property name="compiler.max.memory" value="128m"/>
-    <property name="compiler.args" value=""/>
+    <property file="build.properties" />
 
-    <property name="ver.major" value="9"/>
-    <property name="ver.minor" value="0"/>
-    <property name="ver.build" value="0"/>
-    <property name="publish.dir" value="./publish"/>
-    <property name="build.version" value="${ver.major}.${ver.minor}.${ver.build}"/>
-    <property name="jar.filename" value="V1GitIntegration.jar"/>
-    <property name="zip.filename" value="V1GitIntegration.${build.version}.zip"/>
-    <property name="zip.source.filename" value="V1GitIntegration.Source.${build.version}.zip"/>
-    <property name="wrapper.licence.filename" value="LICENSE.txt"/>
+    <target name="init" >
+        <!-- Compiler settings -->
+        <property name="compiler.debug" value="on"/>
+        <property name="compiler.generate.no.warnings" value="off"/>
+        <property name="compiler.max.memory" value="128m"/>
+        <property name="compiler.args" value=""/>
 
-    <!-- Directories -->
-    <property name="base.dir" value="."/>
-    <property name="service.dir" value="service"/>
-    <property name="doc.dir" value="${basedir}/doc"/>
-    <property name="lib.dir" value="${basedir}/lib"/>
-    <property name="src.dir" value="${basedir}/src"/>
-    <property name="res.dir" value="${basedir}/resources"/>    
-    <property name="distr.dir" value="${basedir}/distr"/>
-    <property name="tests.dir" value="${basedir}/tests"/>
-    <property name="servicewrapper.dir" value="${basedir}/ServiceWrapper"/>
+        <property name="publish.dir" value="./publish"/>
+        <property name="build.version" value="${ver.major}.${ver.minor}.${ver.build}"/>
+        <property name="jar.filename" value="V1GitIntegration.jar"/>
+        <property name="zip.filename" value="V1GitIntegration.${build.version}.zip"/>
+        <property name="zip.source.filename" value="V1GitIntegration.Source.${build.version}.zip"/>
+        <property name="wrapper.licence.filename" value="LICENSE.txt"/>
 
+        <!-- Directories -->
+        <property name="base.dir" value="."/>
+        <property name="service.dir" value="service"/>
+        <property name="doc.dir" value="${basedir}/doc"/>
+        <property name="lib.dir" value="${basedir}/lib"/>
+        <property name="src.dir" value="${basedir}/src"/>
+        <property name="res.dir" value="${basedir}/resources"/>    
+        <property name="distr.dir" value="${basedir}/distr"/>
+        <property name="tests.dir" value="${basedir}/tests"/>
+        <property name="servicewrapper.dir" value="${basedir}/ServiceWrapper"/>
 
-    <!-- Build Directories -->
-    <property name="build.dir" value="${basedir}/build"/>
-    <property name="bin.product.dir" value="${build.dir}/bin_production"/>
-    <property name="junit.output.dir" value="junit"/>
-    <property name="publish.git.dir" value="${publish.dir}/tmpl/GitIntegration"/>
+        <!-- Build Directories -->
+        <property name="build.dir" value="${basedir}/build"/>
+        <property name="bin.product.dir" value="${build.dir}/bin_production"/>
+        <property name="junit.output.dir" value="junit"/>
+        <property name="publish.git.dir" value="${publish.dir}/tmpl/GitIntegration"/>
 
-    <path id="classpath">
-        <fileset dir="${lib.dir}">
-            <include name="**/*.jar"/>
-        </fileset>
-    </path>
-    
-    <patternset id="compiler.resources">
-        <include name="**/?*.properties"/>
-        <include name="**/?*.xml"/>
-        <include name="**/?*.gif"/>
-        <include name="**/?*.png"/>
-        <include name="**/?*.jpeg"/>
-        <include name="**/?*.jpg"/>
-        <include name="**/?*.html"/>
-        <include name="**/?*.dtd"/>
-        <include name="**/?*.tld"/>
-    </patternset>
+        <path id="classpath">
+            <fileset dir="${lib.dir}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+        
+        <patternset id="compiler.resources">
+            <include name="**/?*.properties"/>
+            <include name="**/?*.xml"/>
+            <include name="**/?*.gif"/>
+            <include name="**/?*.png"/>
+            <include name="**/?*.jpeg"/>
+            <include name="**/?*.jpg"/>
+            <include name="**/?*.html"/>
+            <include name="**/?*.dtd"/>
+            <include name="**/?*.tld"/>
+        </patternset>
+
+        <path id="base.classpath">
+            <fileset dir="${lib.dir}" includes="*.jar">
+                <exclude name="junit-4.4.jar"/>
+                <exclude name="hamcrest-core-1.1.jar" />
+                <exclude name="hamcrest-library-1.1.jar" />
+                <exclude name="jmock-2.5.1.jar" />
+                <exclude name="jmock-junit4-2.5.1.jar" />
+            </fileset>
+        </path>
+
+        <pathconvert property="manifest.classpath" pathsep=" ">
+          <path refid="base.classpath"/>
+          <mapper>
+            <chainedmapper>
+               <flattenmapper/>
+               <globmapper from="*.jar" to="lib/*.jar"/>
+            </chainedmapper>
+          </mapper>
+        </pathconvert>
+    </target>
 
     <!-- Clean -->
-    <target name="compile.clean">
+    <target name="compile.clean" depends="init" >
         <delete dir="${bin.product.dir}"/>
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="build.clean">
+    <target name="build.clean" depends="init" >
         <delete file="${build.dir}/${jar.filename}"/>
     </target>
 
-    <target name="package.clean">
+    <target name="package.clean" depends="init" >
         <delete dir="${distr.dir}"/>
         <delete file="${zip.filename}"/>
         <delete file="${zip.source.filename}"/>
@@ -75,7 +95,8 @@
         description="cleanup all"/>
 
     <!-- Compile -->
-    <target name="integration.compile.git" description="Compile VersionOne integration for Git">
+    <target name="integration.compile.git" depends="init"
+        description="Compile VersionOne integration for Git">
         <mkdir dir="${bin.product.dir}"/>
         <javac destdir="${bin.product.dir}" debug="${compiler.debug}"
             nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}"
@@ -90,28 +111,9 @@
 
     </target>
 
-    <path id="base.classpath">
-        <fileset dir="${lib.dir}" includes="*.jar">
-            <exclude name="junit-4.4.jar"/>
-            <exclude name="hamcrest-core-1.1.jar" />
-            <exclude name="hamcrest-library-1.1.jar" />
-            <exclude name="jmock-2.5.1.jar" />
-            <exclude name="jmock-junit4-2.5.1.jar" />
-        </fileset>
-    </path>
-    <pathconvert property="manifest.classpath" pathsep=" ">
-      <path refid="base.classpath"/>
-      <mapper>
-        <chainedmapper>
-           <flattenmapper/>
-           <globmapper from="*.jar" to="lib/*.jar"/>
-        </chainedmapper>
-      </mapper>
-    </pathconvert>
-
-
     <!-- Jar creation -->
-    <target name="integration.build.git" depends="integration.compile.git">
+    <target name="integration.build.git" 
+        depends="init,integration.compile.git">
         <mkdir dir="${distr.dir}"/>
 
         <copy todir="${bin.product.dir}/">
@@ -135,7 +137,8 @@
     </target>
 
     <!-- package -->
-    <target name="integration.package.git" depends="integration.build.git">
+    <target name="integration.package.git"
+        depends="init,integration.build.git">
         <mkdir dir="${publish.git.dir}"/>
 
         <copy file="${distr.dir}/${jar.filename}" todir="${publish.git.dir}"/>
@@ -144,8 +147,6 @@
         <!-- copy runner -->
         <copy file="${base.dir}/RunGitIntegration.bat" todir="${publish.git.dir}"/>
 
-		<copy file="License.rtf" todir="${publish.git.dir}"/>
-		
         <!-- copy service wrapper-->
         <copy todir="${publish.git.dir}">
             <fileset dir="${servicewrapper.dir}/">
@@ -192,7 +193,7 @@
     <target name="coverage.clean">
     </target>
 
-    <target name="testing" depends="integration.compile.git">
+    <target name="testing" depends="init,integration.compile.git">
         <mkdir dir="${junit.output.dir}"/>
         <!-- copy test data for tests -->
         <copy todir="${bin.product.dir}/">
@@ -216,9 +217,7 @@
 
     </target>
 
-
     <target name="teamcity.build" depends="clean, testing, integration.package.git"
         description="build all"/>
-
 
 </project>
