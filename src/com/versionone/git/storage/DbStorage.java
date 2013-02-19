@@ -48,13 +48,14 @@ public class DbStorage implements IDbStorage {
         return count > 0;
     }
 
-    public void persistLastCommit(String commitHash, String repositoryId) {
-        LOG.debug(String.format("Persisting to local store commit %1$s in repository %2$s", commitHash, repositoryId));
+    public void persistLastCommit(String commitHash, String repositoryId, String branchRef) {
+        LOG.debug(String.format("Persisting to local store commit %1$s in repository %2$s on branch %3$s", commitHash, repositoryId, branchRef));
 
         LastProcessedItem lastHash = new LastProcessedItem();
         //lastHash.setId(LAST_COMMIT_HASH + "||" + repositoryId);
-        lastHash.setValue(commitHash);
         lastHash.setRepositoryId(repositoryId);
+        lastHash.setBranchRef(branchRef);
+        lastHash.setValue(commitHash);
 
         Transaction tr = getSession().beginTransaction();
         getSession().saveOrUpdate(lastHash);
@@ -62,13 +63,14 @@ public class DbStorage implements IDbStorage {
         getSession().flush();
     }
 
-    public String getLastCommit(String repositoryId){
-        LOG.debug(String.format("Querying local store for last commit in repository %1$s", repositoryId));
+    public String getLastCommit(String repositoryId, String branchRef){
+        LOG.debug(String.format("Querying local store for last commit in repository %1$s on branch %2$s", repositoryId, branchRef));
 
         Criteria criteria = getSession().
-                                    createCriteria(LastProcessedItem.class).
-                                    //add(Restrictions.eq("id", LAST_COMMIT_HASH + "||" + repositoryId)).
-                                    add(Restrictions.eq("repositoryId", repositoryId));
+                                    createCriteria(LastProcessedItem.class)
+                                    //.add(Restrictions.eq("id", LAST_COMMIT_HASH + "||" + repositoryId))
+                                    .add(Restrictions.eq("repositoryId", repositoryId))
+                                    .add(Restrictions.eq("branchRef", branchRef));
         LastProcessedItem result = (LastProcessedItem)criteria.uniqueResult();
         getSession().evict(result);
         return result == null ? null : result.getValue();

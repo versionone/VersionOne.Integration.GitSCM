@@ -34,10 +34,6 @@ public class GitServiceTester {
 
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).initRepository();
-            oneOf(gitConnectorMock).watchedBranchExists();
-                will(returnValue(true));
-            oneOf(gitConnectorMock).getWatchedBranchName();
-                will(returnValue("refs/remotes/origin/master"));
             oneOf(gitConnectorMock).getChangeSets(); will(returnValue(new LinkedList()));
         }});
 
@@ -58,10 +54,6 @@ public class GitServiceTester {
 
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).initRepository();
-            oneOf(gitConnectorMock).watchedBranchExists();
-                will(returnValue(true));
-            oneOf(gitConnectorMock).getWatchedBranchName();
-                will(returnValue("refs/remotes/origin/master"));
             oneOf(gitConnectorMock).getChangeSets();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision(), repositoryId);
@@ -93,10 +85,6 @@ public class GitServiceTester {
 
         context.checking(new Expectations() {{
             oneOf(gitConnectorMock).initRepository();
-            oneOf(gitConnectorMock).watchedBranchExists();
-                will(returnValue(true));
-            oneOf(gitConnectorMock).getWatchedBranchName();
-                will(returnValue("refs/remotes/origin/master"));
             oneOf(gitConnectorMock).getChangeSets();
                 will(returnValue(changes));
             PersistentChange firstPersistentChange = PersistentChange.createNew(firstChange.getRevision(), repositoryId);
