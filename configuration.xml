@@ -35,6 +35,13 @@
             -->
             <UseBranchName>false</UseBranchName>
 
+            <!--
+            	Set BranchFilter to filter out branch name that contains the text configured. For 
+            	example, having the value set to "personal" all personal branches will be filtered.
+            	If no filter should apply to this connection, simply leave blank.
+            -->
+            <BranchFilter></BranchFilter>
+
             <Link>
                 <!-- Add {0} where you want the commit ID to be inserted -->
                 <NameTemplate>ChangeSet: {0}</NameTemplate>
@@ -48,6 +55,7 @@
             <SshPassphrase></SshPassphrase>
             <WatchedBranchName></WatchedBranchName>
             <UseBranchName>false</UseBranchName>
+            <BranchFilter></BranchFilter>
             <Link>
                 <NameTemplate>ChangeSet: {0}</NameTemplate>
                 <UrlTemplate>https://github.com/edkennard/Integration.Git.Test2/commit/{0}</UrlTemplate>
@@ -60,6 +68,7 @@
             <SshPassphrase></SshPassphrase>
             <WatchedBranchName></WatchedBranchName>
             <UseBranchName>false</UseBranchName>
+            <BranchFilter></BranchFilter>
             <Link>
                 <NameTemplate>ChangeSet: {0}</NameTemplate>
                 <UrlTemplate>https://github.com/account/repo/commit/{0}</UrlTemplate>

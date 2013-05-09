@@ -134,6 +134,15 @@ public class GitConnector implements IGitConnector {
                 String branchName = Constants.R_REMOTES + "/" + Constants.DEFAULT_REMOTE_NAME +  "/" + gitConnection.getWatchedBranch();
                 refs = new HashMap();
                 refs.put(branchName, local.getRef(branchName));
+            } 
+            else if (gitConnection.getBranchFilter() != null && !gitConnection.getBranchFilter().trim().isEmpty()) {
+            	refs = local.getAllRefs();
+            	for (String ref : refs.keySet()) {
+            		if (ref.contains(gitConnection.getBranchFilter())) {
+            			LOG.debug("Remove branch " + ref + " from the watching list since the GitConnection is configured to filter " + gitConnection.getBranchFilter());
+            			refs.remove(ref);
+            		}
+            	}
             }
             else
                 refs = local.getAllRefs();
