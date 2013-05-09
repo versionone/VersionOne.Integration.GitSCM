@@ -33,6 +33,7 @@ public class ConfigurationTester {
         Assert.assertEquals("Git password is incorrect.", "password", git.getPassword());
         Assert.assertEquals("Git passphrase is incorrect.", "passphrase", git.getPassphrase());
         Assert.assertEquals("Git branch name is incorrect.", "master", git.getWatchedBranch());
+        Assert.assertEquals("Git ingore branch filter is incorrect", "personal", git.getBranchFilter());
         Assert.assertEquals("Git local directory is incorrect.", "./repos", config.getLocalDirectory());
         Assert.assertEquals("Incorrect settings for processing through branch name.", false, git.getUseBranchName());
         Assert.assertEquals("Incorrect setting for polling interval in seconds.", 300, config.getPollIntervalInSeconds());
@@ -50,6 +51,7 @@ public class ConfigurationTester {
         Assert.assertEquals("Git passphrase is incorrect.", null, git2.getPassphrase());
         Assert.assertEquals("Git branch name is incorrect.", null, git2.getWatchedBranch());
         Assert.assertEquals("Incorrect settings for processing through branch name.", false, git2.getUseBranchName());
+        Assert.assertEquals("Incorrect settings for ignore branc filter", null, git2.getBranchFilter());
     }
 
     @Test
