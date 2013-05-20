@@ -24,6 +24,7 @@
             <SshPassphrase>passphrase</SshPassphrase>
             <WatchedBranchName>master</WatchedBranchName>
             <UseBranchName>false</UseBranchName>
+            <BranchFilter>personal</BranchFilter>
             <Link>
                 <NameTemplate>ChangeSet: {0}</NameTemplate>
                 <UrlTemplate>https://github.com/account/repo/{0}</UrlTemplate>

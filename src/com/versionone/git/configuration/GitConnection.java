@@ -7,6 +7,8 @@ public class GitConnection {
     private String repositoryPath;
     @XmlElement(name = "WatchedBranchName")
     private String watchedBranch;
+    @XmlElement(name = "BranchFilter")
+    private String branchFilter;
     @XmlElement(name = "Password")
     private String password;
     @XmlElement(name = "SshPassphrase")
@@ -31,6 +33,10 @@ public class GitConnection {
 
     public String getWatchedBranch() {
         return watchedBranch;
+    }
+
+    public String getBranchFilter() {
+    	return branchFilter;
     }
 
     public Boolean getUseBranchName() {
