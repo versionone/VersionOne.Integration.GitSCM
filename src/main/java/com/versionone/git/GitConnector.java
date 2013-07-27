@@ -283,11 +283,11 @@ public class GitConnector implements IGitConnector {
 
         try {
         	tn.fetch(new ProgressMonitor() {
-				@Override public void beginTask(String taskName, int totalWork) {LOG.debug(taskName + ", total subtasks: " + totalWork);}
-				@Override public void start(int totalTasks) { LOG.debug("Starting task, total tasks: " + totalTasks); }
-				@Override public void update(int completed) {}
-				@Override public void endTask() {}
-				@Override public boolean isCancelled() {return false;}}
+				public void beginTask(String taskName, int totalWork) {LOG.debug(taskName + ", total subtasks: " + totalWork);}
+				public void start(int totalTasks) { LOG.debug("Starting task, total tasks: " + totalTasks); }
+				public void update(int completed) {}
+				public void endTask() {}
+				public boolean isCancelled() {return false;}}
         	, null);
 		} finally {
 			tn.close();

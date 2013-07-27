@@ -175,7 +175,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
 
     private QueryResult findExistingChangeset(String revision) throws OidException, APIException, ConnectionException {
         FilterTerm term = new FilterTerm(getChangeSetType().getAttributeDefinition(REFERENCE_ATTRIBUTE));
-        term.Equal(revision);
+        term.equal(revision);
 
         Query q = new Query(getChangeSetType());
         q.getSelection().add(getChangeSetType().getAttributeDefinition(REFERENCE_ATTRIBUTE));
@@ -212,7 +212,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
 
         Query q = new Query(getPrimaryWorkitemType());
         FilterTerm term = new FilterTerm(getPrimaryWorkitemReference());
-        term.Equal(reference);
+        term.equal(reference);
         q.setFilter(term);
 
         Asset[] list = connector.getServices().retrieve(q).getAssets();

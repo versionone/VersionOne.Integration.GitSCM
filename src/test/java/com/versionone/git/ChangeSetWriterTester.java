@@ -95,7 +95,7 @@ public class ChangeSetWriterTester {
 
      private QueryResult findExistingChangeset(String revision) throws OidException, APIException, ConnectionException {
         FilterTerm term = new FilterTerm(changeSetType.getAttributeDefinition(referenceAttrDef));
-        term.Equal(revision);
+        term.equal(revision);
 
         Query q = new Query(changeSetType);
         q.getSelection().add(changeSetType.getAttributeDefinition(nameAttrDef));
