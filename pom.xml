@@ -1,0 +1,138 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.versionone</groupId>
+	<artifactId>git-integration</artifactId>
+	<version>9.0.1</version>
+	<packaging>jar</packaging>
+	<name>VersionOne Integration for Git</name>
+	<description>The VersionOne Integration for Git creates a record of Git commits in VersionOne, so the development team can quickly view all of the code changes for a story or defect. This visibility can be useful when tracking down defects or performing code reviews.</description>
+	<url>https://github.com/versionone/VersionOne.Integration.Git</url>
+	<organization>
+		<name>Version One, Inc.</name>
+		<url>http://www.versionone.com/</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>Modified BSD (3-clause) License</name>
+			<url>https://raw.github.com/versionone/VersionOne.Integration.Git/master/LICENSE.md</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/versionone/VersionOne.Integration.Git/issues</url>
+	</issueManagement>
+	<scm>
+		<url>https://github.com/versionone/VersionOne.Integration.Git</url>
+		<connection>scm:git:git@github.com:versionone/VersionOne.Integration.Git.git</connection>
+		<developerConnection>scm:git:git@github.com:versionone/VersionOne.Integration.Git.git</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<name>Ian Buchanan</name>
+			<email>ian.buchanan@versionone.com</email>
+		</developer>
+	</developers>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<github.global.server>github</github.global.server>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.doxia</groupId>
+						<artifactId>doxia-module-markdown</artifactId>
+						<version>1.4</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<configuration>
+					<message>Creating site for ${project.artifactId} ${project.version}</message>
+					<!-- <dryRun>true</dryRun> -->
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>site</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+	<repositories>
+		<repository>
+			<id>BUILDSERVER1</id>
+			<name>BUILDSERVER1-releases</name>
+			<url>http://buildserver1:8081/artifactory/libs-release-local</url>
+		</repository>
+		<repository>
+			<id>java.net-Public</id>
+			<name>Maven Java Net Snapshots and Releases</name>
+			<url>https://maven.java.net/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>repository.jboss.org-public</id>
+			<name>JBoss.org Maven repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public</url>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>com.versionone</groupId>
+			<artifactId>VersionOne.SDK.Java.ObjectModel</artifactId>
+			<version>12.1.0.150</version>
+		</dependency>
+<dependency>
+    <groupId>org.eclipse.jgit</groupId>
+    <artifactId>org.eclipse.jgit</artifactId>
+    <version>3.0.0.201306101825-r</version>
+</dependency>
+	</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>
