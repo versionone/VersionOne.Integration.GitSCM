@@ -121,23 +121,51 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
 				<configuration>
-					<programs>
-						<program>
+					<repositoryLayout>flat</repositoryLayout>
+					<!-- Copy the contents from "/src/main/config" to the target configuration 
+						directory in the assembled application -->
+					<copyConfigurationDirectory>true</copyConfigurationDirectory>
+					<!-- Include the target configuration directory in the beginning of 
+						the classpath declaration in the bin scripts -->
+					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+					<daemons>
+						<daemon>
+							<id>v1git</id>
 							<mainClass>com.versionone.git.ServiceHandler</mainClass>
-							<name>v1git</name>
-						</program>
-					</programs>
+							<commandLineArguments>
+								<commandLineArgument>start</commandLineArgument>
+							</commandLineArguments>
+							<generatorConfigurations>
+								<generatorConfiguration>
+									<generator>jsw</generator>
+									<!-- Only include wrappers for Linux, Mac, and Windows -->
+									<includes>
+										<include>linux-x86-32</include>
+										<include>linux-x86-64</include>
+										<include>macosx-universal-32</include>
+										<include>macosx-universal-64</include>
+										<include>windows-x86-32</include>
+										<include>windows-x86-64</include>
+									</includes>
+								</generatorConfiguration>
+							</generatorConfigurations>
+							<platforms>
+								<platform>jsw</platform>
+							</platforms>
+						</daemon>
+					</daemons>
 				</configuration>
 				<executions>
 					<execution>
 						<id>generate-jsw-scripts</id>
 						<phase>package</phase>
 						<goals>
-							<goal>assemble</goal>
+							<goal>generate-daemons</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 	</build>
 	<repositories>
