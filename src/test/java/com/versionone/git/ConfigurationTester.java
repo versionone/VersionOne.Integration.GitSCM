@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ConfigurationTester {
     @Test
     public void config() throws IOException {
-        Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
+        Configuration config = Configuration.getInstance("test_configuration.xml");
         VersionOneConnection v1 = config.getVersionOneConnection();
         ProxySettings proxy = v1.getProxySettings();
 
@@ -56,7 +56,7 @@ public class ConfigurationTester {
 
     @Test
     public void gitConnectionNotEquals() {
-        Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
+        Configuration config = Configuration.getInstance("test_configuration.xml");
         GitConnection git1 = config.getGitConnections().get(0);
         GitConnection git2 = config.getGitConnections().get(2);
 
@@ -65,7 +65,7 @@ public class ConfigurationTester {
 
     @Test
     public void gitConnectionEquals() {
-        Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
+        Configuration config = Configuration.getInstance("test_configuration.xml");
         GitConnection git1 = config.getGitConnections().get(0);
         GitConnection git2 = config.getGitConnections().get(1);
 

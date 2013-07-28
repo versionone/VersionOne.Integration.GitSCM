@@ -60,7 +60,7 @@ public class ChangeSetInfoTester {
 
     private void loadConfig(String configFile) {
         Configuration.reset();
-        config = Configuration.getInstance(ConfigurationTester.class.getResource(configFile).getPath());
+        config = Configuration.getInstance(configFile);
         changeSetConfig = config.getChangeSet();
     }
 

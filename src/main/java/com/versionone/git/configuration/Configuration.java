@@ -8,6 +8,8 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -67,7 +69,9 @@ public class Configuration {
             JAXBContext jc = JAXBContext.newInstance(thisClass);
 
             Unmarshaller um = jc.createUnmarshaller();
-            stream = new FileInputStream(fileName);
+            stream = Configuration.class.getClassLoader().getResourceAsStream(fileName);
+            if (null == stream) throw new FileNotFoundException();
+            //stream = new FileInputStream(fileName);
             config = (Configuration) um.unmarshal(stream);
             LOG.info("Configuration loaded successfully");
         } catch (JAXBException ex) {

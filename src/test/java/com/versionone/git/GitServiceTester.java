@@ -22,7 +22,7 @@ public class GitServiceTester {
     @Before
     public void before() {
         context = new JUnit4Mockery();
-        configuration = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
+        configuration = Configuration.getInstance("test_configuration.xml");
         gitConnectorMock = context.mock(IGitConnector.class);
         storageMock = context.mock(IDbStorage.class);
         v1ConnectorMock = context.mock(IChangeSetWriter.class);

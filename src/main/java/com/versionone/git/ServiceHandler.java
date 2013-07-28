@@ -35,4 +35,21 @@ public class ServiceHandler {
     public static void stop(String[] arg){
         timer.cancel();
     }
+
+    public static void main(String[] arg) {
+        LOG.info("Git integration service is starting...");
+
+        Configuration configuration = Configuration.getInstance();
+
+        try {
+            timer.scheduleAtFixedRate(new GitPollTask(configuration), 0, configuration.getPollIntervalInSeconds() * 1000);
+        } catch (VersionOneException ex) {
+            if (ex.getInnerException() != null)
+                LOG.fatal(ex.getInnerException().getMessage() + ex.getInnerException().getStackTrace());
+            fail(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            fail(ex);
+        }
+    }
+
 }

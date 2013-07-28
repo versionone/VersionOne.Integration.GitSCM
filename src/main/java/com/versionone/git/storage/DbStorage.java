@@ -44,7 +44,7 @@ public class DbStorage implements IDbStorage {
                 .createCriteria(PersistentChange.class)
                 .add(Restrictions.eq("hash", change.getHash()))
                 .add(Restrictions.eq("repositoryId", change.getRepositoryId()));
-        Integer count = (Integer) criteria.setProjection(Projections.rowCount()).uniqueResult();
+        Long count = (Long) criteria.setProjection(Projections.rowCount()).uniqueResult();
         return count > 0;
     }
 
@@ -72,7 +72,8 @@ public class DbStorage implements IDbStorage {
                                     .add(Restrictions.eq("repositoryId", repositoryId))
                                     .add(Restrictions.eq("branchRef", branchRef));
         LastProcessedItem result = (LastProcessedItem)criteria.uniqueResult();
-        getSession().evict(result);
+        // Not sure why the result needs to be evicted. First time will be null, causing NPE.
+        //getSession().evict(result);
         return result == null ? null : result.getValue();
     }
 }

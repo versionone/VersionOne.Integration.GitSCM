@@ -39,7 +39,7 @@ public class ChangeSetWriterUnitTester {
 
     @Test
     public void publish() throws VersionOneException, V1Exception, ConnectionException {
-        Configuration config = Configuration.getInstance(ConfigurationTester.class.getResource("test_configuration.xml").getPath());
+        Configuration config = Configuration.getInstance("test_configuration.xml");
         ChangeSetWriter writer1 = new ChangeSetWriter(config.getChangeSet(), v1ConnectorMock);
         ChangeSetWriter writer2 = new ChangeSetWriter(config.getChangeSet(), v1ConnectorMock);
         ChangeSetWriter writer3 = new ChangeSetWriter(config.getChangeSet(), v1ConnectorMock);

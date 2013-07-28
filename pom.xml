@@ -37,6 +37,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.global.server>github</github.global.server>
+		<assembleDirectory>${project.build.directory}/generated-resources/appassembler/jsw/v1git</assembleDirectory>
 	</properties>
 	<build>
 		<plugins>
@@ -56,7 +57,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<skipTests>false</skipTests>
+					<additionalClasspathElements>
+						<additionalClasspathElement>${project.build.testOutputDirectory}</additionalClasspathElement>
+					</additionalClasspathElements>
 					<includes>
 						<include>**/*Tester.java</include>
 					</includes>
@@ -118,16 +121,33 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>config</id>
+						<phase>process-resources</phase>
+						<configuration>
+							<tasks>
+								<copy todir="${assembleDirectory}/conf">
+									<fileset dir="src/main/conf" />
+								</copy>
+								<mkdir dir="${assembleDirectory}/apps" />
+								<mkdir dir="${assembleDirectory}/logs" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
 				<configuration>
 					<repositoryLayout>flat</repositoryLayout>
-					<!-- Copy the contents from "/src/main/config" to the target configuration 
-						directory in the assembled application -->
-					<copyConfigurationDirectory>true</copyConfigurationDirectory>
-					<!-- Include the target configuration directory in the beginning of 
-						the classpath declaration in the bin scripts -->
-					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+					<assembleDirectory>${assembleDirectory}</assembleDirectory>
 					<daemons>
 						<daemon>
 							<id>v1git</id>
@@ -147,6 +167,20 @@
 										<include>windows-x86-32</include>
 										<include>windows-x86-64</include>
 									</includes>
+									<configuration>
+										<property>
+											<name>configuration.directory.in.classpath.first</name>
+											<value>conf</value>
+										</property>
+										<property>
+											<name>wrapper.logfile</name>
+											<value>logs/wrapper.log</value>
+										</property>
+										<property>
+											<name>derby.stream.error.file</name>
+											<value>logs/derby.log</value>
+										</property>
+									</configuration>
 								</generatorConfiguration>
 							</generatorConfigurations>
 							<platforms>
@@ -165,8 +199,43 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.3,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 	<repositories>
 		<repository>
@@ -205,6 +274,11 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>4.2.3.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.10.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
