@@ -1,1 +1,0 @@
-call java "-Dderby.stream.error.file=logs/derby.log" -jar V1GitIntegration.jar 
