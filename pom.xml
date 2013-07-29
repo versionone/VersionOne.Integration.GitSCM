@@ -38,7 +38,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.global.server>github</github.global.server>
 		<assembleDirectory>${project.build.directory}/generated-resources/appassembler/jsw/v1git</assembleDirectory>
-		<version.number>${project.version}</version.number>
+		<VERSION_NUMBER>${project.version}</VERSION_NUMBER>
 	</properties>
 	<build>
 		<plugins>
