@@ -1,0 +1,87 @@
+{
+    "id": "VersionOne.Integration.Git",
+    "titleSection": {
+        "name": "VersionOne Integration for Git",
+        "shortDescription": "view code changes for a story or defect quickly by integrating VersionOne with your source code manager",
+        "pricing": "Free",
+        "support": {
+            "text": "VersionOne",
+            "href": "http://support.versionone.com/home"
+        }
+    },
+    "descriptionSection": {
+        "description": "The VersionOne Integration for Git creates a record of Git commits in VersionOne, so the development team can quickly view all of the code changes for a story or defect. This visibility can be useful when tracking down defects or performing code reviews."
+    },
+    "linksSection": [
+        {
+            "type": "download",
+            "title": "Download Latest Stable Build",
+            "href": "http://platform.versionone.com.s3.amazonaws.com/downloads/V1GitIntegration.9.0.zip"
+        },
+        {
+            "type": "documentation",
+            "title": "Documentation",
+            "href": "http://versionone.github.io/VersionOne.Integration.Git/index.html"
+        },
+        {
+            "type": "documentation",
+            "title": "README",
+            "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/README.md"
+        },
+        {
+            "type": "documentation",
+            "title": "JavaDoc",
+            "href": "http://versionone.github.io/VersionOne.Integration.Git/apidocs/index.html"
+        },
+        {
+            "type": "source",
+            "title": "GitHub Project for Source Code and Issues",
+            "href": "https://github.com/versionone/VersionOne.Integration.Git"
+        },
+        {
+            "type": "license",
+            "title": "Modified BSD (3 clause) License",
+            "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/LICENSE.md"
+        }
+    ],
+    "updatesSection": {
+        "updates": [
+            {
+                "date": "2012-05-31T00:00:00.000Z",
+                "description": "Spring 2012",
+                "version": "9.0.116",
+                "releaseNotes": "Fixed: Support for linking to multiple repositories.",
+                "qualityBand": "mature",
+                "downloadUrl": "http://platform.versionone.com.s3.amazonaws.com/downloads/V1GitIntegration.9.0.zip"
+            },
+            {
+                "date": "2012-05-15T00:00:00.000Z",
+                "description": "Spring 2012",
+                "version": "110",
+                "releaseNotes": "Added: Support for multiple repositories.",
+                "qualityBand": "mature"
+            },
+            {
+                "date": "2011-07-01T00:00:00.000Z",
+                "description": "Summer 2011",
+                "version": "91",
+                "releaseNotes": "Initial Release",
+                "qualityBand": "mature"
+            }
+        ],
+        "qualityBands": {
+            "seed": {
+                "shortDescription": "The initial idea of a product. May not be stable code.",
+                "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/CONTRIBUTING.md#seed"
+            },
+            "sapling": {
+                "shortDescription": "The product is undergoing rapid growth. The code works but expect major changes.",
+                "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/CONTRIBUTING.md#sapling"
+            },
+            "mature": {
+                "shortDescription": "The product is stable. The code will continue to evolve with minimum breaking changes.",
+                "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/CONTRIBUTING.md#mature"
+            }
+        }
+    }
+}
