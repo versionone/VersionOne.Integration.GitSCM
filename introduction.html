@@ -28,7 +28,7 @@
         
                 <div class="xleft">
         <span id="publishDate">Last Published: 2013-07-29</span>
-                  &nbsp;| <span id="projectVersion">Version: ${VERSION_NUMBER}</span>
+                  &nbsp;| <span id="projectVersion">Version: 10.0.0</span>
                       </div>
             <div class="xright">        
         
@@ -74,34 +74,7 @@
     </div>
     <div id="bodyColumn">
       <div id="contentBox">
-        <div class="section"><h2>Introduction<a name="Introduction"></a></h2><p>VersionOne Integration for Git creates a record of Git changesets in VersionOne so the development team can quickly view all of the code changes for a story or defect. This visibility can be useful when tracking down defects or performing code reviews. Development team members include a story or defect ID, such as <tt>S-01454</tt> in their Git commit messages. The integration checks each commit message for IDs and creates a changeset within VersionOne linked to the stories or defects matching the entered IDs. A changeset is the collection of changes for a single revision in Git. The changesets for each story or defect are viewable on the details page of that item in VersionOne. Additionally, the integration has the capability to create link on the changeset in VersionOne that navigates to the changeset in a Git repository viewer.</p><p>The following sequence diagram illustrates how VersionOne Integration for Git interacts with Git and VersionOne.</p>
-
-<div><pre>
-title Git Integration Sequence
-
-Integration-&gt;Git: Any changes?
-activate Git
-Git--&gt;Integration: No
-deactivate Git
-
-Developer-&gt;Git: Commit change
-Integration-&gt;Git: Any changes?
-activate Git
-Git--&gt;Integration: Yes
-deactivate Git
-activate Integration
-Integration-&gt;VersionOne: Create ChangeSet
-Integration-&gt;VersionOne: Relate ChangeSet to WorkItems
-Integration-&gt;VersionOne: Link to Git
-deactivate Integration
-
-Integration-&gt;Git: Any changes?
-activate Git
-Git--&gt;Integration: No
-deactivate Git
-</pre></div>
-
-<script type="text/javascript" src="http://www.websequencediagrams.com/service.js"></script></div>
+        <div class="section"><h2>Introduction<a name="Introduction"></a></h2><p>VersionOne Integration for Git creates a record of Git changesets in VersionOne so the development team can quickly view all of the code changes for a story or defect. This visibility can be useful when tracking down defects or performing code reviews. Development team members include a story or defect ID, such as <tt>S-01454</tt> in their Git commit messages. The integration checks each commit message for IDs and creates a changeset within VersionOne linked to the stories or defects matching the entered IDs. A changeset is the collection of changes for a single revision in Git. The changesets for each story or defect are viewable on the details page of that item in VersionOne. Additionally, the integration has the capability to create link on the changeset in VersionOne that navigates to the changeset in a Git repository viewer.</p><p>The following sequence diagram illustrates how VersionOne Integration for Git interacts with Git and VersionOne.</p><p><img src="images/Git_Integration_Sequence.png" alt="Git Integration Sequence Diagram" /></p></div>
       </div>
     </div>
     <div class="clear">
