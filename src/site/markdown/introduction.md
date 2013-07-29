@@ -4,30 +4,4 @@ VersionOne Integration for Git creates a record of Git changesets in VersionOne 
 
 The following sequence diagram illustrates how VersionOne Integration for Git interacts with Git and VersionOne.
 
-<div class="wsd" wsd_style="qsd">
-<pre>
-title Git Integration Sequence
-
-Integration->Git: Any changes?
-activate Git
-Git-->Integration: No
-deactivate Git
-
-Developer->Git: Commit change
-Integration->Git: Any changes?
-activate Git
-Git-->Integration: Yes
-deactivate Git
-activate Integration
-Integration->VersionOne: Create ChangeSet
-Integration->VersionOne: Relate ChangeSet to WorkItems
-Integration->VersionOne: Link to Git
-deactivate Integration
-
-Integration->Git: Any changes?
-activate Git
-Git-->Integration: No
-deactivate Git
-</pre>
-</div>
-<script type="text/javascript" src="http://www.websequencediagrams.com/service.js"></script>
+![Git Integration Sequence Diagram](images/Git_Integration_Sequence.png)
