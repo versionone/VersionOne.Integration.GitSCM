@@ -2,7 +2,7 @@
     "id": "VersionOne.Integration.Git",
     "titleSection": {
         "name": "VersionOne Integration for Git",
-        "shortDescription": "view code changes for a story or defect quickly by integrating VersionOne with your source code manager",
+        "shortDescription": "View code changes for a story or defect quickly by integrating VersionOne with Git.",
         "pricing": "Free",
         "support": {
             "text": "VersionOne",
