@@ -1,10 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>com.versionone</groupId>
 	<artifactId>git-integration</artifactId>
 	<version>10.0.0</version>
 	<packaging>jar</packaging>
+	
 	<name>VersionOne Integration for Git</name>
 	<description>The VersionOne Integration for Git creates a record of Git commits in VersionOne, so the development team can quickly view all of the code changes for a story or defect. This visibility can be useful when tracking down defects or performing code reviews.</description>
 	<url>https://github.com/versionone/VersionOne.Integration.Git</url>

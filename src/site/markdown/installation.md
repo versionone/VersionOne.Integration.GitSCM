@@ -1,6 +1,6 @@
 ## Installation
 
-These installation instructions assume that Git is already installed, configured, and working properly.
+The following instructions use examples for Windows. The service is also expected to run under Linux and OSX. The instructions should be sufficiently similar for those familiar with those operating systems.
 
 ### 1. Determine Install Location
 
@@ -12,53 +12,64 @@ Download VersionOne Integration for Git and extract it into a folder of your cho
 
 ### 3. Configure
 
-Instructions for configuring V1Git are located below in the Configuration section.
+Instructions for configuring VersionOne Integration for Git are located in the [Configuration](configuration.html) section. The default configuration provided with the integration is a working sample. Provided the integration server can reach the VersionOne SaaS environment and GitHub, you can proceed to test the integration prior to configuration for the local environment.
 
 ### 4. Start integration
-Open up the command prompt, navigate to your installation folder, and run the following command:
+
+To test the integration the first time, we suggest running it in console mode. Open a command prompt window. Navigate to your installation folder and find the `bin` directory. Run the following command:
 
 ```
-RunGitIntegration.bat
+v1git.bat console
 ```
 
-You should see output similar to the following:
+The following will appear for a first time run using the sample configuration:
 
 ```
-2011-06-09 16:35:59 GitIntegration [INFO] Git integration service is starting.
-2011-06-09 16:35:59 GitIntegration [INFO] Loading configuration...
-2011-06-09 16:35:59 GitIntegration [INFO] Configuration loaded.
-2011-06-09 16:35:59 GitIntegration [INFO] Creating service...
-2011-06-09 16:36:08 GitIntegration [INFO] Connection to VersionOne server established.
-2011-06-09 16:36:08 GitIntegration [INFO] Initialize Git Service
-2011-06-09 16:36:08 GitIntegration [INFO] Clone Repository
-2011-06-09 16:36:08 GitIntegration [INFO] Fetch Repository
-2011-06-09 16:37:45 GitIntegration [INFO] Connection to Git server established.
-2011-06-09 16:37:45 GitIntegration [INFO] Service created.
-2011-06-09 16:37:45 GitIntegration [INFO] Processing new changes...
-2011-06-09 16:37:45 GitIntegration [INFO] Fetch Repository
-2011-06-09 16:37:47 GitIntegration [INFO] Completed.
+wrapper  | --> Wrapper Started as Console
+wrapper  | Launching a JVM...
+jvm 1    | Wrapper (Version 3.2.3) http://wrapper.tanukisoftware.org
+jvm 1    |   Copyright 1999-2006 Tanuki Software, Inc.  All Rights Reserved.
+jvm 1    |
+jvm 1    | 2013-07-30 08:59:45 GitIntegration [INFO] Git integration service is starting...
+jvm 1    | 2013-07-30 08:59:45 GitIntegration [INFO] Loading configuration...
+jvm 1    | 2013-07-30 08:59:45 GitIntegration [INFO] Configuration loaded successfully
+jvm 1    | 2013-07-30 08:59:45 GitIntegration [INFO] Connecting to VersionOne as 'admin'...
+jvm 1    | 2013-07-30 08:59:49 GitIntegration [INFO] Connection to VersionOne server established successfully
+jvm 1    | 2013-07-30 08:59:49 GitIntegration [WARN] ./repos couldn't be reset, possibly due to this being the first time the service has been run
+jvm 1    | 2013-07-30 08:59:49 GitIntegration [INFO] Creating 3 Git service(s)...
+jvm 1    | 2013-07-30 08:59:52 GitIntegration [INFO] Initializing Git Service for git://github.com/edkennard/Integration.Git.Test1.git...
+jvm 1    | 2013-07-30 08:59:52 GitIntegration [INFO] Connection to Git repository established successfully
+jvm 1    | 2013-07-30 08:59:53 GitIntegration [INFO] Initializing Git Service for git://github.com/edkennard/Integration.Git.Test2.git...
+jvm 1    | 2013-07-30 08:59:53 GitIntegration [INFO] Connection to Git repository established successfully
+jvm 1    | 2013-07-30 08:59:53 GitIntegration [INFO] Initializing Git Service for git://github.com/edkennard/Integration.Git.Test3.git...
+jvm 1    | 2013-07-30 08:59:53 GitIntegration [INFO] Connection to Git repository established successfully
+jvm 1    | 2013-07-30 08:59:53 GitIntegration [INFO] Git services created successfully
 ```
 
-The last 3 lines are repeated each time the integration checks the repository for changes.
+The output will proceed as the integration checks for new changes. With the sample configuration, you may see some warnings since the workitems mentioned in the sample GitHub repository do not have corresponding items in VersionOne. This is simply a test for normal error handling.
+
+If you did not configure the integration with your own settings, you will need to do so at this time. Simple press `Control-C` to halt the integration. Edit the `conf\configuration.xml` per instructions in [Configuration](configuration.html). Restart the integration to proceed with testing.
 
 ### 5. Test the integration
 
 To ensure the integration is working, commit and push a	change to your Git repository that includes a VersionOne identifier (i.e. `S-01001 testing the git integration`). The next time the integration polls Git, you should see something similar	to the following:
 
 ```
-2011-06-09 16:45:45 GitIntegration [INFO] Fetch Repository
-2011-06-09 16:45:47 GitIntegration [INFO] Changeset ChangeSet:263587:733085 by Jerry Odenwelder on Thu Jun 09 16:45:32 EDT 2011 was saved.
-2011-06-09 16:45:48 GitIntegration [INFO] Completed.
+jvm 1    | 2013-07-30 08:59:53 GitIntegration [INFO] Checking for new changes...
+jvm 1    | 2013-07-30 08:59:53 GitIntegration [INFO] Checking git://github.com/edkennard/Integration.Git.Test2.git
+jvm 1    | 2013-07-30 08:59:57 GitIntegration [INFO] Using existing ChangeSet:11691 for commit 711b80fa0afc48e1810423cf2423e077d09994d4
+jvm 1    | 2013-07-30 08:59:57 GitIntegration [INFO] Saved ChangeSet:11691:20725 to D-01001 for commit 711b80fa0afc48e1810423cf2423e077d09994d4 by Ed Kennard on Thu Nov 01 21:21:35 EDT 2012 successfully
 ```
 
 ### 6. Install as a Windows Service
 
-The download package contains a sub-directory called `service`. This directory contains the batch files necessary to install and uninstall the service depending on your platform.
+To install the integration as a service, run the following:
 
-* Use InstallService_x32.bat to install the integration as a service on a 32 bit Windows operating system.
-* Use InstallService_x64.bat to install the integration as a service on a 64 bit Windows operating system.
+```
+v1git install
+```
 
-The service is installed to run under the `Local Service` account. Local Service must be given access privileges to the	directory where VersionOne Integration for Git was installed so the integration can store its state and write log files. Follow the steps below to change the security on the installation directory:
+The service is installed to run under the `Local Service` account. `Local Service` must be given access privileges to the directory where VersionOne Integration for Git was installed so the integration can store its state and write log files. Follow the steps below to change the security on the installation directory:
 
 * Right click the installation folder from Windows Explorer.
 * Select `properties`.
