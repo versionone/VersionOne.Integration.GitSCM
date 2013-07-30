@@ -47,6 +47,14 @@
     "updatesSection": {
         "updates": [
             {
+                "date": "2013-07-30T10:00:00.000Z",
+                "description": "Summer 2012",
+                "version": "10.0.0.124",
+                "releaseNotes": " * Added: Listen on all branches and ignore a subset\n * Added: Configure names for created changeset assets\n * Added: Sample configuration file pointing to working Git and VersionOne instances.\n * Update: JGit and VersionOne libraries\n * Update: now using Java Service Wrapper\n * Improved: Logging",
+                "qualityBand": "mature",
+                "downloadUrl": "http://platform.versionone.com.s3.amazonaws.com/downloads/VersionOne.Integration.Git_10.0.0.124.zip"
+            },
+            {
                 "date": "2012-05-31T00:00:00.000Z",
                 "description": "Spring 2012",
                 "version": "9.0.116",
