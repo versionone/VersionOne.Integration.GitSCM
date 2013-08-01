@@ -72,8 +72,7 @@ public class DbStorage implements IDbStorage {
                                     .add(Restrictions.eq("repositoryId", repositoryId))
                                     .add(Restrictions.eq("branchRef", branchRef));
         LastProcessedItem result = (LastProcessedItem)criteria.uniqueResult();
-        // Not sure why the result needs to be evicted. First time will be null, causing NPE.
-        //getSession().evict(result);
+        if (null!=result) getSession().evict(result);
         return result == null ? null : result.getValue();
     }
 }
