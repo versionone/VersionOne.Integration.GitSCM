@@ -21,27 +21,27 @@
         {
             "type": "documentation",
             "title": "Documentation",
-            "href": "http://versionone.github.io/VersionOne.Integration.Git/index.html"
+            "href": "http://versionone.github.io/VersionOne.Integration.GitSCM/index.html"
         },
         {
             "type": "documentation",
             "title": "README",
-            "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/README.md"
+            "href": "https://github.com/versionone/VersionOne.Integration.GitSCM/blob/master/README.md"
         },
         {
             "type": "documentation",
             "title": "JavaDoc",
-            "href": "http://versionone.github.io/VersionOne.Integration.Git/apidocs/index.html"
+            "href": "http://versionone.github.io/VersionOne.Integration.GitSCM/apidocs/index.html"
         },
         {
             "type": "source",
             "title": "GitHub Project for Source Code and Issues",
-            "href": "https://github.com/versionone/VersionOne.Integration.Git"
+            "href": "https://github.com/versionone/VersionOne.Integration.GitSCM"
         },
         {
             "type": "license",
             "title": "Modified BSD (3 clause) License",
-            "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/LICENSE.md"
+            "href": "https://github.com/versionone/VersionOne.Integration.GitSCM/blob/master/LICENSE.md"
         }
     ],
     "updatesSection": {
@@ -80,15 +80,15 @@
         "qualityBands": {
             "seed": {
                 "shortDescription": "The initial idea of a product. May not be stable code.",
-                "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/CONTRIBUTING.md#seed"
+                "href": "https://github.com/versionone/VersionOne.Integration.GitSCM/blob/master/CONTRIBUTING.md#seed"
             },
             "sapling": {
                 "shortDescription": "The product is undergoing rapid growth. The code works but expect major changes.",
-                "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/CONTRIBUTING.md#sapling"
+                "href": "https://github.com/versionone/VersionOne.Integration.GitSCM/blob/master/CONTRIBUTING.md#sapling"
             },
             "mature": {
                 "shortDescription": "The product is stable. The code will continue to evolve with minimum breaking changes.",
-                "href": "https://github.com/versionone/VersionOne.Integration.Git/blob/master/CONTRIBUTING.md#mature"
+                "href": "https://github.com/versionone/VersionOne.Integration.GitSCM/blob/master/CONTRIBUTING.md#mature"
             }
         }
     }
