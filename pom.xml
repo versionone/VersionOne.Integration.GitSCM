@@ -9,7 +9,7 @@
 	
 	<name>VersionOne Integration for Git</name>
 	<description>The VersionOne Integration for Git creates a record of Git commits in VersionOne, so the development team can quickly view all of the code changes for a story or defect. This visibility can be useful when tracking down defects or performing code reviews.</description>
-	<url>https://github.com/versionone/VersionOne.Integration.Git</url>
+	<url>https://github.com/versionone/VersionOne.Integration.GitSCM</url>
 	<organization>
 		<name>Version One, Inc.</name>
 		<url>http://www.versionone.com/</url>
@@ -17,18 +17,18 @@
 	<licenses>
 		<license>
 			<name>Modified BSD (3-clause) License</name>
-			<url>https://raw.github.com/versionone/VersionOne.Integration.Git/master/LICENSE.md</url>
+			<url>https://raw.github.com/versionone/VersionOne.Integration.GitSCM/master/LICENSE.md</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/versionone/VersionOne.Integration.Git/issues</url>
+		<url>https://github.com/versionone/VersionOne.Integration.GitSCM/issues</url>
 	</issueManagement>
 	<scm>
-		<url>https://github.com/versionone/VersionOne.Integration.Git</url>
-		<connection>scm:git:git@github.com:versionone/VersionOne.Integration.Git.git</connection>
-		<developerConnection>scm:git:git@github.com:versionone/VersionOne.Integration.Git.git</developerConnection>
+		<url>https://github.com/versionone/VersionOne.Integration.GitSCM</url>
+		<connection>scm:git:git@github.com:versionone/VersionOne.Integration.GitSCM.git</connection>
+		<developerConnection>scm:git:git@github.com:versionone/VersionOne.Integration.GitSCM.git</developerConnection>
 	</scm>
 	<developers>
 		<developer>
