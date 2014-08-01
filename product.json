@@ -9,9 +9,11 @@
             "href": "http://support.versionone.com/home"
         }
     },
+	
     "descriptionSection": {
         "description": "The VersionOne Integration for Git creates a record of Git commits in VersionOne, so the development team can quickly view all of the code changes for a story or defect. This visibility can be useful when tracking down defects or performing code reviews."
     },
+	
     "linksSection": [
         {
             "type": "download",
