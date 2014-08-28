@@ -209,7 +209,7 @@ The following elements control integration behavior.
             <span class="nt">&lt;Password&gt;</span>pass<span class="nt">&lt;/Password&gt;</span>
             <span class="nt">&lt;SshPassphrase&gt;&lt;/SshPassphrase&gt;</span>
             <span class="nt">&lt;WatchedBranchName&gt;&lt;/WatchedBranchName&gt;</span>
-            <span class="nt">&lt;UseBranchName&gt;</span>false<span class="nt">&lt;/UseBranchName&gt;</span>
+            <span class="nt">&lt;UseBranchName&gt;</span>true<span class="nt">&lt;/UseBranchName&gt;</span>
             <span class="nt">&lt;Link&gt;</span>
                 <span class="nt">&lt;NameTemplate&gt;</span>ChangeSet: {0}<span class="nt">&lt;/NameTemplate&gt;</span>
                 <span class="nt">&lt;UrlTemplate&gt;</span>https://github.com/account/v1sdktesting/commit/{0}<span class="nt">&lt;/UrlTemplate&gt;</span>
