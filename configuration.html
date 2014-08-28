@@ -237,6 +237,10 @@
 
 <div><pre><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;</span>
 <span class="nt">&lt;Configuration&gt;</span>
+
+    <span class="nt">&lt;LocalDirectory&gt;</span>./v1sdktesting<span class="nt">&lt;/LocalDirectory&gt;</span>
+    <span class="nt">&lt;PollIntervalInSeconds&gt;</span>10<span class="nt">&lt;/PollIntervalInSeconds&gt;</span> 
+
     <span class="nt">&lt;VersionOneConnection&gt;</span>
         <span class="nt">&lt;Path&gt;</span>https://www14.v1host.com/v1sdktesting/<span class="nt">&lt;/Path&gt;</span>
         <span class="nt">&lt;UserName&gt;</span>admin<span class="nt">&lt;/UserName&gt;</span>
@@ -250,35 +254,39 @@
             <span class="nt">&lt;Password&gt;</span>proxyUserPass<span class="nt">&lt;/Password&gt;</span>
         <span class="nt">&lt;/ProxySettings&gt;</span>
     <span class="nt">&lt;/VersionOneConnection&gt;</span>
-    <span class="nt">&lt;GitSettings&gt;</span>
-        <span class="nt">&lt;Instance&gt;</span>
-            <span class="nt">&lt;Path&gt;</span>git@github.com:account/repo1.git<span class="nt">&lt;/Path&gt;</span>
-            <span class="nt">&lt;Password&gt;&lt;/Password&gt;</span>
+
+   <span class="nt">&lt;GitConnections&gt;</span>
+        <span class="nt">&lt;GitConnection&gt;</span>
+            <span class="nt">&lt;Path&gt;</span>git://github.com/account/v1sdktesting.git<span class="nt">&lt;/Path&gt;</span>
+            <span class="nt">&lt;Password&gt;</span>pass<span class="nt">&lt;/Password&gt;</span>
             <span class="nt">&lt;SshPassphrase&gt;&lt;/SshPassphrase&gt;</span>
-            <span class="nt">&lt;WatchedBranchName&gt;</span>master<span class="nt">&lt;/WatchedBranchName&gt;</span>
-            <span class="c">&lt;!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.</span>
-<span class="c">                If you want to search VersionOne item id in commit comments then set to false--&gt;</span>
+            <span class="nt">&lt;WatchedBranchName&gt;&lt;/WatchedBranchName&gt;</span>
             <span class="nt">&lt;UseBranchName&gt;</span>true<span class="nt">&lt;/UseBranchName&gt;</span>
             <span class="nt">&lt;Link&gt;</span>
-                <span class="nt">&lt;Name&gt;</span>ChangeSet: {0}<span class="nt">&lt;/Name&gt;</span>
-                <span class="nt">&lt;URL&gt;</span>https://github.com/account/repo1/commit/{0}<span class="nt">&lt;/URL&gt;</span>
+                <span class="nt">&lt;NameTemplate&gt;</span>ChangeSet: {0}<span class="nt">&lt;/NameTemplate&gt;</span>
+                <span class="nt">&lt;UrlTemplate&gt;</span>https://github.com/account/v1sdktesting/commit/{0}<span class="nt">&lt;/UrlTemplate&gt;</span>
                 <span class="nt">&lt;OnMenu&gt;</span>true<span class="nt">&lt;/OnMenu&gt;</span>
             <span class="nt">&lt;/Link&gt;</span>
-        <span class="nt">&lt;/Instance&gt;</span>
-    <span class="nt">&lt;/GitSettings&gt;</span>
+       <span class="nt">&lt;/GitConnection&gt;</span>
+    <span class="nt">&lt;/GitConnections&gt;</span>
 
-    <span class="nt">&lt;LocalDirectory&gt;</span>c:\\temp\\git\\data\\<span class="nt">&lt;/LocalDirectory&gt;</span>
     <span class="nt">&lt;Timeout&gt;</span>10000<span class="nt">&lt;/Timeout&gt;</span>
-    <span class="nt">&lt;AlwaysCreate&gt;</span>false<span class="nt">&lt;/AlwaysCreate&gt;</span>
-    <span class="nt">&lt;ChangeComment&gt;</span>Updated by Git<span class="nt">&lt;/ChangeComment&gt;</span>
-    <span class="c">&lt;!-- </span>
-<span class="c">        === Sample Regexes ===</span>
-<span class="c">        To Match S-01001 (Matches &quot;S-01001&quot;): [A-Z]{1,2}-[0-9]+</span>
-<span class="c">        To match #Reference (matches only &quot;Reference&quot;): (?&lt;=#)[a-zA-Z]+\b</span>
-<span class="c">        To match &quot;V1:Reference&quot; (matches only &quot;Reference&quot;): (?&lt;=V1:)[a-zA-Z]+\b</span>
-<span class="c">    --&gt;</span>
-    <span class="nt">&lt;ReferenceAttribute&gt;</span>Number<span class="nt">&lt;/ReferenceAttribute&gt;</span>
-    <span class="nt">&lt;ReferenceExpression&gt;</span><span class="cp">&lt;![CDATA[[A-Z]{1,2}-[0-9]+]]&gt;</span><span class="nt">&lt;/ReferenceExpression&gt;</span>
+ <span class="nt">&lt;ChangeSet&gt;</span>   
+        <span class="nt">&lt;AlwaysCreate&gt;</span>false<span class="nt">&lt;/AlwaysCreate&gt;</span>
+        <span class="nt">&lt;NameTemplate&gt;</span>{0}<span class="nt">&lt;/NameTemplate&gt;</span>
+        <span class="nt">&lt;NameTemplateDateFormat&gt;</span>yyyy-MM-dd HH:mm:ss<span class="nt">&lt;/NameTemplateDateFormat&gt;</span>
+        <span class="nt">&lt;NameTemplateRepositoryFormat&gt;</span>NameOnly<span class="nt">&lt;/NameTemplateRepositoryFormat&gt;</span>
+        <span class="nt">&lt;ChangeComment&gt;</span>Updated by Git<span class="nt">&lt;/ChangeComment&gt;</span>
+        <span class="nt">&lt;ReferenceAttribute&gt;</span>Number<span class="nt">&lt;/ReferenceAttribute&gt;</span>
+        <span class="c">&lt;!--</span>
+<span class="c">            === Sample Regexes ===</span>
+<span class="c">            To Match S-01001 (Matches &quot;S-01001&quot;):                   [A-Z]{1,2}-[0-9]+</span>
+<span class="c">            To match #Reference (matches only &quot;Reference&quot;):         (?&lt;=#)[a-zA-Z]+\b</span>
+<span class="c">            To match &quot;V1:Reference&quot;  (matches only &quot;Reference&quot;):    (?&lt;=V1:)[a-zA-Z]+\b</span>
+<span class="c">        --&gt;</span>
+        <span class="nt">&lt;ReferenceExpression&gt;</span><span class="cp">&lt;![CDATA[[A-Z]{1,2}-[0-9]+]]&gt;</span><span class="nt">&lt;/ReferenceExpression&gt;</span>
+<span class="nt">&lt;/ChangeSet&gt;</span>
+
 <span class="nt">&lt;/Configuration&gt;</span>
 </pre></div>
 
