@@ -206,7 +206,7 @@ The following elements control integration behavior.
             <span class="nt">&lt;WatchedBranchName&gt;</span>master<span class="nt">&lt;/WatchedBranchName&gt;</span>
             <span class="c">&lt;!-- Set UseBranchName to true to enable parsing branch name as VersionOne item id.</span>
 <span class="c">                If you want to search VersionOne item id in commit comments then set to false--&gt;</span>
-            <span class="nt">&lt;UseBranchName&gt;</span>false<span class="nt">&lt;/UseBranchName&gt;</span>
+            <span class="nt">&lt;UseBranchName&gt;</span>true<span class="nt">&lt;/UseBranchName&gt;</span>
             <span class="nt">&lt;Link&gt;</span>
                 <span class="nt">&lt;Name&gt;</span>ChangeSet: {0}<span class="nt">&lt;/Name&gt;</span>
                 <span class="nt">&lt;URL&gt;</span>https://github.com/account/repo1/commit/{0}<span class="nt">&lt;/URL&gt;</span>
@@ -228,4 +228,6 @@ The following elements control integration behavior.
     <span class="nt">&lt;ReferenceAttribute&gt;</span>Number<span class="nt">&lt;/ReferenceAttribute&gt;</span>
     <span class="nt">&lt;ReferenceExpression&gt;</span><span class="cp">&lt;![CDATA[[A-Z]{1,2}-[0-9]+]]&gt;</span><span class="nt">&lt;/ReferenceExpression&gt;</span>
 <span class="nt">&lt;/Configuration&gt;</span>
-</pre></div></div>
+</pre></div>
+
+</div>
