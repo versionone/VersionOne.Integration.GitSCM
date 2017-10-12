@@ -133,7 +133,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
         return changeSet;
     }
 
-	private static String htmlize(Srting value) {
+	private static String htmlize(String value) {
 		return "<pre>" + escapeHTML(value) + "</pre>";
 	}
 
