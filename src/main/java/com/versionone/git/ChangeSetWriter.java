@@ -134,22 +134,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
     }
 
 	private static String htmlize(String value) {
-		return "<pre>" + escapeHTML(value) + "</pre>";
-	}
-
-	private static String escapeHTML(String s) {
-		StringBuilder out = new StringBuilder(Math.max(16, s.length()));
-		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
-			if (c > 127 || c == '"' || c == '<' || c == '>' || c == '&') {
-				out.append("&#");
-				out.append((int) c);
-				out.append(';');
-			} else {
-				out.append(c);
-			}
-		}
-		return out.toString();
+		return "<pre>" + Utilities.escapeHTML(value) + "</pre>";
 	}
 
     private Boolean shouldCreateURL(String url, Attribute linkUrlAttribute) {
