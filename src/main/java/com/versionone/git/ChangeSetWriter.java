@@ -122,7 +122,7 @@ public class ChangeSetWriter implements IChangeSetWriter {
     private Asset saveChangeSet(Asset changeSet, ChangeSetInfo changeSetInfo, List<Oid> workitems) throws V1Exception {
 
         changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(NAME_ATTRIBUTE), changeSetInfo.getName(changeSetConfig));
-        changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(DESCRIPTION_ATTRIBUTE), changeSetInfo.getMessage());
+        changeSet.setAttributeValue(getChangeSetType().getAttributeDefinition(DESCRIPTION_ATTRIBUTE), htmlize(changeSetInfo.getMessage()));
 
         for (Oid oid : workitems) {
             changeSet.addAttributeValue(getChangeSetType().getAttributeDefinition(PRIMARY_WORKITEMS_ATTRIBUTE), oid);
@@ -132,6 +132,10 @@ public class ChangeSetWriter implements IChangeSetWriter {
 
         return changeSet;
     }
+
+	private static String htmlize(String value) {
+		return "<pre>" + Utilities.escapeHTML(value) + "</pre>";
+	}
 
     private Boolean shouldCreateURL(String url, Attribute linkUrlAttribute) {
         if (linkUrlAttribute == null) {
